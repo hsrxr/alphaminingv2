@@ -1,0 +1,13 @@
+{
+  "operator_slot_mappings": {
+    "group_op": ["group_rank", "group_mean", "group_neutralize"],
+    "group_rank_op": ["group_rank"],
+    "group_compare_op": ["group_rank", "group_mean"],
+    "ts_op": ["ts_mean", "ts_rank", "ts_zscore", "ts_delta","ts_decay_linear","ts_scale","ts_std_dev","ts_corr"],
+    "ts_smooth_op": ["ts_mean", "ts_decay_linear"],
+    "ts_compare_op": ["ts_rank", "ts_zscore"],
+    "ts_position_op": ["ts_rank", "ts_scale"],
+    "ts_risk_op": ["ts_std_dev", "ts_zscore"],
+    "time_series_op": ["ts_mean", "ts_rank", "ts_zscore"]
+  }
+}

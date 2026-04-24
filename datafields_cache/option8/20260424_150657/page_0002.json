@@ -1,0 +1,367 @@
+{
+  "dataset_id": "option8",
+  "created_at": "2026-04-24T15:07:03",
+  "page_index": 2,
+  "offset": 50,
+  "count": 14,
+  "request": {
+    "instrumentType": "EQUITY",
+    "region": "USA",
+    "delay": 1,
+    "universe": "TOP3000",
+    "data_type": "MATRIX",
+    "search": ""
+  },
+  "results": [
+    {
+      "id": "implied_volatility_put_270",
+      "description": "At-the-money option-implied volatility for Put Option for 270 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6959,
+      "userCount": 7509,
+      "alphaCount": 10937,
+      "themes": []
+    },
+    {
+      "id": "implied_volatility_put_30",
+      "description": "At-the-money option-implied volatility for Put Option for 30 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6959,
+      "userCount": 1395,
+      "alphaCount": 2878,
+      "themes": []
+    },
+    {
+      "id": "implied_volatility_put_360",
+      "description": "At-the-money option-implied volatility for Put Option for 360 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6959,
+      "userCount": 1356,
+      "alphaCount": 2599,
+      "themes": []
+    },
+    {
+      "id": "implied_volatility_put_60",
+      "description": "At-the-money option-implied volatility for Put Option for 60 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6959,
+      "userCount": 2147,
+      "alphaCount": 3854,
+      "themes": []
+    },
+    {
+      "id": "implied_volatility_put_720",
+      "description": "At-the-money option-implied volatility for Put Option for 720 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6959,
+      "userCount": 1407,
+      "alphaCount": 2318,
+      "themes": []
+    },
+    {
+      "id": "implied_volatility_put_90",
+      "description": "At-the-money option-implied volatility for Put Option for 90 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6959,
+      "userCount": 1670,
+      "alphaCount": 3472,
+      "themes": []
+    },
+    {
+      "id": "parkinson_volatility_10",
+      "description": "Parkinson model's historical volatility over 2 weeks",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6983,
+      "userCount": 646,
+      "alphaCount": 1632,
+      "themes": []
+    },
+    {
+      "id": "parkinson_volatility_120",
+      "description": "Parkinson model's historical volatility over 120 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7004,
+      "userCount": 2159,
+      "alphaCount": 3973,
+      "themes": []
+    },
+    {
+      "id": "parkinson_volatility_150",
+      "description": "Parkinson model's historical volatility over 150 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7013,
+      "userCount": 713,
+      "alphaCount": 1700,
+      "themes": []
+    },
+    {
+      "id": "parkinson_volatility_180",
+      "description": "Parkinson model's historical volatility over 180 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7022,
+      "userCount": 1257,
+      "alphaCount": 2576,
+      "themes": []
+    },
+    {
+      "id": "parkinson_volatility_20",
+      "description": "Parkinson model's historical volatility over 20 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6983,
+      "userCount": 672,
+      "alphaCount": 1548,
+      "themes": []
+    },
+    {
+      "id": "parkinson_volatility_30",
+      "description": "Parkinson model's historical volatility over 30 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6981,
+      "userCount": 601,
+      "alphaCount": 1411,
+      "themes": []
+    },
+    {
+      "id": "parkinson_volatility_60",
+      "description": "Parkinson model's historical volatility over 60 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6984,
+      "userCount": 703,
+      "alphaCount": 1641,
+      "themes": []
+    },
+    {
+      "id": "parkinson_volatility_90",
+      "description": "Parkinson model's historical volatility over 90 days",
+      "dataset": {
+        "id": "option8",
+        "name": "Volatility Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6994,
+      "userCount": 857,
+      "alphaCount": 1788,
+      "themes": []
+    }
+  ]
+}

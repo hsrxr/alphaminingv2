@@ -1,0 +1,8 @@
+{
+  "decay": [3, 6, 9],
+  "neutralization": ["MARKET", "SECTOR", "INDUSTRY", "SUBINDUSTRY"],
+  "nanHandling": ["OFF", "ON"],
+  "truncation": [0.06, 0.08],
+  "pasteurization": ["ON"],
+  "delay": [1]
+}

@@ -1,0 +1,15 @@
+{
+  "global": {
+    "day": [63],
+    "days": [63]
+  },
+  "TPL_GROUP_TS_BASIC_V1": {
+    "group_op": ["group_rank"],
+    "ts_op": ["ts_zscore"],
+    "group": ["sector", "industry"]
+  },
+  "TPL_GROUP_AF_CORR_V1": {
+    "d": [63, 126],
+    "group": ["industry"]
+  }
+}
