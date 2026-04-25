@@ -1,6 +1,8 @@
 import argparse
+import hashlib
 import json
 import logging
+import re
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -21,6 +23,7 @@ DEFAULT_MAX_WORKERS = 3
 DEFAULT_MAX_RETRIES = 3
 DEFAULT_RETRY_SLEEP_SECONDS = 2
 DEFAULT_LOG_DIRNAME = "logs"
+DEFAULT_CHECKPOINT_DIRNAME = "checkpoints"
 DEFAULT_RELOGIN_INTERVAL_SECONDS = 13800
 
 
@@ -49,6 +52,222 @@ def setup_logger(output_dir: Path, log_level: str = "INFO") -> logging.Logger:
     logger.addHandler(stream_handler)
     logger.info("Backtest logging initialized. Log file: %s", log_file)
     return logger
+
+
+def stable_factor_signature(factor: dict) -> str:
+    """Create a stable identity for one factor payload."""
+
+    normalized = json.dumps(factor, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha1(normalized.encode("utf-8")).hexdigest()
+
+
+def result_is_successful(result: dict | None) -> bool:
+    return isinstance(result, dict) and result.get("status") == "ok"
+
+
+def is_retryable_http_status(status_code: int | None) -> bool:
+    if status_code is None:
+        return True
+    if status_code in (401, 403, 408, 409, 425, 429):
+        return True
+    return status_code >= 500
+
+
+def infer_retryable_from_error_message(error_message: str) -> bool:
+    match = re.search(r"(\d{3})\s+Client\s+Error", error_message)
+    if not match:
+        return True
+    status_code = int(match.group(1))
+    return is_retryable_http_status(status_code)
+
+
+def result_needs_retry(result: dict | None) -> bool:
+    if result is None:
+        return True
+    if result_is_successful(result):
+        return False
+    if result.get("status") != "skipped_after_retries":
+        return True
+    if "retryable" in result:
+        return bool(result.get("retryable"))
+    return infer_retryable_from_error_message(str(result.get("error", "")))
+
+
+def factor_matches_result(factor: dict, result: dict | None) -> bool:
+    if not isinstance(result, dict):
+        return False
+    return (
+        result.get("index") is not None
+        and result.get("regular", "") == factor.get("regular", "")
+        and result.get("settings", {}) == factor.get("settings", {})
+    )
+
+
+def checkpoint_path_for(input_file: Path, input_dir: Path, checkpoint_root: Path) -> Path:
+    """Mirror the input batch path under the checkpoint directory."""
+
+    relative_path = input_file.relative_to(input_dir)
+    return checkpoint_root / relative_path
+
+
+def load_checkpoint_state(
+    checkpoint_file: Path,
+    batch_payload: dict,
+    factors: list[dict],
+    logger: logging.Logger,
+) -> dict:
+    """Load an existing checkpoint if it matches the current batch payload, otherwise start fresh."""
+
+    expected_signatures = [stable_factor_signature(factor) for factor in factors]
+    empty_state = {
+        "source_batch": batch_payload.get("source_batch", ""),
+        "dataset_id": batch_payload.get("dataset_id", ""),
+        "input_count": len(factors),
+        "factor_signatures": expected_signatures,
+        "results": [None] * len(factors),
+    }
+
+    if not checkpoint_file.exists():
+        return empty_state
+
+    try:
+        with open(checkpoint_file, encoding="utf-8") as file_handle:
+            state = json.load(file_handle)
+    except (OSError, json.JSONDecodeError) as exc:
+        logger.warning("Failed to load checkpoint %s, starting fresh: %s", checkpoint_file, exc)
+        return empty_state
+
+    if not isinstance(state, dict):
+        logger.warning("Checkpoint %s is not a JSON object, starting fresh.", checkpoint_file)
+        return empty_state
+
+    if state.get("input_count") != len(factors):
+        logger.warning(
+            "Checkpoint %s input_count mismatch (checkpoint=%s current=%s), starting fresh.",
+            checkpoint_file,
+            state.get("input_count"),
+            len(factors),
+        )
+        return empty_state
+
+    if state.get("factor_signatures") != expected_signatures:
+        logger.warning("Checkpoint %s factor signatures changed, starting fresh.", checkpoint_file)
+        return empty_state
+
+    results = state.get("results")
+    if not isinstance(results, list) or len(results) != len(factors):
+        logger.warning("Checkpoint %s result layout mismatch, starting fresh.", checkpoint_file)
+        return empty_state
+
+    state["source_batch"] = batch_payload.get("source_batch", state.get("source_batch", ""))
+    state["dataset_id"] = batch_payload.get("dataset_id", state.get("dataset_id", ""))
+    state["input_count"] = len(factors)
+    state["factor_signatures"] = expected_signatures
+    state["results"] = results
+    logger.info(
+        "Loaded checkpoint %s with %s completed factor(s).",
+        checkpoint_file,
+        len([item for item in results if item is not None]),
+    )
+    return state
+
+
+def load_result_state(
+    output_file: Path,
+    batch_payload: dict,
+    factors: list[dict],
+    logger: logging.Logger,
+) -> dict:
+    """Load an existing result file as a resumable state."""
+
+    empty_state = {
+        "source_batch": batch_payload.get("source_batch", ""),
+        "dataset_id": batch_payload.get("dataset_id", ""),
+        "input_count": len(factors),
+        "results": [None] * len(factors),
+    }
+
+    if not output_file.exists():
+        return empty_state
+
+    try:
+        with open(output_file, encoding="utf-8") as file_handle:
+            payload = json.load(file_handle)
+    except (OSError, json.JSONDecodeError) as exc:
+        logger.warning("Failed to load result file %s, starting fresh: %s", output_file, exc)
+        return empty_state
+
+    if not isinstance(payload, dict):
+        logger.warning("Result file %s is not a JSON object, starting fresh.", output_file)
+        return empty_state
+
+    results = payload.get("results")
+    if not isinstance(results, list) or len(results) != len(factors):
+        logger.warning(
+            "Result file %s layout mismatch (results=%s current=%s), starting fresh.",
+            output_file,
+            len(results) if isinstance(results, list) else "invalid",
+            len(factors),
+        )
+        return empty_state
+
+    # Prefer exact per-factor alignment when available; otherwise keep index-aligned recovery.
+    for index, factor in enumerate(factors, start=1):
+        existing_result = results[index - 1]
+        if isinstance(existing_result, dict) and existing_result.get("index") == index and factor_matches_result(factor, existing_result):
+            continue
+        if existing_result is None:
+            continue
+        if not factor_matches_result(factor, existing_result):
+            logger.warning("Result file %s factor mismatch at index %s, starting fresh.", output_file, index)
+            return empty_state
+
+    payload["source_batch"] = batch_payload.get("source_batch", payload.get("source_batch", ""))
+    payload["dataset_id"] = batch_payload.get("dataset_id", payload.get("dataset_id", ""))
+    payload["input_count"] = len(factors)
+    payload["results"] = results
+    logger.info(
+        "Loaded result file %s with %s completed factor(s).",
+        output_file,
+        len([item for item in results if item is not None]),
+    )
+    return payload
+
+
+def write_checkpoint_state(checkpoint_file: Path, state: dict) -> None:
+    """Atomically persist the current checkpoint state."""
+
+    checkpoint_file.parent.mkdir(parents=True, exist_ok=True)
+    temp_file = checkpoint_file.with_suffix(checkpoint_file.suffix + ".tmp")
+    with open(temp_file, "w", encoding="utf-8") as file_handle:
+        json.dump(state, file_handle, ensure_ascii=False, indent=2)
+    temp_file.replace(checkpoint_file)
+
+
+def is_batch_complete(state: dict) -> bool:
+    results = state.get("results", [])
+    return all(result_is_successful(item) for item in results) and bool(results)
+
+
+def ensure_output_state(
+    checkpoint_file: Path,
+    output_file: Path,
+    batch_payload: dict,
+    factors: list[dict],
+    logger: logging.Logger,
+) -> tuple[dict, str]:
+    """Resolve the best available resume state, preferring checkpoint over result file."""
+
+    if checkpoint_file.exists():
+        return load_checkpoint_state(checkpoint_file, batch_payload, factors, logger), "checkpoint"
+    if output_file.exists():
+        return load_result_state(output_file, batch_payload, factors, logger), "result"
+    return {
+        "source_batch": batch_payload.get("source_batch", ""),
+        "dataset_id": batch_payload.get("dataset_id", ""),
+        "input_count": len(factors),
+        "results": [None] * len(factors),
+    }, "fresh"
 
 
 def load_credentials() -> tuple[str, str]:
@@ -153,6 +372,7 @@ def run_single_backtest(
     """Submit one factor, retry failures, and return simulation/alpha details."""
 
     last_error = ""
+    retryable = True
     for attempt in range(1, max_retries + 1):
         try:
             logger.debug("Submitting factor attempt %s/%s", attempt, max_retries)
@@ -191,8 +411,19 @@ def run_single_backtest(
                 "alpha_detail": alpha_detail,
                 "attempts": attempt,
             }
+        except requests.HTTPError as exc:
+            last_error = str(exc)
+            status_code = exc.response.status_code if exc.response is not None else None
+            retryable = is_retryable_http_status(status_code)
+            logger.warning("Factor backtest attempt %s/%s failed: %s", attempt, max_retries, last_error)
+            if not retryable:
+                logger.warning("Factor failure classified as non-retryable (status=%s), stop retrying.", status_code)
+                break
+            if attempt < max_retries:
+                time.sleep(max(0, retry_sleep_seconds))
         except (requests.RequestException, ValueError) as exc:
             last_error = str(exc)
+            retryable = True
             logger.warning("Factor backtest attempt %s/%s failed: %s", attempt, max_retries, last_error)
             if attempt < max_retries:
                 time.sleep(max(0, retry_sleep_seconds))
@@ -201,10 +432,11 @@ def run_single_backtest(
     return {
         "status": "skipped_after_retries",
         "error": f"Failed after {max_retries} attempts: {last_error}",
+        "retryable": retryable,
         "alpha_id": None,
         "simulation_summary": {},
         "alpha_detail": {},
-        "attempts": max_retries,
+        "attempts": attempt,
     }
 
 
@@ -235,6 +467,7 @@ def process_batch_file(
     session_manager: BrainSessionManager,
     input_file: Path,
     output_file: Path,
+    checkpoint_file: Path,
     max_workers: int,
     max_retries: int,
     retry_sleep_seconds: float,
@@ -246,12 +479,35 @@ def process_batch_file(
         batch_payload = json.load(file_handle)
 
     factors = batch_payload.get("factors", [])
-    results = [None] * len(factors)
+    state, state_source = ensure_output_state(checkpoint_file, output_file, batch_payload, factors, logger)
+    results = state["results"]
 
-    logger.info("Processing batch: %s (%s factors)", input_file, len(factors))
+    if is_batch_complete(state) and output_file.exists():
+        logger.info("Batch already completed in %s. Skipping: %s", state_source, input_file)
+        return
+
+    logger.info(
+        "Processing batch: %s (%s factors). state_source=%s checkpoint=%s",
+        input_file,
+        len(factors),
+        state_source,
+        checkpoint_file,
+    )
 
     completed = 0
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        pending_items = [
+            (index, factor)
+            for index, factor in enumerate(factors, start=1)
+            if result_needs_retry(results[index - 1])
+        ]
+        logger.info(
+            "Pending factors for this batch: %s/%s (already completed: %s)",
+            len(pending_items),
+            len(factors),
+            len(factors) - len(pending_items),
+        )
+
         future_to_index = {
             executor.submit(
                 process_single_factor,
@@ -262,13 +518,31 @@ def process_batch_file(
                 retry_sleep_seconds,
                 logger,
             ): index
-            for index, factor in enumerate(factors, start=1)
+            for index, factor in pending_items
         }
 
         for future in as_completed(future_to_index):
             index = future_to_index[future]
             single_result = future.result()
             results[index - 1] = single_result
+            state["results"] = results
+            state["updated_at"] = datetime.now().isoformat(timespec="seconds")
+            state["result_count"] = len([item for item in results if item is not None])
+            state["factor_signatures"] = [stable_factor_signature(factor) for factor in factors]
+            state["completed_at"] = None
+            output_payload = {
+                "source_batch": str(input_file),
+                "processed_at": datetime.now().isoformat(timespec="seconds"),
+                "dataset_id": batch_payload.get("dataset_id", ""),
+                "input_count": len(factors),
+                "result_count": len([item for item in results if item is not None]),
+                "factor_signatures": [stable_factor_signature(factor) for factor in factors],
+                "results": results,
+            }
+            output_file.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_file, "w", encoding="utf-8") as file_handle:
+                json.dump(output_payload, file_handle, ensure_ascii=False, indent=2)
+            write_checkpoint_state(checkpoint_file, state)
             completed += 1
 
             if single_result["status"] == "skipped_after_retries":
@@ -283,12 +557,18 @@ def process_batch_file(
         "dataset_id": batch_payload.get("dataset_id", ""),
         "input_count": len(factors),
         "result_count": len([item for item in results if item is not None]),
+        "factor_signatures": [stable_factor_signature(factor) for factor in factors],
         "results": results,
     }
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with open(output_file, "w", encoding="utf-8") as file_handle:
         json.dump(output_payload, file_handle, ensure_ascii=False, indent=2)
+
+    state["results"] = results
+    state["updated_at"] = datetime.now().isoformat(timespec="seconds")
+    state["completed_at"] = datetime.now().isoformat(timespec="seconds")
+    write_checkpoint_state(checkpoint_file, state)
 
     ok_count = len([item for item in results if item and item.get("status") == "ok"])
     skipped_count = len([item for item in results if item and item.get("status") == "skipped_after_retries"])
@@ -301,14 +581,13 @@ def process_batch_file(
 
 
 def iter_unprocessed_batches(input_dir: Path, output_dir: Path):
-    """Yield generated batch files that do not have corresponding result files yet."""
+    """Yield generated batch files; completion is decided by process_batch_file state checks."""
 
     for input_file in sorted(input_dir.rglob("*.json")):
         relative_path = input_file.relative_to(input_dir)
         output_file = output_dir / relative_path
-        if output_file.exists():
-            continue
-        yield input_file, output_file
+        checkpoint_file = output_dir / DEFAULT_CHECKPOINT_DIRNAME / relative_path
+        yield input_file, output_file, checkpoint_file
 
 
 def main() -> None:
@@ -393,11 +672,12 @@ def main() -> None:
             continue
 
         logger.info("Found %s pending batch file(s).", len(pending))
-        for input_file, output_file in pending:
+        for input_file, output_file, checkpoint_file in pending:
             process_batch_file(
                 session_manager=session_manager,
                 input_file=input_file,
                 output_file=output_file,
+                checkpoint_file=checkpoint_file,
                 max_workers=max_workers,
                 max_retries=max_retries,
                 retry_sleep_seconds=retry_sleep_seconds,
