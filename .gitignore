@@ -9,3 +9,5 @@ wheels/
 # Virtual environments
 .venv
 .env
+backtest_results/logs/
+backtest_results/checkpoints/
