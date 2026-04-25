@@ -1,6 +1,7 @@
 import argparse
 import json
 import logging
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
@@ -20,6 +21,7 @@ DEFAULT_MAX_WORKERS = 3
 DEFAULT_MAX_RETRIES = 3
 DEFAULT_RETRY_SLEEP_SECONDS = 2
 DEFAULT_LOG_DIRNAME = "logs"
+DEFAULT_RELOGIN_INTERVAL_SECONDS = 13800
 
 
 def setup_logger(output_dir: Path, log_level: str = "INFO") -> logging.Logger:
@@ -89,13 +91,60 @@ def create_authenticated_session(username: str, password: str) -> Session:
 
     response = session.post(f"{API_BASE}/authentication", timeout=30)
     response.raise_for_status()
-    print(response.status_code)
-    print(response.json())
     return session
 
 
+class BrainSessionManager:
+    """Manage authenticated session lifecycle with periodic relogin."""
+
+    def __init__(
+        self,
+        username: str,
+        password: str,
+        logger: logging.Logger,
+        relogin_interval_seconds: int,
+    ):
+        self.username = username
+        self.password = password
+        self.logger = logger
+        self.relogin_interval_seconds = max(1, relogin_interval_seconds)
+        self._lock = threading.Lock()
+        self._session: Session | None = None
+        self._last_login_monotonic = 0.0
+
+    def _needs_relogin(self) -> bool:
+        if self._session is None:
+            return True
+        elapsed = time.monotonic() - self._last_login_monotonic
+        return elapsed >= self.relogin_interval_seconds
+
+    def _login(self) -> Session:
+        session = create_authenticated_session(self.username, self.password)
+        self._session = session
+        self._last_login_monotonic = time.monotonic()
+        self.logger.info("Session login refreshed successfully.")
+        return session
+
+    def get_session(self, force_relogin: bool = False) -> Session:
+        with self._lock:
+            if force_relogin or self._needs_relogin():
+                return self._login()
+            return self._session
+
+    def request(self, method: str, url: str, **kwargs) -> requests.Response:
+        session = self.get_session()
+        response = session.request(method, url, **kwargs)
+
+        # Retry once with forced relogin only when auth is explicitly rejected.
+        if response.status_code in (401, 403):
+            self.logger.warning("Received %s, forcing relogin and retrying request.", response.status_code)
+            session = self.get_session(force_relogin=True)
+            response = session.request(method, url, **kwargs)
+        return response
+
+
 def run_single_backtest(
-    session: Session,
+    session_manager: BrainSessionManager,
     factor_payload: dict,
     max_retries: int,
     retry_sleep_seconds: float,
@@ -107,7 +156,7 @@ def run_single_backtest(
     for attempt in range(1, max_retries + 1):
         try:
             logger.debug("Submitting factor attempt %s/%s", attempt, max_retries)
-            submit_resp = session.post(f"{API_BASE}/simulations", json=factor_payload, timeout=30)
+            submit_resp = session_manager.request("POST", f"{API_BASE}/simulations", json=factor_payload, timeout=30)
             submit_resp.raise_for_status()
 
             progress_url = submit_resp.headers.get("Location")
@@ -115,7 +164,7 @@ def run_single_backtest(
                 raise ValueError("Missing progress Location header")
 
             while True:
-                progress_resp = session.get(progress_url, timeout=30)
+                progress_resp = session_manager.request("GET", progress_url, timeout=30)
                 progress_resp.raise_for_status()
                 retry_after_sec = float(progress_resp.headers.get("Retry-After", 0))
                 if retry_after_sec == 0:
@@ -128,7 +177,7 @@ def run_single_backtest(
             alpha_detail = {}
             if alpha_id:
                 # Fetch alpha detail to preserve performance metrics for later screening.
-                alpha_resp = session.get(f"{API_BASE}/alphas/{alpha_id}", timeout=30)
+                alpha_resp = session_manager.request("GET", f"{API_BASE}/alphas/{alpha_id}", timeout=30)
                 alpha_resp.raise_for_status()
                 alpha_detail = alpha_resp.json()
 
@@ -160,7 +209,7 @@ def run_single_backtest(
 
 
 def process_single_factor(
-    session: Session,
+    session_manager: BrainSessionManager,
     factor: dict,
     index: int,
     max_retries: int,
@@ -170,7 +219,7 @@ def process_single_factor(
     """Run one factor backtest and normalize output with index/expression/settings."""
 
     single_result = run_single_backtest(
-        session=session,
+        session_manager=session_manager,
         factor_payload=factor,
         max_retries=max_retries,
         retry_sleep_seconds=retry_sleep_seconds,
@@ -183,7 +232,7 @@ def process_single_factor(
 
 
 def process_batch_file(
-    session: Session,
+    session_manager: BrainSessionManager,
     input_file: Path,
     output_file: Path,
     max_workers: int,
@@ -206,7 +255,7 @@ def process_batch_file(
         future_to_index = {
             executor.submit(
                 process_single_factor,
-                session,
+                session_manager,
                 factor,
                 index,
                 max_retries,
@@ -291,6 +340,12 @@ def main() -> None:
         help="Sleep seconds between retry attempts for the same factor.",
     )
     parser.add_argument(
+        "--relogin-interval-seconds",
+        type=int,
+        default=DEFAULT_RELOGIN_INTERVAL_SECONDS,
+        help="Refresh login session every N seconds (default 13800 ~= 3h50m).",
+    )
+    parser.add_argument(
         "--log-level",
         default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR"],
@@ -302,6 +357,7 @@ def main() -> None:
     max_workers = min(3, max(1, args.max_workers))
     max_retries = max(1, args.max_retries)
     retry_sleep_seconds = max(0.0, args.retry_sleep)
+    relogin_interval_seconds = max(1, args.relogin_interval_seconds)
 
     input_dir = Path(args.input_dir)
     output_dir = Path(args.output_dir)
@@ -309,14 +365,21 @@ def main() -> None:
     logger = setup_logger(output_dir=output_dir, log_level=args.log_level)
 
     username, password = load_credentials()
-    session = create_authenticated_session(username, password)
+    session_manager = BrainSessionManager(
+        username=username,
+        password=password,
+        logger=logger,
+        relogin_interval_seconds=relogin_interval_seconds,
+    )
+    session_manager.get_session(force_relogin=True)
     logger.info(
-        "Runner started. input_dir=%s output_dir=%s max_workers=%s max_retries=%s retry_sleep=%s once=%s",
+        "Runner started. input_dir=%s output_dir=%s max_workers=%s max_retries=%s retry_sleep=%s relogin_interval_seconds=%s once=%s",
         input_dir,
         output_dir,
         max_workers,
         max_retries,
         retry_sleep_seconds,
+        relogin_interval_seconds,
         args.once,
     )
 
@@ -332,7 +395,7 @@ def main() -> None:
         logger.info("Found %s pending batch file(s).", len(pending))
         for input_file, output_file in pending:
             process_batch_file(
-                session=session,
+                session_manager=session_manager,
                 input_file=input_file,
                 output_file=output_file,
                 max_workers=max_workers,
