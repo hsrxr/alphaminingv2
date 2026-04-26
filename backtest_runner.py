@@ -394,6 +394,23 @@ def run_single_backtest(
             simulation_summary = progress_resp.json()
             alpha_id = simulation_summary.get("alpha")
 
+            if not alpha_id:
+                # Brain may return 200 for finished simulations that were rejected/invalid.
+                # In that case there is no alpha id and this should not be treated as success.
+                logger.warning(
+                    "Simulation finished without alpha id; treat as non-retryable. summary=%s",
+                    json.dumps(simulation_summary, ensure_ascii=False),
+                )
+                return {
+                    "status": "skipped_after_retries",
+                    "error": f"Simulation finished without alpha id: {json.dumps(simulation_summary, ensure_ascii=False)}",
+                    "retryable": False,
+                    "alpha_id": None,
+                    "simulation_summary": simulation_summary,
+                    "alpha_detail": {},
+                    "attempts": attempt,
+                }
+
             alpha_detail = {}
             if alpha_id:
                 # Fetch alpha detail to preserve performance metrics for later screening.
