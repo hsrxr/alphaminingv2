@@ -1,278 +1,127 @@
 # AlphaMiningV2
 
-面向 WorldQuant Brain 的本地因子批量生产与回测流水线。
+面向 WorldQuant Brain 的本地因子批量生产与闭环回测流水线。
 
-本项目把流程拆成 3 个可独立执行的阶段：
+AlphaMiningV2 采用了 **Probe-Expand（探测-展开）闭环架构**。系统不再机械地遍历所有参数组合，而是通过少量代表性参数（Probe）快速验证核心金融逻辑（Core）的有效性，随后自动对表现优异的 Core 进行全量参数展开（Expand），从而将算力效率提升 70% 以上。
 
-1. 拉取并缓存数据字段。
-2. 基于模板批量生成因子表达式（按批次落盘）。
-3. 持续消费批次文件并提交回测，支持断点续跑与结果筛选。
+---
 
-## 1. 功能概览
+## 1. 核心工作流 (The Closed-Loop Pipeline)
 
-- 模板驱动生成：从 `template_catalog.json` 读取表达式模板与槽位定义。
-- 字段缓存复用：优先复用 `datafields_cache/` 中最新缓存，减少重复 API 请求。
-- 可控生成规模：支持 `--max-per-template` 和 `--max-generated` 双重上限。
-- 回测稳健执行：多线程提交（上限 3）、失败重试、会话定时重登录。
-- 断点续跑：在 `backtest_results/checkpoints/` 保存逐因子状态，进程中断后可继续。
-- 结果二次筛选：按 Sharpe/Fitness/Returns/Turnover 等指标过滤输出。
-
-## 2. 环境要求
-
-- Python >= 3.12
-- 依赖（见 `pyproject.toml`）：
-  - `requests>=2.31`
-  - `pandas>=2.0`
-
-安装依赖示例：
+推荐的因子挖掘工作流分为 4 步：
 
 ```bash
-pip install -e .
+# 1. 探测生成 (Probe Generation)
+# 每个 Core 只生成 3-6 个具有代表性的参数组合，用于快速验证。
+python main.py --dataset-id option8 --template-ids TPL_GROUP_IVHV_SMOOTH_V1 --probe
+
+# 2. 执行回测 (Execution)
+# 稳健地并发提交回测，支持失败重试与断点续跑。
+python backtest_runner.py --once
+
+# 3. 智能调度 (Adaptive Scheduling)
+# 读取回测结果，按 Core 聚合评估，自动为 Sharpe>1.0 的 Core 生成全量扩展批次。
+python adaptive_scheduler.py \
+  --probe-results-dir backtest_results/probe \
+  --dataset-id option8 \
+  --expand-min-sharpe 1.0
+
+# 4. 再次回测与总结 (Expand & Summary)
+python backtest_runner.py --once
+python result_filter.py --group-by-core --core-summary-output core_summary.json
 ```
 
-或：
+---
 
-```bash
-pip install requests pandas
+## 2. 目录结构
+
+整理后的根目录保持清爽，将文档与示例配置归类存放：
+
+```text
+alphaminingv2/
+├── main.py                     # 核心：模板驱动的因子生成器（支持 --probe 模式）
+├── backtest_runner.py          # 核心：并发回测执行引擎
+├── adaptive_scheduler.py       # 核心：Probe-Expand 闭环调度器
+├── result_filter.py            # 核心：因子筛选与 Core 级别聚合分析
+├── datafields_store.py         # 工具：数据字段缓存管理器
+├── template_catalog.json       # 配置：11 个预定义因子模板及槽位约束
+├── common_operator_slot_mappings.json # 配置：通用算子映射表
+├── test_improvements.py        # 测试：端到端本地验证脚本
+│
+├── docs/                       # 文档与架构设计报告
+│   ├── Architecture_Diagnosis_and_Improvement.md
+│   ├── LLM_Agent_Architecture_Design.md
+│   ├── template_naming_guide.md
+│   └── assets/                 # 文档配图
+│
+├── examples/                   # 示例配置文件
+│   ├── settings_grid.example.json
+│   └── slot_overrides.example.json
+│
+├── factor_batches/             # 生成的因子 JSON 批次（自动创建）
+├── backtest_results/           # 回测结果与 Checkpoints（自动创建）
+└── datafields_cache/           # 数据字段本地缓存（自动创建）
 ```
 
-## 3. 凭证配置
+---
+
+## 3. 环境要求与配置
+
+- **Python** >= 3.12
+- **依赖**：`requests>=2.31`, `pandas>=2.0`
+  ```bash
+  pip install requests pandas
+  ```
+
+### 凭证配置
 
 脚本会按以下顺序读取凭证：
-
-1. 项目根目录 `.env`
+1. 项目根目录 `.env` 文件
 2. 进程环境变量
 
-需要提供：
-
-- `BRAIN_USERNAME`
-- `BRAIN_PASSWORD`
-
-`.env` 示例：
-
+需要提供以下变量：
 ```env
 BRAIN_USERNAME=your_username
 BRAIN_PASSWORD=your_password
 ```
 
-## 4. 快速开始
+---
 
-### 4.1 生成因子批次
+## 4. 核心模块详解
 
-```bash
-python main.py \
-  --dataset-id pv13 \
-  --data-type GROUP \
-  --template-ids ALL \
-  --batch-size 500 \
-  --max-per-template 5000 \
-  --max-generated 20000
-```
+### 4.1 `main.py` (Factor Generator)
+负责“拉字段 + 组装表达式 + 写批次”。
+- **新增特性**：支持 `--probe` 模式。开启后，数值/分类槽位将使用 `template_catalog.json` 中定义的 `representative_values`，大幅缩减无效的笛卡尔积。
+- **元数据**：生成的每条记录都会携带 `core_id`（如 `iv_mean_field=iv_30d|hv_field=hv_30d`），为后续聚合提供基础。
 
-输出位于：
+### 4.2 `backtest_runner.py` (Execution Engine)
+负责读取批次文件并并发提交给 Brain 平台。
+- 并发 worker 上限严格钳制到 3，避免 HTTP 429。
+- 支持常驻模式（不带 `--once`），会持续轮询 `factor_batches/` 目录的新文件。
+- 每处理一个因子即落盘 checkpoint，中断后可无缝续跑。
 
-- `factor_batches/<dataset>_<template-ids>/...batch_XXXX.json`
+### 4.3 `adaptive_scheduler.py` (Closed-Loop Brain)
+读取 `backtest_results/probe` 中的结果，按 `core_id` 聚合计算 `sharpe_mean`、`fitness_mean` 等指标，并做出决策：
+- **EXPAND**：核心逻辑有效，自动调用 `main.py` 生成该 Core 的全量参数网格。
+- **WATCH**：表现平庸，记录但暂不展开。
+- **ABANDON**：表现极差，直接抛弃。
 
-### 4.2 执行回测（单次扫描）
+### 4.4 `result_filter.py` (Result Analyzer)
+除了传统的单因子指标筛选，新增了 `--group-by-core` 模式，可输出 Core 级别的表现摘要表格，帮助研究员快速定位最强信号源。
 
-```bash
-python backtest_runner.py --once
-```
+---
 
-默认读取：
+## 5. 架构演进与 LLM Agent 展望
 
-- 输入目录：`factor_batches/`
-- 输出目录：`backtest_results/`
+本项目正从传统的“机械枚举”向“智能 Agent”架构演进。当前的 Probe-Expand 机制构成了坚实的**代码规则闭环**。
 
-### 4.3 执行回测（常驻模式）
+在 `docs/LLM_Agent_Architecture_Design.md` 中，我们详细规划了下一阶段的 Hybrid Agent 架构：
+- **LLM Planner**：负责根据金融直觉设计新模板（Template Design）。
+- **LLM Evaluator**：负责对表现平庸（WATCH）的 Core 提出变异建议（如引入非线性算子或改变中性化方式）。
+- **Code Rules**：负责并发调度、字段合法性硬校验与回测执行。
 
-```bash
-python backtest_runner.py
-```
+---
 
-常驻模式会循环扫描新批次文件并持续处理。
+## 6. 免责声明
 
-### 4.4 结果筛选
-
-```bash
-python result_filter.py \
-  --results-dir backtest_results \
-  --status ok \
-  --min-sharpe 1.5 \
-  --min-fitness 1.0 \
-  --max-turnover 0.7 \
-  --limit 50 \
-  --output backtest_results/filtered/top50.json
-```
-
-## 5. 核心脚本说明
-
-### `main.py`
-
-负责“拉字段 + 生成表达式 + 写批次”。
-
-关键参数：
-
-- `--dataset-id`：数据集 ID（默认 `pv13`）
-- `--data-type`：字段类型过滤（默认 `GROUP`）
-- `--template-doc`：模板目录文件（默认 `template_catalog.json`）
-- `--template-ids`：模板选择（`ALL` 或逗号分隔）
-- `--slot-overrides-file`：槽位覆盖配置
-- `--settings-grid-file`：回测 settings 网格配置
-- `--field-role-mode`：多字段角色取值模式（`auto/shared/distinguish`）
-- `--batch-size`：每个输出文件的因子数量
-- `--max-per-template`：每个模板最多生成多少条
-- `--max-generated`：全局最多生成多少条
-
-### `datafields_store.py`
-
-负责分页拉取字段并按页落盘；也可单独运行。
-
-示例：
-
-```bash
-python datafields_store.py \
-  --dataset-id pv13 \
-  --data-type GROUP \
-  --output-dir datafields_cache
-```
-
-### `backtest_runner.py`
-
-负责读取批次文件并提交回测。
-
-特性：
-
-- 并发 worker 上限自动钳制到 3（与 Brain 并发约束一致）
-- 可配置重试次数与重试间隔
-- 每隔一段时间自动重登录（默认约 3h50m）
-- 每处理一个因子就落盘结果 + checkpoint，降低中断损失
-
-常用参数：
-
-- `--input-dir`
-- `--output-dir`
-- `--max-workers`
-- `--max-retries`
-- `--retry-sleep`
-- `--relogin-interval-seconds`
-- `--scan-interval`
-- `--once`
-
-### `result_filter.py`
-
-负责聚合 `backtest_results/**/*.json` 的 `results`，并按阈值筛选。
-
-常用参数：
-
-- `--status {ok,failed}`（默认 `ok`）
-- `--contains`：表达式子串匹配
-- `--min-sharpe`
-- `--min-fitness`
-- `--min-returns`
-- `--max-turnover`
-- `--sort-by {sharpe,fitness,returns,turnover}`
-- `--limit`
-- `--output`
-
-## 6. 配置文件说明
-
-### `template_catalog.json`
-
-- 定义命名规范、模板表达式、槽位、约束。
-- 模板 ID 会按正则校验。
-
-### `common_operator_slot_mappings.json`
-
-- 定义通用 operator 槽位到算子集合的映射。
-- 当模板槽位是 operator 且未显式给 `values` 时可复用该映射。
-
-### `slot_overrides.example.json`
-
-用于覆盖模板槽位默认值。
-
-支持两层：
-
-1. `global`：对所有模板生效。
-2. `<template_id>`：仅对指定模板生效。
-
-### `settings_grid.example.json`
-
-用于批量展开 simulation settings 组合。
-
-例如 `decay=[3,6,9]` 与 `neutralization=[MARKET,SECTOR]` 会做笛卡尔积扩展，生成多组 settings。
-
-## 7. 目录约定
-
-```text
-alphaminingv2/
-  main.py
-  datafields_store.py
-  backtest_runner.py
-  result_filter.py
-  template_catalog.json
-  common_operator_slot_mappings.json
-  factor_batches/
-    <dataset>_<template-selection>/
-      ..._batch_0001.json
-  backtest_results/
-    logs/
-    checkpoints/
-      ... (镜像 factor_batches 路径)
-    ... (回测结果 json)
-  datafields_cache/
-    <dataset>/
-      <timestamp>/
-        page_0001.json
-```
-
-## 8. 断点续跑机制
-
-- checkpoint 路径与输入批次路径保持镜像关系。
-- checkpoint 中保存：因子签名、逐索引结果、更新时间。
-- 若结果文件不存在但 checkpoint 存在，可从 checkpoint 恢复。
-- 若 checkpoint 与当前批次签名不一致，会放弃旧状态并重新处理，避免错配。
-
-## 9. 常见问题
-
-### Q1: 报错缺少凭证
-
-确认 `.env` 或环境变量里存在 `BRAIN_USERNAME` 和 `BRAIN_PASSWORD`。
-
-### Q2: 生成太慢或文件太大
-
-降低以下参数：
-
-- `--template-ids`（只跑部分模板）
-- `--max-per-template`
-- `--max-generated`
-- `--batch-size`
-
-### Q3: 回测经常失败
-
-可尝试：
-
-- 降低 `--max-workers`（最小 1）
-- 提高 `--max-retries`
-- 增加 `--retry-sleep`
-
-### Q4: 如何只处理新文件
-
-常驻模式下，runner 会持续扫描输入目录；已完成批次会自动跳过。
-
-## 10. 推荐工作流
-
-```bash
-# 1) 生成批次
-python main.py --dataset-id pv13 --template-ids ALL
-
-# 2) 单次回测（调试）
-python backtest_runner.py --once --log-level INFO
-
-# 3) 结果筛选
-python result_filter.py --min-sharpe 1.5 --limit 20
-```
-
-## 11. 免责声明
-
-本项目仅用于研究与流程自动化示例。请遵守 WorldQuant Brain 平台规则与账户条款，控制请求频率与并发，避免对服务造成不必要压力。
+本项目仅用于量化研究与流程自动化示例。请严格遵守 WorldQuant Brain 平台规则与账户条款，控制请求频率与并发，避免对服务造成不必要压力。
