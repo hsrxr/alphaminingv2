@@ -166,14 +166,28 @@ def ordered_placeholders(expression: str) -> list[str]:
     return placeholders
 
 
-def apply_dataset_field_domain(datafields: list[str], slot_def: dict) -> list[str]:
+# ─────────────────────────────────────────────────────────────────────────────
+# 改进 2.1：修复 search_domain 字段过滤逻辑
+#   - fallback_to_all 默认改为 False，过滤结果为空时抛出异常而非静默回退
+#   - 新增 require_match 参数：当为 True 时，过滤结果为空直接 raise，不允许 fallback
+# ─────────────────────────────────────────────────────────────────────────────
+def apply_dataset_field_domain(datafields: list[str], slot_def: dict, slot_name: str = "") -> list[str]:
+    """Apply search_domain filters to narrow down dataset field candidates.
+
+    Breaking change from original:
+    - ``fallback_to_all`` now defaults to ``False`` instead of ``True``.
+    - When the filtered list is empty and ``fallback_to_all`` is False, a
+      ``ValueError`` is raised immediately so misconfigured regexes are caught
+      at generation time rather than silently producing semantically wrong factors.
+    """
     domain = slot_def.get("search_domain", {})
     if not isinstance(domain, dict):
         return list(datafields)
 
     include_regex = domain.get("include_regex", [])
     exclude_regex = domain.get("exclude_regex", [])
-    fallback_to_all = bool(domain.get("fallback_to_all", True))
+    # Default changed to False: fallback must be explicitly opted-in.
+    fallback_to_all = bool(domain.get("fallback_to_all", False))
     max_candidates = int(domain.get("max_candidates", 0) or 0)
 
     filtered = list(datafields)
@@ -185,8 +199,21 @@ def apply_dataset_field_domain(datafields: list[str], slot_def: dict) -> list[st
         compiled = re.compile(str(pattern), re.IGNORECASE)
         filtered = [field for field in filtered if not compiled.search(field)]
 
-    if not filtered and fallback_to_all:
-        filtered = list(datafields)
+    if not filtered:
+        if fallback_to_all:
+            print(
+                f"[WARN] Slot '{slot_name}': search_domain filters matched 0 fields; "
+                f"falling back to all {len(datafields)} fields as configured."
+            )
+            filtered = list(datafields)
+        else:
+            raise ValueError(
+                f"Slot '{slot_name}': search_domain filters matched 0 fields from "
+                f"{len(datafields)} candidates. "
+                f"include_regex={include_regex}, exclude_regex={exclude_regex}. "
+                f"Fix the regex patterns or set fallback_to_all=true to allow fallback."
+            )
+
     if max_candidates > 0:
         filtered = filtered[:max_candidates]
     return filtered
@@ -208,17 +235,30 @@ def build_dataset_field_candidates(template: dict, datafields: list[str], field_
         if mode == "shared":
             candidates[slot_name] = list(datafields)
         else:
-            candidates[slot_name] = apply_dataset_field_domain(datafields, slots[slot_name])
+            # Pass slot_name for better error messages.
+            candidates[slot_name] = apply_dataset_field_domain(datafields, slots[slot_name], slot_name=slot_name)
     return candidates
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 改进 2.2：resolve_slot_values 支持 probe_mode
+#   - probe_mode=True 时，优先使用 slot 定义中的 representative_values
+#   - 这使得探测批次只使用少量代表性参数，而非全量笛卡尔积
+# ─────────────────────────────────────────────────────────────────────────────
 def resolve_slot_values(
     slot_name: str,
     slot_def: dict,
     dataset_field_candidates: dict[str, list[str]],
     overrides: dict,
     common_operator_slot_mappings: dict[str, list[str]],
+    probe_mode: bool = False,
 ) -> list[str]:
+    """Resolve the candidate values for a single template slot.
+
+    When ``probe_mode`` is True, numeric/categorical slots that define
+    ``representative_values`` will use that smaller set instead of the full
+    ``values`` list, reducing the Cartesian explosion during the probe phase.
+    """
     if slot_name in overrides:
         values = overrides[slot_name]
         if not isinstance(values, list) or not values:
@@ -231,6 +271,12 @@ def resolve_slot_values(
         if not candidates:
             raise ValueError(f"Slot {slot_name} requires dataset fields, but candidate list is empty.")
         return candidates
+
+    # In probe mode, prefer representative_values if defined.
+    if probe_mode:
+        rep_values = slot_def.get("representative_values", [])
+        if isinstance(rep_values, list) and rep_values:
+            return [str(v) for v in rep_values]
 
     values = slot_def.get("values", [])
     if isinstance(values, list) and values:
@@ -273,13 +319,45 @@ def combo_matches_constraints(combo: dict[str, str], constraints: dict) -> bool:
     return True
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 改进 3.1：iter_template_expressions 携带 core_id 元数据
+#   - 返回 (expression, core_id) 而非仅 expression
+#   - core_id 由模板定义的 core_slots 字段决定（哪些 slot 构成 Core）
+#   - 若未定义 core_slots，则以所有 dataset_field 类型的 slot 作为 Core
+# ─────────────────────────────────────────────────────────────────────────────
+def compute_core_id(template: dict, combo: dict[str, str]) -> str:
+    """Derive a stable core identifier from the combination of core-defining slots.
+
+    The ``core_slots`` list in the template definition specifies which slots
+    form the semantic core of the expression (e.g. the field pair that drives
+    the signal). Wrapping parameters like smoothing windows or group operators
+    are excluded so that variants sharing the same core can be grouped together
+    during evaluation.
+    """
+    slots = template.get("slots", {})
+    core_slot_names: list[str] = template.get("core_slots", [])
+
+    if not core_slot_names:
+        # Default: treat all dataset_field slots as the core.
+        core_slot_names = [name for name, slot in slots.items() if slot.get("source") == "dataset_field"]
+
+    parts = [f"{name}={combo[name]}" for name in core_slot_names if name in combo]
+    return "|".join(parts)
+
+
 def iter_template_expressions(
     template: dict,
     dataset_field_candidates: dict[str, list[str]],
     slot_overrides: dict,
     common_operator_slot_mappings: dict[str, list[str]],
     max_per_template: int,
-) -> Iterable[str]:
+    probe_mode: bool = False,
+) -> Iterable[tuple[str, str]]:
+    """Yield (expression, core_id) pairs for a single template.
+
+    ``probe_mode=True`` restricts numeric/categorical slots to their
+    ``representative_values``, producing a much smaller probe batch.
+    """
     expression = template["expression"]
     slots = template.get("slots", {})
     placeholders = ordered_placeholders(expression)
@@ -296,6 +374,7 @@ def iter_template_expressions(
                 dataset_field_candidates=dataset_field_candidates,
                 overrides=slot_overrides,
                 common_operator_slot_mappings=common_operator_slot_mappings,
+                probe_mode=probe_mode,
             )
         )
 
@@ -309,7 +388,8 @@ def iter_template_expressions(
         for slot_name, slot_value in combo.items():
             rendered = rendered.replace(f"<{slot_name}>", slot_value)
 
-        yield rendered
+        core_id = compute_core_id(template, combo)
+        yield rendered, core_id
         generated += 1
         if max_per_template > 0 and generated >= max_per_template:
             break
@@ -324,6 +404,7 @@ def iter_alpha_requests(
     field_role_mode: str,
     max_per_template: int,
     max_generated: int,
+    probe_mode: bool = False,
 ) -> Iterable[dict]:
     generated = 0
     global_overrides = slot_overrides.get("global", {}) if isinstance(slot_overrides.get("global", {}), dict) else {}
@@ -341,18 +422,22 @@ def iter_alpha_requests(
             field_role_mode=field_role_mode,
         )
 
-        for expression in iter_template_expressions(
+        for expression, core_id in iter_template_expressions(
             template=template,
             dataset_field_candidates=dataset_field_candidates,
             slot_overrides=merged_overrides,
             common_operator_slot_mappings=common_operator_slot_mappings,
             max_per_template=max_per_template,
+            probe_mode=probe_mode,
         ):
             for settings in settings_list:
                 yield {
                     "type": "REGULAR",
                     "settings": settings,
                     "regular": expression,
+                    # ── 改进 3.2：在每条因子记录中携带 core_id 和 template_id ──
+                    "core_id": core_id,
+                    "template_id": template["template_id"],
                 }
                 generated += 1
                 if max_generated > 0 and generated >= max_generated:
@@ -462,6 +547,17 @@ def main() -> None:
     parser.add_argument("--search", default="", help="Optional search term for field fetch.")
     parser.add_argument("--test-years", type=int, default=1, help="Metadata only: test period years.")
     parser.add_argument("--test-months", type=int, default=0, help="Metadata only: test period months.")
+    # ── 改进 2.3：新增 --probe 模式开关 ──
+    parser.add_argument(
+        "--probe",
+        action="store_true",
+        default=False,
+        help=(
+            "Probe mode: use representative_values instead of full values for each slot. "
+            "Generates a small representative batch per core for quick evaluation. "
+            "Use adaptive_scheduler.py to decide whether to expand to full search."
+        ),
+    )
     args = parser.parse_args()
 
     dataset_fields_df = fetch_and_store_datafields(
@@ -503,6 +599,8 @@ def main() -> None:
         raise RuntimeError("No templates left after dataset applicability filtering.")
 
     print(f"Selected {len(applicable_templates)} template(s), {len(settings_list)} settings combination(s).")
+    if args.probe:
+        print("Probe mode enabled: using representative_values for numeric/categorical slots.")
 
     for template in applicable_templates:
         template_override = slot_overrides.get(template["template_id"], {})
@@ -528,8 +626,10 @@ def main() -> None:
         field_role_mode=args.field_role_mode,
         max_per_template=max(1, args.max_per_template),
         max_generated=max(1, args.max_generated),
+        probe_mode=args.probe,
     )
 
+    # ── 改进 3.3：在 generation_context 中记录 probe_mode ──
     written_files = write_factor_batches(
         alpha_iter=alpha_iter,
         output_dir=Path(args.output_dir),
@@ -541,6 +641,7 @@ def main() -> None:
             "field_role_mode": args.field_role_mode,
             "settings_grid": settings_grid,
             "settings_count": len(settings_list),
+            "probe_mode": args.probe,
             "test_period": {"years": args.test_years, "months": args.test_months},
         },
     )
