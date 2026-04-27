@@ -1,192 +1,278 @@
-# Alpha Mining 脚本说明
+# AlphaMiningV2
 
-本文档详细说明 `main.py` 的实现功能、执行流程、核心参数、输出结果，以及当前代码中的已知问题与改进建议。
+面向 WorldQuant Brain 的本地因子批量生产与回测流水线。
 
-## 1. 脚本目标
+本项目把流程拆成 3 个可独立执行的阶段：
 
-该脚本用于自动化完成以下任务：
+1. 拉取并缓存数据字段。
+2. 基于模板批量生成因子表达式（按批次落盘）。
+3. 持续消费批次文件并提交回测，支持断点续跑与结果筛选。
 
-1. 登录 WorldQuant Brain API。
-2. 拉取指定数据集（当前是 `pv13`）下的全部数据字段，并缓存到本地目录。
-3. 基于字段批量拼接 Alpha 表达式。
-4. 将每个表达式提交到模拟接口执行回测/仿真。
-5. 轮询仿真进度，完成后输出返回的 `alpha_id`。
+## 1. 功能概览
 
-整体上，这是一个“**批量生成并提交 Alpha 仿真任务**”的自动化脚本。
+- 模板驱动生成：从 `template_catalog.json` 读取表达式模板与槽位定义。
+- 字段缓存复用：优先复用 `datafields_cache/` 中最新缓存，减少重复 API 请求。
+- 可控生成规模：支持 `--max-per-template` 和 `--max-generated` 双重上限。
+- 回测稳健执行：多线程提交（上限 3）、失败重试、会话定时重登录。
+- 断点续跑：在 `backtest_results/checkpoints/` 保存逐因子状态，进程中断后可继续。
+- 结果二次筛选：按 Sharpe/Fitness/Returns/Turnover 等指标过滤输出。
 
-## 2. 依赖与运行环境
+## 2. 环境要求
 
-脚本依赖：
+- Python >= 3.12
+- 依赖（见 `pyproject.toml`）：
+  - `requests>=2.31`
+  - `pandas>=2.0`
 
-- `requests`
-- `pandas`
-
-标准库依赖：
-
-- `json`
-- `os`
-- `os.path`
-- `time`
-
-## 3. 认证逻辑
-
-脚本启动后会先尝试读取凭证：
-
-1. 优先读取本地文件 `brain_credentials.txt`（通过 `expanduser` 处理路径）。
-2. 如果文件不存在，则从环境变量读取：
-	- `BRAIN_USERNAME`
-	- `BRAIN_PASSWORD`
-
-随后通过 `requests.Session()` 创建会话，使用 `HTTPBasicAuth` 设置认证信息，并调用：
-
-- `POST https://api.worldquantbrain.com/authentication`
-
-脚本会打印认证接口的状态码和返回 JSON，用于调试。
-
-## 4. 数据字段拉取：`get_datafields`
-
-当前这部分逻辑已经从主脚本中拆分出去，放在 [datafields_store.py](datafields_store.py) 中，主脚本通过该模块完成字段拉取与本地落盘。
-
-默认缓存目录为 `datafields_cache/`，目录结构类似：
-
-```text
-datafields_cache/
-	pv13/
-		20260424_153000/
-			page_0001.json
-			page_0002.json
-```
-
-该模块也可以单独运行，例如：
+安装依赖示例：
 
 ```bash
-python datafields_store.py --dataset-id pv13 --output-dir datafields_cache --data-type GROUP
+pip install -e .
 ```
 
-可选参数包括 `--instrument-type`、`--region`、`--delay`、`--universe` 和 `--search`，适合只想单独拉取某个数据集字段并缓存到本地时使用。
+或：
 
-函数定义：
-
-```python
-def get_datafields(
-		  s,
-		  instrument_type: str = 'EQUITY',
-		  region: str = 'USA',
-		  delay: int = 1,
-		  universe: str = 'TOP3000',
-		  dataset_id: str = '',
-		  data_type: str = 'MATRIX',
-		  search: str = ''
-)
+```bash
+pip install requests pandas
 ```
 
-### 4.1 功能
+## 3. 凭证配置
 
-分页请求 `/data-fields` 接口，直到拉取完整数据：
+脚本会按以下顺序读取凭证：
 
-- 每页固定 `limit=50`
-- 使用 `offset` 做翻页（0, 50, 100, ...）
-- 返回结果列表中的 `results` 累积到本地
-- 最终转成 `pandas.DataFrame` 返回
+1. 项目根目录 `.env`
+2. 进程环境变量
 
-### 4.2 当前调用
+需要提供：
 
-```python
-fundamental6 = get_datafields(s=sess, dataset_id='pv13', data_type='GROUP')
+- `BRAIN_USERNAME`
+- `BRAIN_PASSWORD`
+
+`.env` 示例：
+
+```env
+BRAIN_USERNAME=your_username
+BRAIN_PASSWORD=your_password
 ```
 
-表示当前脚本会拉取数据集 `pv13`、类型 `GROUP` 的全部字段。
+## 4. 快速开始
 
-### 4.3 限速处理
+### 4.1 生成因子批次
 
-每次翻页后 `sleep(5)`，用于降低请求频率，减少被限流风险。
-
-## 5. Alpha 表达式批量生成逻辑
-
-脚本从数据字段 DataFrame 里取 `id` 列，作为基础因子：
-
-```python
-datafields_list = fundamental6['id'].values
+```bash
+python main.py \
+  --dataset-id pv13 \
+  --data-type GROUP \
+  --template-ids ALL \
+  --batch-size 500 \
+  --max-per-template 5000 \
+  --max-generated 20000
 ```
 
-然后采用笛卡尔积组合参数：
+输出位于：
 
-- 横截面分组算子：`group_mean`, `group_neutralize`
-- 时间序列算子：`ts_mean`, `ts_rank`
-- 窗口：`63`, `126`
-- 分组维度：`market`, `sector`, `industry`
+- `factor_batches/<dataset>_<template-ids>/...batch_XXXX.json`
 
-拼接目标表达式形如：
+### 4.2 执行回测（单次扫描）
+
+```bash
+python backtest_runner.py --once
+```
+
+默认读取：
+
+- 输入目录：`factor_batches/`
+- 输出目录：`backtest_results/`
+
+### 4.3 执行回测（常驻模式）
+
+```bash
+python backtest_runner.py
+```
+
+常驻模式会循环扫描新批次文件并持续处理。
+
+### 4.4 结果筛选
+
+```bash
+python result_filter.py \
+  --results-dir backtest_results \
+  --status ok \
+  --min-sharpe 1.5 \
+  --min-fitness 1.0 \
+  --max-turnover 0.7 \
+  --limit 50 \
+  --output backtest_results/filtered/top50.json
+```
+
+## 5. 核心脚本说明
+
+### `main.py`
+
+负责“拉字段 + 生成表达式 + 写批次”。
+
+关键参数：
+
+- `--dataset-id`：数据集 ID（默认 `pv13`）
+- `--data-type`：字段类型过滤（默认 `GROUP`）
+- `--template-doc`：模板目录文件（默认 `template_catalog.json`）
+- `--template-ids`：模板选择（`ALL` 或逗号分隔）
+- `--slot-overrides-file`：槽位覆盖配置
+- `--settings-grid-file`：回测 settings 网格配置
+- `--field-role-mode`：多字段角色取值模式（`auto/shared/distinguish`）
+- `--batch-size`：每个输出文件的因子数量
+- `--max-per-template`：每个模板最多生成多少条
+- `--max-generated`：全局最多生成多少条
+
+### `datafields_store.py`
+
+负责分页拉取字段并按页落盘；也可单独运行。
+
+示例：
+
+```bash
+python datafields_store.py \
+  --dataset-id pv13 \
+  --data-type GROUP \
+  --output-dir datafields_cache
+```
+
+### `backtest_runner.py`
+
+负责读取批次文件并提交回测。
+
+特性：
+
+- 并发 worker 上限自动钳制到 3（与 Brain 并发约束一致）
+- 可配置重试次数与重试间隔
+- 每隔一段时间自动重登录（默认约 3h50m）
+- 每处理一个因子就落盘结果 + checkpoint，降低中断损失
+
+常用参数：
+
+- `--input-dir`
+- `--output-dir`
+- `--max-workers`
+- `--max-retries`
+- `--retry-sleep`
+- `--relogin-interval-seconds`
+- `--scan-interval`
+- `--once`
+
+### `result_filter.py`
+
+负责聚合 `backtest_results/**/*.json` 的 `results`，并按阈值筛选。
+
+常用参数：
+
+- `--status {ok,failed}`（默认 `ok`）
+- `--contains`：表达式子串匹配
+- `--min-sharpe`
+- `--min-fitness`
+- `--min-returns`
+- `--max-turnover`
+- `--sort-by {sharpe,fitness,returns,turnover}`
+- `--limit`
+- `--output`
+
+## 6. 配置文件说明
+
+### `template_catalog.json`
+
+- 定义命名规范、模板表达式、槽位、约束。
+- 模板 ID 会按正则校验。
+
+### `common_operator_slot_mappings.json`
+
+- 定义通用 operator 槽位到算子集合的映射。
+- 当模板槽位是 operator 且未显式给 `values` 时可复用该映射。
+
+### `slot_overrides.example.json`
+
+用于覆盖模板槽位默认值。
+
+支持两层：
+
+1. `global`：对所有模板生效。
+2. `<template_id>`：仅对指定模板生效。
+
+### `settings_grid.example.json`
+
+用于批量展开 simulation settings 组合。
+
+例如 `decay=[3,6,9]` 与 `neutralization=[MARKET,SECTOR]` 会做笛卡尔积扩展，生成多组 settings。
+
+## 7. 目录约定
 
 ```text
-group_mean(ts_rank(<datafield>, 63), sector)
+alphaminingv2/
+  main.py
+  datafields_store.py
+  backtest_runner.py
+  result_filter.py
+  template_catalog.json
+  common_operator_slot_mappings.json
+  factor_batches/
+    <dataset>_<template-selection>/
+      ..._batch_0001.json
+  backtest_results/
+    logs/
+    checkpoints/
+      ... (镜像 factor_batches 路径)
+    ... (回测结果 json)
+  datafields_cache/
+    <dataset>/
+      <timestamp>/
+        page_0001.json
 ```
 
-每个表达式会封装为一个仿真请求体 `simulation_data`，写入 `alpha_list`。
+## 8. 断点续跑机制
 
-## 6. 仿真提交与轮询
+- checkpoint 路径与输入批次路径保持镜像关系。
+- checkpoint 中保存：因子签名、逐索引结果、更新时间。
+- 若结果文件不存在但 checkpoint 存在，可从 checkpoint 恢复。
+- 若 checkpoint 与当前批次签名不一致，会放弃旧状态并重新处理，避免错配。
 
-对 `alpha_list` 中每一个请求体执行：
+## 9. 常见问题
 
-1. `POST /simulations` 提交仿真。
-2. 从响应头 `Location` 获取进度查询地址。
-3. 轮询该地址：
-	- 若 `Retry-After > 0`，等待对应秒数后继续查询
-	- 若 `Retry-After == 0`，表示仿真完成
-4. 从最终 JSON 中读取 `alpha` 字段并打印（即 `alpha_id`）。
+### Q1: 报错缺少凭证
 
-若响应中没有 `Location`，脚本会打印提示并等待 10 秒后继续下一个任务。
+确认 `.env` 或环境变量里存在 `BRAIN_USERNAME` 和 `BRAIN_PASSWORD`。
 
-## 7. 当前脚本的实际行为与已知问题
+### Q2: 生成太慢或文件太大
 
-以下问题会直接影响结果正确性与任务规模：
+降低以下参数：
 
-1. **表达式里窗口参数写错变量**
-	- 当前写法：`{days}`
-	- 预期应为：`{day}`
-	- 影响：表达式会把整个列表 `[63, 126]` 传入，而不是单个窗口值。
+- `--template-ids`（只跑部分模板）
+- `--max-per-template`
+- `--max-generated`
+- `--batch-size`
 
-2. **`group` 变量名被重复使用（列表名与循环变量同名）**
-	- 写法：`group = ['market', 'sector', 'industry']` 与 `for group in group:`
-	- 影响：循环后 `group` 变量会变成字符串，后续再次进入循环时可能按字符迭代，导致组合异常膨胀或语义错误。
+### Q3: 回测经常失败
 
-3. **函数参数 `s` 未被使用**
-	- `get_datafields(s=...)` 内部实际调用的是全局 `sess`。
-	- 影响：函数可复用性降低，也不利于测试。
+可尝试：
 
-4. **异常处理过于宽泛**
-	- 使用裸 `except:`，会吞掉真实错误原因。
-	- 建议改为捕获具体异常并记录错误细节。
+- 降低 `--max-workers`（最小 1）
+- 提高 `--max-retries`
+- 增加 `--retry-sleep`
 
-5. **认证文件路径处理可能不符合预期**
-	- `expanduser('brain_credentials.txt')` 不会自动补 `~`，通常只是返回原字符串。
-	- 如果期望用户主目录，建议使用 `expanduser('~/brain_credentials.txt')`。
+### Q4: 如何只处理新文件
 
-6. **缺少失败重试与速率控制策略**
-	- 仅依赖固定 `sleep`，未针对 `429/5xx` 做指数退避重试。
+常驻模式下，runner 会持续扫描输入目录；已完成批次会自动跳过。
 
-7. **可能创建超大任务队列**
-	- 理论组合量为：
-	  - 每个字段：$2 \times 2 \times 2 \times 3 = 24$ 个表达式
-	  - 总任务数：$24 \times \text{字段数}$
-	- 字段数大时会导致大量请求与较长执行时间。
+## 10. 推荐工作流
 
-## 8. 建议的改进方向
+```bash
+# 1) 生成批次
+python main.py --dataset-id pv13 --template-ids ALL
 
-1. 修正变量名冲突与格式化错误：`day`/`days`、`group` 命名分离。
-2. 在 `get_datafields` 中统一使用参数 `s` 发请求，去除对全局变量依赖。
-3. 增加请求超时、状态码判断与重试策略（如指数退避）。
-4. 记录日志（开始时间、字段数、成功数、失败数、失败原因）。
-5. 分批提交仿真，控制并发和总任务量，避免触发 API 限制。
-6. 将配置（region/universe/delay/decay 等）外置到配置文件或命令行参数。
+# 2) 单次回测（调试）
+python backtest_runner.py --once --log-level INFO
 
-## 9. 脚本执行流程（简版）
-
-```text
-读取凭证 -> 会话认证 -> 拉取字段(分页) -> 生成表达式列表 ->
-逐个提交仿真 -> 轮询完成 -> 输出 alpha_id
+# 3) 结果筛选
+python result_filter.py --min-sharpe 1.5 --limit 20
 ```
 
-## 10. 一句话总结
+## 11. 免责声明
 
-这个脚本是一个面向 WorldQuant Brain 的批量 Alpha 仿真流水线原型，已经具备“认证、抓字段、组表达式、提仿真、取结果”的主流程，但在变量使用、容错和可维护性方面还需要修正后再用于稳定生产。
+本项目仅用于研究与流程自动化示例。请遵守 WorldQuant Brain 平台规则与账户条款，控制请求频率与并发，避免对服务造成不必要压力。
