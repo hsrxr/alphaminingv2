@@ -8,27 +8,56 @@ AlphaMiningV2 采用了 **Probe-Expand（探测-展开）闭环架构**。系统
 
 ## 1. 核心工作流 (The Closed-Loop Pipeline)
 
-推荐的因子挖掘工作流分为 4 步：
+### 一键运行（推荐）
+
+使用 `run_pipeline.py` 将四个阶段合并为单一命令，自动完成探测生成 → 探测回测 → 调度决策 → 扩展回测的完整闭环：
 
 ```bash
-# 1. 探测生成 (Probe Generation)
-# 每个 Core 只生成 3-6 个具有代表性的参数组合，用于快速验证。
+# 最简调用：使用所有默认参数
+python run_pipeline.py --dataset-id option8
+
+# 指定模板与决策阈值
+python run_pipeline.py \
+  --dataset-id option8 \
+  --template-ids TPL_GROUP_IVHV_SMOOTH_V1 \
+  --expand-min-sharpe 1.0 \
+  --expand-max-turnover 0.7
+
+# 干跑模式：仅打印调度决策，不生成扩展批次
+python run_pipeline.py --dataset-id option8 --dry-run
+
+# 仅运行探测阶段（生成 + 回测），不做调度与扩展
+python run_pipeline.py --dataset-id option8 --probe-only
+
+# 跳过已完成的阶段（如探测批次和回测结果已存在）
+python run_pipeline.py --dataset-id option8 --skip-probe-gen --skip-probe-run
+```
+
+流水线完成后，使用以下命令查看 Core 级别结果摘要：
+
+```bash
+python result_filter.py --results-dir backtest_results/expand --group-by-core
+```
+
+### 各阶段单独运行（高级用法）
+
+各阶段脚本仍可独立调用，适合调试或局部重跑：
+
+```bash
+# 阶段 1：探测批次生成
 python main.py --dataset-id option8 --template-ids TPL_GROUP_IVHV_SMOOTH_V1 --probe
 
-# 2. 执行回测 (Execution)
-# 稳健地并发提交回测，支持失败重试与断点续跑。
-python backtest_runner.py --once
+# 阶段 2：探测回测
+python backtest_runner.py --input-dir factor_batches/probe --output-dir backtest_results/probe --once
 
-# 3. 智能调度 (Adaptive Scheduling)
-# 读取回测结果，按 Core 聚合评估，自动为 Sharpe>1.0 的 Core 生成全量扩展批次。
-python adaptive_scheduler.py \
-  --probe-results-dir backtest_results/probe \
-  --dataset-id option8 \
-  --expand-min-sharpe 1.0
+# 阶段 3：调度决策 + 扩展批次生成
+python adaptive_scheduler.py --probe-results-dir backtest_results/probe --dataset-id option8
 
-# 4. 再次回测与总结 (Expand & Summary)
-python backtest_runner.py --once
-python result_filter.py --group-by-core --core-summary-output core_summary.json
+# 阶段 4：扩展回测
+python backtest_runner.py --input-dir factor_batches/expand --output-dir backtest_results/expand --once
+
+# 结果分析
+python result_filter.py --results-dir backtest_results/expand --group-by-core
 ```
 
 ---
@@ -39,6 +68,7 @@ python result_filter.py --group-by-core --core-summary-output core_summary.json
 
 ```text
 alphaminingv2/
+├── run_pipeline.py             # 入口：一键式闭环流水线（推荐使用）
 ├── main.py                     # 核心：模板驱动的因子生成器（支持 --probe 模式）
 ├── backtest_runner.py          # 核心：并发回测执行引擎
 ├── adaptive_scheduler.py       # 核心：Probe-Expand 闭环调度器
@@ -46,7 +76,8 @@ alphaminingv2/
 ├── datafields_store.py         # 工具：数据字段缓存管理器
 ├── template_catalog.json       # 配置：11 个预定义因子模板及槽位约束
 ├── common_operator_slot_mappings.json # 配置：通用算子映射表
-├── test_improvements.py        # 测试：端到端本地验证脚本
+├── test_improvements.py        # 测试：架构改进端到端验证（33 项）
+├── test_pipeline.py            # 测试：run_pipeline.py 逻辑验证（24 项）
 │
 ├── docs/                       # 文档与架构设计报告
 │   ├── Architecture_Diagnosis_and_Improvement.md
