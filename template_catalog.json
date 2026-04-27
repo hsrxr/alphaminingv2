@@ -16,13 +16,23 @@
       "source_name": "group_ts_ratio",
       "description": "<group_op>(<ts_op>(<field>,<day>) / <ts_op>(<field>,<day2>),<group>)",
       "expression": "<group_op>(divide(<ts_op>(<field>, <day>), <ts_op>(<field>, <day2>)), <group>)",
+      "core_slots": ["field"],
       "slots": {
         "group_op": {"slot_kind": "operator", "values": ["group_rank", "group_mean", "group_neutralize"]},
         "ts_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_rank", "ts_zscore"]},
         "field": {"source": "dataset_field"},
-        "day": {"values": [3, 5, 10, 21 ]},
-        "day2": {"values": [63, 126, 252]},
-        "group": {"values": ["market", "sector", "industry"]}
+        "day": {
+          "values": [3, 5, 10, 21],
+          "representative_values": [5, 21]
+        },
+        "day2": {
+          "values": [63, 126, 252],
+          "representative_values": [126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
       }
     },
     {
@@ -30,11 +40,18 @@
       "source_name": "surprise_zscore_group_rank",
       "description": "group_rank(ts_zscore(divide(actual-forecast, abs(forecast)), d), group)",
       "expression": "group_rank(ts_zscore(divide(subtract(<actual>, <forecast>), abs(<forecast>)), <d>), <group>)",
+      "core_slots": ["actual", "forecast"],
       "slots": {
         "actual": {"source": "dataset_field"},
         "forecast": {"source": "dataset_field"},
-        "d": {"values": [3, 5, 10, 21, 63, 126, 252]},
-        "group": {"values": ["market", "sector", "industry"]}
+        "d": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
       },
       "constraints": {
         "not_equal": [["actual", "forecast"]]
@@ -45,10 +62,17 @@
       "source_name": "forecast_delta_group_rank",
       "description": "group_rank(ts_delta(forecast, d), group)",
       "expression": "group_rank(ts_delta(<forecast>, <d>), <group>)",
+      "core_slots": ["forecast"],
       "slots": {
         "forecast": {"source": "dataset_field"},
-        "d": {"values": [3, 5, 10, 21, 63, 126, 252]},
-        "group": {"values": ["market", "sector", "industry"]}
+        "d": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
       }
     },
     {
@@ -56,11 +80,18 @@
       "source_name": "actual_forecast_corr_group_rank",
       "description": "group_rank(ts_corr(actual, forecast, d), group)",
       "expression": "group_rank(ts_corr(<actual>, <forecast>, <d>), <group>)",
+      "core_slots": ["actual", "forecast"],
       "slots": {
         "actual": {"source": "dataset_field"},
         "forecast": {"source": "dataset_field"},
-        "d": {"values": [3, 5, 10, 21, 63, 126, 252]},
-        "group": {"values": ["market", "sector", "industry"]}
+        "d": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
       },
       "constraints": {
         "not_equal": [["actual", "forecast"]]
@@ -71,13 +102,20 @@
       "source_name": "group_compare_ts_compare",
       "description": "<group_compare_op>(<sign><ts_compare_op>(<company_fundamentals>, <days>), <group>)",
       "expression": "<group_compare_op>(<sign><ts_compare_op>(<company_fundamentals>, <days>), <group>)",
+      "core_slots": ["company_fundamentals"],
       "slots": {
         "group_compare_op": {"slot_kind": "operator", "values": ["group_rank", "group_mean"]},
         "sign": {"values": ["", "-"]},
         "ts_compare_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
         "company_fundamentals": {"source": "dataset_field"},
-        "days": {"values": [3, 5, 10, 21, 63, 126, 252]},
-        "group": {"values": ["market", "sector", "industry"]}
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
       }
     },
     {
@@ -85,12 +123,19 @@
       "source_name": "group_compare_ts_position",
       "description": "<group_compare_op>(<ts_position_op>(<company_fundamentals>, <days>), <group>)",
       "expression": "<group_compare_op>(<ts_position_op>(<company_fundamentals>, <days>), <group>)",
+      "core_slots": ["company_fundamentals"],
       "slots": {
         "group_compare_op": {"slot_kind": "operator", "values": ["group_rank", "group_mean"]},
         "ts_position_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_scale"]},
         "company_fundamentals": {"source": "dataset_field"},
-        "days": {"values": [3, 5, 10, 21, 63, 126, 252]},
-        "group": {"values": ["market", "sector", "industry"]}
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
       }
     },
     {
@@ -98,13 +143,20 @@
       "source_name": "group_compare_ts_risk",
       "description": "<group_compare_op>(<sign><ts_risk_op>(<company_fundamentals>, <days>), <group>)",
       "expression": "<group_compare_op>(<sign><ts_risk_op>(<company_fundamentals>, <days>), <group>)",
+      "core_slots": ["company_fundamentals"],
       "slots": {
         "group_compare_op": {"slot_kind": "operator", "values": ["group_rank", "group_mean"]},
         "sign": {"values": ["", "-"]},
         "ts_risk_op": {"slot_kind": "operator", "values": ["ts_std_dev", "ts_zscore"]},
         "company_fundamentals": {"source": "dataset_field"},
-        "days": {"values": [3, 5, 10, 21, 63, 126, 252]},
-        "group": {"values": ["market", "sector", "industry"]}
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
       }
     },
     {
@@ -112,11 +164,15 @@
       "source_name": "ts_ratio_profit_size",
       "description": "<time_series_op>(<profit_field>/<size_field>, <days>)",
       "expression": "<time_series_op>(divide(<profit_field>, <size_field>), <days>)",
+      "core_slots": ["profit_field", "size_field"],
       "slots": {
         "time_series_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_rank", "ts_zscore"]},
         "profit_field": {"source": "dataset_field"},
         "size_field": {"source": "dataset_field"},
-        "days": {"values": [3, 5, 10, 21, 63, 126, 252]}
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [21, 126]
+        }
       },
       "constraints": {
         "not_equal": [["profit_field", "size_field"]]
@@ -127,11 +183,15 @@
       "source_name": "group_put_call_spread",
       "description": "<group_op>(<put_greek> - <call_greek>, <grouping_data>)",
       "expression": "<group_op>(subtract(<put_greek>, <call_greek>), <grouping_data>)",
+      "core_slots": ["put_greek", "call_greek"],
       "slots": {
         "group_op": {"slot_kind": "operator", "values": ["group_rank", "group_mean", "group_neutralize"]},
         "put_greek": {"source": "dataset_field"},
         "call_greek": {"source": "dataset_field"},
-        "grouping_data": {"values": ["market", "sector", "industry"]}
+        "grouping_data": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
       },
       "constraints": {
         "not_equal": [["put_greek", "call_greek"]]
@@ -142,12 +202,19 @@
       "source_name": "group_ts_basic",
       "description": "<group_op>(<ts_op>(<datafield>, day), <group>)",
       "expression": "<group_op>(<ts_op>(<datafield>, <day>), <group>)",
+      "core_slots": ["datafield"],
       "slots": {
         "group_op": {"slot_kind": "operator", "values": ["group_mean", "group_rank", "group_neutralize"]},
         "ts_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_rank", "ts_zscore", "ts_delta"]},
         "datafield": {"source": "dataset_field"},
-        "day": {"values": [3, 5, 10, 21, 63, 126, 252]},
-        "group": {"values": ["market", "sector", "industry"]}
+        "day": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [5, 21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
       }
     },
     {
@@ -156,28 +223,34 @@
       "description": "<group_rank_op>(<ts_smooth_op>(<iv_mean_field> - <hv_field>, <smooth_days>), <group>)",
       "expression": "<group_rank_op>(<ts_smooth_op>(subtract(<iv_mean_field>, <hv_field>), <smooth_days>), <group>)",
       "applicable_datasets": [],
+      "core_slots": ["iv_mean_field", "hv_field"],
       "slots": {
         "group_rank_op": {"slot_kind": "operator"},
         "ts_smooth_op": {"slot_kind": "operator"},
         "iv_mean_field": {
           "source": "dataset_field",
           "search_domain": {
-            "include_regex": ["iv", "implied"],
-            "exclude_regex": ["hv", "hist", "realized"],
-            "fallback_to_all": true,
+            "include_regex": ["implied_volatility"],
+            "fallback_to_all": false,
             "max_candidates": 100
           }
         },
         "hv_field": {
           "source": "dataset_field",
           "search_domain": {
-            "include_regex": ["hv", "hist", "realized"],
-            "fallback_to_all": true,
+            "include_regex": ["historical_volatility", "parkinson_volatility"],
+            "fallback_to_all": false,
             "max_candidates": 100
           }
         },
-        "smooth_days": {"values": [3, 5, 10, 21, 63, 126, 252]},
-        "group": {"values": ["market", "sector", "industry", "subindustry"]}
+        "smooth_days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [5, 21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry", "subindustry"],
+          "representative_values": ["sector", "industry"]
+        }
       },
       "constraints": {
         "not_equal": [["iv_mean_field", "hv_field"]]
