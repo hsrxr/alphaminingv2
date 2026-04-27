@@ -174,6 +174,13 @@ def ordered_placeholders(expression: str) -> list[str]:
 def apply_dataset_field_domain(datafields: list[str], slot_def: dict, slot_name: str = "") -> list[str]:
     """Apply search_domain filters to narrow down dataset field candidates.
 
+    include_regex semantics: OR logic — a field is kept if it matches ANY of
+    the patterns. This allows a slot to accept multiple disjoint field families
+    (e.g. ["historical_volatility", "parkinson_volatility"]).
+
+    exclude_regex semantics: AND logic — a field is removed if it matches ANY
+    of the exclude patterns.
+
     Breaking change from original:
     - ``fallback_to_all`` now defaults to ``False`` instead of ``True``.
     - When the filtered list is empty and ``fallback_to_all`` is False, a
@@ -190,11 +197,21 @@ def apply_dataset_field_domain(datafields: list[str], slot_def: dict, slot_name:
     fallback_to_all = bool(domain.get("fallback_to_all", False))
     max_candidates = int(domain.get("max_candidates", 0) or 0)
 
-    filtered = list(datafields)
-    for pattern in include_regex:
-        compiled = re.compile(str(pattern), re.IGNORECASE)
-        filtered = [field for field in filtered if compiled.search(field)]
+    # include_regex: OR logic — keep fields matching ANY pattern.
+    # (Previous AND logic was a bug: chaining filters would eliminate all fields
+    # when patterns matched disjoint subsets, e.g. ["historical_volatility",
+    # "parkinson_volatility"] would first keep only historical_* then filter
+    # those for parkinson_* yielding an empty list.)
+    if include_regex:
+        compiled_includes = [re.compile(str(p), re.IGNORECASE) for p in include_regex]
+        filtered = [
+            field for field in datafields
+            if any(c.search(field) for c in compiled_includes)
+        ]
+    else:
+        filtered = list(datafields)
 
+    # exclude_regex: remove fields matching ANY pattern.
     for pattern in exclude_regex:
         compiled = re.compile(str(pattern), re.IGNORECASE)
         filtered = [field for field in filtered if not compiled.search(field)]
