@@ -2,8 +2,8 @@
 result_filter.py — 回测结果过滤与 Core 级别聚合分析
 
 改进内容：
-  - 新增 --group-by-core 模式：按 core_id 聚合统计，输出 Core 级别的表现摘要
-  - collect_result_rows 现在会读取 core_id 和 template_id 字段（来自新格式的批次文件）
+    - 新增 --group-by-core 模式：按 pipeline_core_id 聚合统计，输出 Core 级别的表现摘要
+    - collect_result_rows 现在会读取 pipeline_core_id 和 pipeline_template_id 字段（来自新格式的批次文件）
   - 新增 --core-summary-output 参数：将 Core 级别摘要写入 JSON 文件
   - 原有的因子级别过滤功能保持不变
 """
@@ -63,7 +63,7 @@ def _extract_metric(result_item: dict, metric_name: str):
 
 
 def _load_source_batch_meta(source_batch_path: str) -> dict[int, dict]:
-    """从源批次文件中读取 core_id / template_id 的 index → meta 映射。"""
+    """从源批次文件中读取 pipeline_core_id / pipeline_template_id 的 index → meta 映射。"""
     if not source_batch_path:
         return {}
     try:
@@ -71,8 +71,8 @@ def _load_source_batch_meta(source_batch_path: str) -> dict[int, dict]:
         meta_map = {}
         for idx, factor in enumerate(payload.get("factors", []), start=1):
             meta_map[idx] = {
-                "core_id": factor.get("core_id", ""),
-                "template_id": factor.get("template_id", ""),
+                "pipeline_core_id": factor.get("pipeline_core_id") or factor.get("core_id", ""),
+                "pipeline_template_id": factor.get("pipeline_template_id") or factor.get("template_id", ""),
             }
         return meta_map
     except (OSError, json.JSONDecodeError):
@@ -83,7 +83,7 @@ def collect_result_rows(results_dir: Path) -> list[dict]:
     """Load all result files and flatten them into row-like records.
 
     Improvements over original:
-    - Reads core_id and template_id from result items (new format).
+    - Reads pipeline_core_id and pipeline_template_id from result items (new format).
     - Falls back to source_batch file for legacy result files.
     """
     rows = []
@@ -94,7 +94,7 @@ def collect_result_rows(results_dir: Path) -> list[dict]:
             print(f"[WARN] Cannot read {result_file}: {exc}")
             continue
 
-        # Try to load source batch metadata for legacy results that lack core_id.
+        # Try to load source batch metadata for legacy results that lack pipeline_core_id.
         source_batch_path = payload.get("source_batch", "")
         meta_map = _load_source_batch_meta(source_batch_path)
 
@@ -103,9 +103,9 @@ def collect_result_rows(results_dir: Path) -> list[dict]:
                 continue
 
             idx = item.get("index", 0)
-            # core_id: prefer value in result item, fallback to source batch meta.
-            core_id = item.get("core_id") or meta_map.get(idx, {}).get("core_id", "")
-            template_id = item.get("template_id") or meta_map.get(idx, {}).get("template_id", "")
+            # pipeline_core_id: prefer value in result item, fallback to source batch meta.
+            pipeline_core_id = item.get("pipeline_core_id") or item.get("core_id") or meta_map.get(idx, {}).get("pipeline_core_id", "")
+            pipeline_template_id = item.get("pipeline_template_id") or item.get("template_id") or meta_map.get(idx, {}).get("pipeline_template_id", "")
 
             row = {
                 "file": str(result_file),
@@ -118,8 +118,8 @@ def collect_result_rows(results_dir: Path) -> list[dict]:
                 "returns": _extract_metric(item, "returns"),
                 "turnover": _extract_metric(item, "turnover"),
                 # ── 新增字段 ──
-                "core_id": core_id,
-                "template_id": template_id,
+                "pipeline_core_id": pipeline_core_id,
+                "pipeline_template_id": pipeline_template_id,
             }
             rows.append(row)
     return rows
@@ -154,7 +154,7 @@ def passes_filters(row: dict, args) -> bool:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def build_core_summary(rows: list[dict]) -> list[dict]:
-    """Aggregate factor-level rows by core_id to produce a Core-level summary.
+    """Aggregate factor-level rows by pipeline_core_id to produce a Core-level summary.
 
     For each core, computes:
     - probe_count / total_count: number of factors in the core
@@ -166,7 +166,7 @@ def build_core_summary(rows: list[dict]) -> list[dict]:
     """
     core_groups: dict[str, list[dict]] = defaultdict(list)
     for row in rows:
-        core_id = row.get("core_id", "")
+        core_id = row.get("pipeline_core_id") or row.get("core_id", "")
         core_groups[core_id].append(row)
 
     summaries = []
@@ -177,8 +177,8 @@ def build_core_summary(rows: list[dict]) -> list[dict]:
 
         if not ok_rows:
             summaries.append({
-                "core_id": core_id,
-                "template_id": group[0].get("template_id", "") if group else "",
+                "pipeline_core_id": core_id,
+                "pipeline_template_id": (group[0].get("pipeline_template_id") or group[0].get("template_id", "")) if group else "",
                 "total_count": n_total,
                 "ok_count": n_ok,
                 "pass_rate": 0.0,
@@ -198,8 +198,8 @@ def build_core_summary(rows: list[dict]) -> list[dict]:
         best = max(ok_rows, key=lambda r: r["sharpe"])
 
         summaries.append({
-            "core_id": core_id,
-            "template_id": group[0].get("template_id", "") if group else "",
+            "pipeline_core_id": core_id,
+            "pipeline_template_id": (group[0].get("pipeline_template_id") or group[0].get("template_id", "")) if group else "",
             "total_count": n_total,
             "ok_count": n_ok,
             "pass_rate": round(n_ok / n_total, 4) if n_total else 0.0,
@@ -223,7 +223,7 @@ def print_core_summary_table(summaries: list[dict], limit: int) -> None:
         reverse=True,
     )[:limit]
 
-    header = f"{'core_id':<50} {'tpl':<30} {'n':>5} {'sharpe_mean':>12} {'sharpe_max':>10} {'turnover':>9} {'fitness':>8}"
+    header = f"{'pipeline_core_id':<50} {'tpl':<30} {'n':>5} {'sharpe_mean':>12} {'sharpe_max':>10} {'turnover':>9} {'fitness':>8}"
     print()
     print("=" * len(header))
     print("CORE-LEVEL SUMMARY")
@@ -235,8 +235,8 @@ def print_core_summary_table(summaries: list[dict], limit: int) -> None:
         sharpe_max = f"{s['sharpe_max']:.3f}" if s["sharpe_max"] is not None else "  N/A"
         turnover = f"{s['turnover_mean']:.3f}" if s["turnover_mean"] is not None else "  N/A"
         fitness = f"{s['fitness_mean']:.3f}" if s["fitness_mean"] is not None else "  N/A"
-        core_id_short = (s["core_id"] or "(no core_id)")[:50]
-        tpl_short = (s["template_id"] or "")[:30]
+        core_id_short = (s["pipeline_core_id"] or "(no pipeline_core_id)")[:50]
+        tpl_short = (s["pipeline_template_id"] or "")[:30]
         print(
             f"{core_id_short:<50} {tpl_short:<30} {s['ok_count']:>5} "
             f"{sharpe_mean:>12} {sharpe_max:>10} {turnover:>9} {fitness:>8}"
@@ -265,8 +265,8 @@ def main() -> None:
         action="store_true",
         default=False,
         help=(
-            "Aggregate results by core_id and print a Core-level summary table. "
-            "Requires factors to have been generated with core_id metadata (new main.py format)."
+            "Aggregate results by pipeline_core_id and print a Core-level summary table. "
+            "Requires factors to have been generated with pipeline_core_id metadata (new main.py format)."
         ),
     )
     parser.add_argument(

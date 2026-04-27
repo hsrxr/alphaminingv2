@@ -1,0 +1,21 @@
+2026-04-27 18:26:38,208 | INFO | Pipeline started.
+2026-04-27 18:26:38,211 | INFO |   dataset_id      : pv13
+2026-04-27 18:26:38,211 | INFO |   template_ids    : ALL
+2026-04-27 18:26:38,211 | INFO |   probe_batches   : factor_batches\probe
+2026-04-27 18:26:38,211 | INFO |   probe_results   : backtest_results\probe
+2026-04-27 18:26:38,211 | INFO |   expand_batches  : factor_batches\expand
+2026-04-27 18:26:38,211 | INFO |   expand_results  : backtest_results\expand
+2026-04-27 18:26:38,211 | INFO |   dry_run         : False
+2026-04-27 18:26:38,212 | INFO |   probe_only      : False
+2026-04-27 18:26:39,022 | INFO | 
+2026-04-27 18:26:39,022 | INFO | ============================================================
+2026-04-27 18:26:39,022 | INFO |   PHASE 1 — PROBE GENERATION
+2026-04-27 18:26:39,022 | INFO | ============================================================
+2026-04-27 18:26:39,022 | INFO | Fetching dataset fields for dataset_id=pv13 ...
+2026-04-27 18:26:39,022 | INFO | Fetched 135 dataset fields.
+2026-04-27 18:26:39,022 | INFO | Selected 11 template(s), 1 settings combination(s). Probe mode: ON
+2026-04-27 18:26:39,479 | INFO | Probe generation complete. Created 40 batch file(s) in factor_batches\probe
+2026-04-27 18:26:39,492 | INFO | 
+2026-04-27 18:26:39,492 | INFO | ============================================================
+2026-04-27 18:26:39,492 | INFO |   PHASE — PROBE BACKTEST (Phase 2)
+2026-04-27 18:26:39,493 | INFO | ============================================================

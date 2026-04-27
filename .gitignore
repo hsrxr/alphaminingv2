@@ -11,3 +11,5 @@ wheels/
 .env
 backtest_results/logs/
 backtest_results/checkpoints/
+
+docs/*.md

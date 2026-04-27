@@ -337,13 +337,13 @@ def combo_matches_constraints(combo: dict[str, str], constraints: dict) -> bool:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 改进 3.1：iter_template_expressions 携带 core_id 元数据
+# 改进 3.1：iter_template_expressions 携带 pipeline_core_id 元数据
 #   - 返回 (expression, core_id) 而非仅 expression
 #   - core_id 由模板定义的 core_slots 字段决定（哪些 slot 构成 Core）
 #   - 若未定义 core_slots，则以所有 dataset_field 类型的 slot 作为 Core
 # ─────────────────────────────────────────────────────────────────────────────
-def compute_core_id(template: dict, combo: dict[str, str]) -> str:
-    """Derive a stable core identifier from the combination of core-defining slots.
+def compute_pipeline_core_id(template: dict, combo: dict[str, str]) -> str:
+    """Derive a stable pipeline_core_id from the combination of core-defining slots.
 
     The ``core_slots`` list in the template definition specifies which slots
     form the semantic core of the expression (e.g. the field pair that drives
@@ -405,8 +405,8 @@ def iter_template_expressions(
         for slot_name, slot_value in combo.items():
             rendered = rendered.replace(f"<{slot_name}>", slot_value)
 
-        core_id = compute_core_id(template, combo)
-        yield rendered, core_id
+        pipeline_core_id = compute_pipeline_core_id(template, combo)
+        yield rendered, pipeline_core_id
         generated += 1
         if max_per_template > 0 and generated >= max_per_template:
             break
@@ -439,7 +439,7 @@ def iter_alpha_requests(
             field_role_mode=field_role_mode,
         )
 
-        for expression, core_id in iter_template_expressions(
+        for expression, pipeline_core_id in iter_template_expressions(
             template=template,
             dataset_field_candidates=dataset_field_candidates,
             slot_overrides=merged_overrides,
@@ -452,9 +452,9 @@ def iter_alpha_requests(
                     "type": "REGULAR",
                     "settings": settings,
                     "regular": expression,
-                    # ── 改进 3.2：在每条因子记录中携带 core_id 和 template_id ──
-                    "core_id": core_id,
-                    "template_id": template["template_id"],
+                    # ── 改进 3.2：在每条因子记录中携带 pipeline_core_id 和 pipeline_template_id ──
+                    "pipeline_core_id": pipeline_core_id,
+                    "pipeline_template_id": template["template_id"],
                 }
                 generated += 1
                 if max_generated > 0 and generated >= max_generated:

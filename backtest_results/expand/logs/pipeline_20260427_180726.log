@@ -1,0 +1,22 @@
+2026-04-27 18:07:26,898 | INFO | Pipeline started.
+2026-04-27 18:07:26,899 | INFO |   dataset_id      : option8
+2026-04-27 18:07:26,899 | INFO |   template_ids    : TPL_GROUP_IVHV_SMOOTH_V1
+2026-04-27 18:07:26,899 | INFO |   probe_batches   : factor_batches\probe
+2026-04-27 18:07:26,899 | INFO |   probe_results   : backtest_results\probe
+2026-04-27 18:07:26,899 | INFO |   expand_batches  : factor_batches\expand
+2026-04-27 18:07:26,899 | INFO |   expand_results  : backtest_results\expand
+2026-04-27 18:07:26,899 | INFO |   dry_run         : False
+2026-04-27 18:07:26,899 | INFO |   probe_only      : False
+2026-04-27 18:07:27,759 | INFO | 
+2026-04-27 18:07:27,759 | INFO | ============================================================
+2026-04-27 18:07:27,760 | INFO |   PHASE 1 — PROBE GENERATION
+2026-04-27 18:07:27,760 | INFO | ============================================================
+2026-04-27 18:07:27,760 | INFO | Fetching dataset fields for dataset_id=option8 ...
+2026-04-27 18:07:27,763 | INFO | Fetched 64 dataset fields.
+2026-04-27 18:07:27,765 | INFO | Selected 1 template(s), 1 settings combination(s). Probe mode: ON
+2026-04-27 18:07:27,878 | INFO | Probe generation complete. Created 10 batch file(s) in factor_batches\probe
+2026-04-27 18:07:27,884 | INFO | 
+2026-04-27 18:07:27,885 | INFO | ============================================================
+2026-04-27 18:07:27,885 | INFO |   PHASE — PROBE BACKTEST (Phase 2)
+2026-04-27 18:07:27,885 | INFO | ============================================================
+2026-04-27 18:07:29,568 | INFO | Found 60 batch file(s) to process.
