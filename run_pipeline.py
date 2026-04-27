@@ -14,9 +14,7 @@ run_pipeline.py — AlphaMiningV2 一键式闭环因子挖掘流水线
   python run_pipeline.py --dataset-id option8
 
   # 指定模板与决策阈值
-  python run_pipeline.py \\
-    --dataset-id option8 \\
-    --template-ids TPL_GROUP_IVHV_SMOOTH_V1 \\
+  python run_pipeline.py --dataset-id option8 --template-ids TPL_GROUP_IVHV_SMOOTH_V1 \\
     --expand-min-sharpe 1.0 \\
     --expand-max-turnover 0.7
 
@@ -346,8 +344,8 @@ def phase_schedule(args, probe_results_dir: Path, expand_batches_dir: Path, logg
         logger.info("── Generating expand batches ──")
         for stats in decisions[DECISION_EXPAND]:
             success = generate_expand_batch(
-                core_id=stats["core_id"],
-                template_id=stats["template_id"],
+                pipeline_core_id=stats["pipeline_core_id"],
+                pipeline_template_id=stats["pipeline_template_id"],
                 dataset_id=args.dataset_id,
                 data_type=args.data_type,
                 template_doc=args.template_doc,
@@ -358,10 +356,10 @@ def phase_schedule(args, probe_results_dir: Path, expand_batches_dir: Path, logg
             )
             if success:
                 expand_success += 1
-                logger.info("  [OK] Expand batch generated for core: %s", stats["core_id"][:60])
+                logger.info("  [OK] Expand batch generated for core: %s", stats["pipeline_core_id"][:60])
             else:
                 expand_fail += 1
-                logger.error("  [FAIL] Expand batch generation failed for core: %s", stats["core_id"][:60])
+                logger.error("  [FAIL] Expand batch generation failed for core: %s", stats["pipeline_core_id"][:60])
     elif args.dry_run and decisions[DECISION_EXPAND]:
         logger.info("[DRY-RUN] Would generate %d expand batch(es). Skipping.", len(decisions[DECISION_EXPAND]))
 

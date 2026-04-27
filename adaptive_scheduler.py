@@ -3,7 +3,7 @@ adaptive_scheduler.py — Probe-Expand 闭环调度器
 
 职责：
   1. 读取已完成的探测批次（probe batch）回测结果。
-  2. 按 core_id 聚合计算代表性指标（Sharpe、Fitness、Turnover）。
+    2. 按 pipeline_core_id 聚合计算代表性指标（Sharpe、Fitness、Turnover）。
   3. 根据可配置的阈值，将每个 Core 分类为：
        - EXPAND  : 代表性参数表现良好，生成全量参数网格批次。
        - WATCH   : 表现平庸，记录但暂不展开，等待更多数据。
@@ -95,18 +95,18 @@ def load_probe_results(probe_results_dir: Path) -> list[dict]:
         if not isinstance(results, list):
             continue
 
-        # 从对应的输入批次文件中读取 core_id 和 template_id（镜像路径关系）
-        # 如果结果文件中已经有 core_id（新格式），直接使用；否则尝试从 source_batch 读取
+        # 从对应的输入批次文件中读取 pipeline_core_id 和 pipeline_template_id（镜像路径关系）
+        # 如果结果文件中已经有 pipeline_core_id（新格式），直接使用；否则尝试从 source_batch 读取
         source_batch_path = payload.get("source_batch", "")
-        core_id_map: dict[int, str] = {}
-        template_id_map: dict[int, str] = {}
+        pipeline_core_id_map: dict[int, str] = {}
+        pipeline_template_id_map: dict[int, str] = {}
 
         if source_batch_path:
             try:
                 source_payload = json.loads(Path(source_batch_path).read_text(encoding="utf-8"))
                 for idx, factor in enumerate(source_payload.get("factors", []), start=1):
-                    core_id_map[idx] = factor.get("core_id", "")
-                    template_id_map[idx] = factor.get("template_id", "")
+                    pipeline_core_id_map[idx] = factor.get("pipeline_core_id") or factor.get("core_id", "")
+                    pipeline_template_id_map[idx] = factor.get("pipeline_template_id") or factor.get("template_id", "")
             except (OSError, json.JSONDecodeError):
                 pass
 
@@ -114,11 +114,11 @@ def load_probe_results(probe_results_dir: Path) -> list[dict]:
             if not isinstance(result, dict):
                 continue
             idx = result.get("index", 0)
-            # core_id 优先从结果本身取（向后兼容），否则从源批次取
-            core_id = result.get("core_id") or core_id_map.get(idx, "")
-            template_id = result.get("template_id") or template_id_map.get(idx, "")
-            result["core_id"] = core_id
-            result["template_id"] = template_id
+            # pipeline_core_id 优先从结果本身取（向后兼容），否则从源批次取
+            pipeline_core_id = result.get("pipeline_core_id") or result.get("core_id") or pipeline_core_id_map.get(idx, "")
+            pipeline_template_id = result.get("pipeline_template_id") or result.get("template_id") or pipeline_template_id_map.get(idx, "")
+            result["pipeline_core_id"] = pipeline_core_id
+            result["pipeline_template_id"] = pipeline_template_id
             result["_source_file"] = str(result_file)
             all_results.append(result)
 
@@ -126,14 +126,14 @@ def load_probe_results(probe_results_dir: Path) -> list[dict]:
 
 
 def aggregate_by_core(results: list[dict]) -> dict[str, dict]:
-    """按 core_id 聚合指标，计算均值、最大值等统计量。"""
+    """按 pipeline_core_id 聚合指标，计算均值、最大值等统计量。"""
     core_groups: dict[str, list[dict]] = defaultdict(list)
 
     for result in results:
-        core_id = result.get("core_id", "")
+        core_id = result.get("pipeline_core_id") or result.get("core_id", "")
         metrics = extract_metrics(result)
         if metrics is not None:
-            metrics["template_id"] = result.get("template_id", "")
+            metrics["pipeline_template_id"] = result.get("pipeline_template_id") or result.get("template_id", "")
             core_groups[core_id].append(metrics)
 
     aggregated = {}
@@ -144,8 +144,8 @@ def aggregate_by_core(results: list[dict]) -> dict[str, dict]:
         turnovers = [m["turnover"] for m in metric_list if m["turnover"] is not None]
 
         aggregated[core_id] = {
-            "core_id": core_id,
-            "template_id": metric_list[0]["template_id"] if metric_list else "",
+            "pipeline_core_id": core_id,
+            "pipeline_template_id": metric_list[0]["pipeline_template_id"] if metric_list else "",
             "probe_count": n,
             "sharpe_mean": sum(sharpes) / n,
             "sharpe_max": max(sharpes),
@@ -195,8 +195,8 @@ def classify_core(
 
 
 def generate_expand_batch(
-    core_id: str,
-    template_id: str,
+    pipeline_core_id: str,
+    pipeline_template_id: str,
     dataset_id: str,
     data_type: str,
     template_doc: str,
@@ -207,23 +207,23 @@ def generate_expand_batch(
 ) -> bool:
     """调用 main.py 为指定 Core 生成全量扩展批次（expand batch）。
 
-    通过 slot_overrides 将 core_id 中的字段对固定下来，然后以非 probe 模式
+    通过 slot_overrides 将 pipeline_core_id 中的字段对固定下来，然后以非 probe 模式
     生成全量参数网格，从而只展开这一个 Core 的所有参数组合。
     """
-    # 解析 core_id 为 slot 覆盖配置（格式：slot1=val1|slot2=val2）
+    # 解析 pipeline_core_id 为 slot 覆盖配置（格式：slot1=val1|slot2=val2）
     slot_overrides: dict = {"global": {}}
     template_overrides: dict = {}
 
-    for part in core_id.split("|"):
+    for part in pipeline_core_id.split("|"):
         if "=" in part:
             slot_name, slot_value = part.split("=", 1)
             template_overrides[slot_name.strip()] = [slot_value.strip()]
 
     if template_overrides:
-        slot_overrides[template_id] = template_overrides
+        slot_overrides[pipeline_template_id] = template_overrides
 
     # 写入临时覆盖文件
-    overrides_path = Path(output_dir) / f"_expand_override_{template_id}_{datetime.now().strftime('%H%M%S%f')}.json"
+    overrides_path = Path(output_dir) / f"_expand_override_{pipeline_template_id}_{datetime.now().strftime('%H%M%S%f')}.json"
     overrides_path.parent.mkdir(parents=True, exist_ok=True)
     overrides_path.write_text(json.dumps(slot_overrides, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -232,7 +232,7 @@ def generate_expand_batch(
         "--dataset-id", dataset_id,
         "--data-type", data_type,
         "--template-doc", template_doc,
-        "--template-ids", template_id,
+        "--template-ids", pipeline_template_id,
         "--slot-overrides-file", str(overrides_path),
         "--output-dir", output_dir,
         # No --probe flag: generate full parameter grid for this core.
@@ -240,7 +240,7 @@ def generate_expand_batch(
     if settings_grid_file:
         cmd += ["--settings-grid-file", settings_grid_file]
 
-    print(f"  [EXPAND] Core: {core_id}")
+    print(f"  [EXPAND] Core: {pipeline_core_id}")
     print(f"  Command: {' '.join(cmd)}")
 
     if dry_run:
@@ -253,7 +253,7 @@ def generate_expand_batch(
         overrides_path.unlink(missing_ok=True)
         return result.returncode == 0
     except subprocess.CalledProcessError as exc:
-        print(f"  [ERROR] Generation failed for core {core_id}: {exc}")
+        print(f"  [ERROR] Generation failed for core {pipeline_core_id}: {exc}")
         overrides_path.unlink(missing_ok=True)
         return False
 
@@ -303,7 +303,7 @@ def run_scheduler(args: argparse.Namespace) -> None:
         print("── EXPAND cores (will generate full parameter grid) ──")
         for stats in decisions[DECISION_EXPAND]:
             print(
-                f"  {stats['core_id'][:60]:<60} "
+                f"  {stats['pipeline_core_id'][:60]:<60} "
                 f"sharpe_mean={stats['sharpe_mean']:.3f}  "
                 f"probes={stats['probe_count']}"
             )
@@ -313,7 +313,7 @@ def run_scheduler(args: argparse.Namespace) -> None:
         print("── WATCH cores (borderline, no action yet) ──")
         for stats in decisions[DECISION_WATCH]:
             print(
-                f"  {stats['core_id'][:60]:<60} "
+                f"  {stats['pipeline_core_id'][:60]:<60} "
                 f"sharpe_mean={stats['sharpe_mean']:.3f}  "
                 f"probes={stats['probe_count']}"
             )
@@ -326,8 +326,8 @@ def run_scheduler(args: argparse.Namespace) -> None:
         print("── Generating expand batches ──")
         for stats in decisions[DECISION_EXPAND]:
             success = generate_expand_batch(
-                core_id=stats["core_id"],
-                template_id=stats["template_id"],
+                pipeline_core_id=stats["pipeline_core_id"],
+                pipeline_template_id=stats["pipeline_template_id"],
                 dataset_id=args.dataset_id,
                 data_type=args.data_type,
                 template_doc=args.template_doc,

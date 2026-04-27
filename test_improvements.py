@@ -1,6 +1,6 @@
 """
 端到端验证脚本：测试所有改进点是否正确工作。
-不依赖 Brain API，使用 mock 数据进行本地验证。
+不依赖 Brain API, 使用 mock 数据进行本地验证。
 """
 import json
 import sys
@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from main import (
     apply_dataset_field_domain,
     build_dataset_field_candidates,
-    compute_core_id,
+    compute_pipeline_core_id,
     iter_template_expressions,
     resolve_slot_values,
     load_template_catalog,
@@ -118,9 +118,9 @@ def test_probe_mode_uses_representative_values():
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 测试 5：compute_core_id 应正确提取 core_slots 定义的字段
+# 测试 5：compute_pipeline_core_id 应正确提取 core_slots 定义的字段
 # ═══════════════════════════════════════════════════════════════════════════════
-def test_compute_core_id():
+def test_compute_pipeline_core_id():
     template = {
         "template_id": "TPL_GROUP_IVHV_SMOOTH_V1",
         "core_slots": ["iv_mean_field", "hv_field"],
@@ -132,9 +132,9 @@ def test_compute_core_id():
         "smooth_days": "21",
         "group": "industry",
     }
-    core_id = compute_core_id(template, combo)
+    core_id = compute_pipeline_core_id(template, combo)
     expected = "iv_mean_field=implied_volatility_30d|hv_field=historical_volatility_30d"
-    check("compute_core_id", core_id == expected, f"Got '{core_id}'")
+    check("compute_pipeline_core_id", core_id == expected, f"Got '{core_id}'")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -173,9 +173,9 @@ def test_probe_mode_reduces_count():
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 测试 7：iter_template_expressions 返回的每个元素都包含 core_id
+# 测试 7：iter_template_expressions 返回的每个元素都包含 pipeline_core_id
 # ═══════════════════════════════════════════════════════════════════════════════
-def test_iter_returns_core_id():
+def test_iter_returns_pipeline_core_id():
     template = {
         "template_id": "TPL_GROUP_TS_BASIC_V1",
         "expression": "<group_op>(<ts_op>(<datafield>, <day>), <group>)",
@@ -193,7 +193,7 @@ def test_iter_returns_core_id():
     exprs = list(iter_template_expressions(template, candidates, {}, {}, 0, probe_mode=False))
     check("iter_returns_core_id_count", len(exprs) == 1, f"Count: {len(exprs)}")
     expr, core_id = exprs[0]
-    check("iter_returns_core_id_value", core_id == "datafield=field_x", f"core_id='{core_id}'")
+    check("iter_returns_pipeline_core_id_value", core_id == "datafield=field_x", f"core_id='{core_id}'")
     check("iter_returns_expression", "field_x" in expr, f"expr='{expr}'")
 
 
@@ -235,16 +235,16 @@ def test_template_catalog_ivhv():
 # ═══════════════════════════════════════════════════════════════════════════════
 def test_build_core_summary():
     mock_rows = [
-        {"core_id": "iv=iv_30d|hv=hv_30d", "template_id": "TPL_A", "status": "ok",
+        {"pipeline_core_id": "iv=iv_30d|hv=hv_30d", "pipeline_template_id": "TPL_A", "status": "ok",
          "sharpe": 1.2, "fitness": 1.1, "returns": 0.15, "turnover": 0.4, "regular": "expr1", "alpha_id": "a1"},
-        {"core_id": "iv=iv_30d|hv=hv_30d", "template_id": "TPL_A", "status": "ok",
+        {"pipeline_core_id": "iv=iv_30d|hv=hv_30d", "pipeline_template_id": "TPL_A", "status": "ok",
          "sharpe": 0.9, "fitness": 0.8, "returns": 0.10, "turnover": 0.5, "regular": "expr2", "alpha_id": "a2"},
-        {"core_id": "iv=iv_60d|hv=hv_60d", "template_id": "TPL_A", "status": "ok",
+        {"pipeline_core_id": "iv=iv_60d|hv=hv_60d", "pipeline_template_id": "TPL_A", "status": "ok",
          "sharpe": 0.3, "fitness": 0.2, "returns": 0.05, "turnover": 0.6, "regular": "expr3", "alpha_id": "a3"},
-        {"core_id": "iv=iv_30d|hv=hv_30d", "template_id": "TPL_A", "status": "failed",
+        {"pipeline_core_id": "iv=iv_30d|hv=hv_30d", "pipeline_template_id": "TPL_A", "status": "failed",
          "sharpe": None, "fitness": None, "returns": None, "turnover": None, "regular": "expr4", "alpha_id": None},
     ]
-    summaries = {s["core_id"]: s for s in build_core_summary(mock_rows)}
+    summaries = {s["pipeline_core_id"]: s for s in build_core_summary(mock_rows)}
 
     core1 = summaries.get("iv=iv_30d|hv=hv_30d")
     check("core_summary_core1_exists", core1 is not None)
@@ -277,20 +277,12 @@ def test_classify_core():
             "probe_count": probe_count,
         }
 
-    kwargs = dict(
-        expand_min_sharpe=1.0,
-        expand_min_fitness=1.0,
-        expand_max_turnover=0.7,
-        watch_min_sharpe=0.5,
-        min_probe_count=1,
-    )
-
-    check("classify_expand", classify_core(make_stats(1.2, 1.1, 0.4), **kwargs) == "EXPAND")
-    check("classify_watch_low_sharpe", classify_core(make_stats(0.7), **kwargs) == "WATCH")
-    check("classify_abandon", classify_core(make_stats(0.2), **kwargs) == "ABANDON")
-    check("classify_watch_high_turnover", classify_core(make_stats(1.2, 1.1, 0.8), **kwargs) == "WATCH")
+    check("classify_expand", classify_core(make_stats(1.2, 1.1, 0.4), 1.0, 1.0, 0.7, 0.5, 1) == "EXPAND")
+    check("classify_watch_low_sharpe", classify_core(make_stats(0.7), 1.0, 1.0, 0.7, 0.5, 1) == "WATCH")
+    check("classify_abandon", classify_core(make_stats(0.2), 1.0, 1.0, 0.7, 0.5, 1) == "ABANDON")
+    check("classify_watch_high_turnover", classify_core(make_stats(1.2, 1.1, 0.8), 1.0, 1.0, 0.7, 0.5, 1) == "WATCH")
     check("classify_watch_insufficient_probes",
-          classify_core(make_stats(1.5, probe_count=0), **kwargs) == "WATCH")
+          classify_core(make_stats(1.5, probe_count=0), 1.0, 1.0, 0.7, 0.5, 1) == "WATCH")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -299,24 +291,24 @@ def test_classify_core():
 def test_aggregate_by_core():
     mock_results = [
         {
-            "core_id": "iv=iv_30d|hv=hv_30d",
-            "template_id": "TPL_A",
+            "pipeline_core_id": "iv=iv_30d|hv=hv_30d",
+            "pipeline_template_id": "TPL_A",
             "status": "ok",
             "regular": "expr1",
             "alpha_id": "a1",
             "alpha_detail": {"sharpe": 1.2, "fitness": 1.1, "returns": 0.15, "turnover": 0.4},
         },
         {
-            "core_id": "iv=iv_30d|hv=hv_30d",
-            "template_id": "TPL_A",
+            "pipeline_core_id": "iv=iv_30d|hv=hv_30d",
+            "pipeline_template_id": "TPL_A",
             "status": "ok",
             "regular": "expr2",
             "alpha_id": "a2",
             "alpha_detail": {"sharpe": 0.8, "fitness": 0.7, "returns": 0.10, "turnover": 0.5},
         },
         {
-            "core_id": "iv=iv_60d|hv=hv_60d",
-            "template_id": "TPL_A",
+            "pipeline_core_id": "iv=iv_60d|hv=hv_60d",
+            "pipeline_template_id": "TPL_A",
             "status": "ok",
             "regular": "expr3",
             "alpha_id": "a3",
@@ -345,9 +337,9 @@ if __name__ == "__main__":
     run_test("fallback_true_returns_all", test_fallback_true_returns_all)
     run_test("include_regex_correct", test_include_regex_correct)
     run_test("probe_mode_uses_representative_values", test_probe_mode_uses_representative_values)
-    run_test("compute_core_id", test_compute_core_id)
+    run_test("compute_pipeline_core_id", test_compute_pipeline_core_id)
     run_test("probe_mode_reduces_count", test_probe_mode_reduces_count)
-    run_test("iter_returns_core_id", test_iter_returns_core_id)
+    run_test("iter_returns_pipeline_core_id", test_iter_returns_pipeline_core_id)
     run_test("template_catalog_ivhv", test_template_catalog_ivhv)
     run_test("build_core_summary", test_build_core_summary)
     run_test("classify_core", test_classify_core)

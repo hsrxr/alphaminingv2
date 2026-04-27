@@ -81,16 +81,67 @@ def infer_retryable_from_error_message(error_message: str) -> bool:
     return is_retryable_http_status(status_code)
 
 
+def format_http_error_body(response: requests.Response | None) -> str:
+    if response is None:
+        return ""
+
+    body_text = ""
+    try:
+        body_json = response.json()
+    except ValueError:
+        body_json = None
+
+    if body_json is not None:
+        try:
+            body_text = json.dumps(body_json, ensure_ascii=False)
+        except (TypeError, ValueError):
+            body_text = str(body_json)
+    else:
+        try:
+            body_text = response.text.strip()
+        except Exception:
+            body_text = ""
+
+    return body_text
+
+
 def result_needs_retry(result: dict | None) -> bool:
     if result is None:
         return True
-    if result_is_successful(result):
-        return False
-    if result.get("status") != "skipped_after_retries":
-        return True
-    if "retryable" in result:
-        return bool(result.get("retryable"))
-    return infer_retryable_from_error_message(str(result.get("error", "")))
+    return not result_is_successful(result)
+
+
+def sanitize_factor_payload(factor_payload: dict) -> dict:
+    """Return only the fields accepted by the Brain simulation request."""
+
+    allowed_keys = ("type", "settings", "regular")
+    return {key: factor_payload[key] for key in allowed_keys if key in factor_payload}
+
+
+def get_retry_sleep_seconds(
+    status_code: int | None,
+    response: requests.Response | None,
+    attempt: int,
+    base_sleep_seconds: float,
+) -> float:
+    """Compute a backoff delay for retryable request failures.
+
+    429 responses are treated as capacity pressure, so they wait longer than
+    ordinary transient failures to avoid immediately re-hitting the limit.
+    """
+
+    if status_code == 429:
+        retry_after = 0.0
+        if response is not None:
+            try:
+                retry_after = float(response.headers.get("Retry-After", 0) or 0)
+            except (TypeError, ValueError):
+                retry_after = 0.0
+        if retry_after > 0:
+            return retry_after
+        return max(45.0, base_sleep_seconds * (2 ** max(0, attempt - 1)))
+
+    return max(0.0, base_sleep_seconds)
 
 
 def factor_matches_result(factor: dict, result: dict | None) -> bool:
@@ -376,7 +427,12 @@ def run_single_backtest(
     for attempt in range(1, max_retries + 1):
         try:
             logger.debug("Submitting factor attempt %s/%s", attempt, max_retries)
-            submit_resp = session_manager.request("POST", f"{API_BASE}/simulations", json=factor_payload, timeout=30)
+            submit_resp = session_manager.request(
+                "POST",
+                f"{API_BASE}/simulations",
+                json=sanitize_factor_payload(factor_payload),
+                timeout=30,
+            )
             submit_resp.raise_for_status()
 
             progress_url = submit_resp.headers.get("Location")
@@ -432,12 +488,30 @@ def run_single_backtest(
             last_error = str(exc)
             status_code = exc.response.status_code if exc.response is not None else None
             retryable = is_retryable_http_status(status_code)
-            logger.warning("Factor backtest attempt %s/%s failed: %s", attempt, max_retries, last_error)
+            response_body = format_http_error_body(exc.response)
+            if response_body:
+                logger.warning(
+                    "Factor backtest attempt %s/%s failed: %s | response_body=%s",
+                    attempt,
+                    max_retries,
+                    last_error,
+                    response_body,
+                )
+            else:
+                logger.warning("Factor backtest attempt %s/%s failed: %s", attempt, max_retries, last_error)
             if not retryable:
                 logger.warning("Factor failure classified as non-retryable (status=%s), stop retrying.", status_code)
                 break
             if attempt < max_retries:
-                time.sleep(max(0, retry_sleep_seconds))
+                sleep_seconds = get_retry_sleep_seconds(status_code, exc.response, attempt, retry_sleep_seconds)
+                if status_code == 429:
+                    logger.warning(
+                        "Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting %.1fs before retry.",
+                        sleep_seconds,
+                    )
+                else:
+                    logger.warning("Retrying factor after %.1fs due to status=%s.", sleep_seconds, status_code)
+                time.sleep(sleep_seconds)
         except (requests.RequestException, ValueError) as exc:
             last_error = str(exc)
             retryable = True
@@ -477,6 +551,8 @@ def process_single_factor(
     single_result["index"] = index
     single_result["regular"] = factor.get("regular", "")
     single_result["settings"] = factor.get("settings", {})
+    single_result["pipeline_core_id"] = factor.get("pipeline_core_id", "")
+    single_result["pipeline_template_id"] = factor.get("pipeline_template_id", "")
     return single_result
 
 
