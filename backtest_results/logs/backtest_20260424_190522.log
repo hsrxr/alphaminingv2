@@ -1,4 +1,0 @@
-2026-04-24 19:05:22,860 | INFO | Backtest logging initialized. Log file: backtest_results\logs\backtest_20260424_190522.log
-2026-04-24 19:05:24,275 | INFO | Runner started. input_dir=factor_batches output_dir=backtest_results max_workers=3 max_retries=3 retry_sleep=2 once=False
-2026-04-24 19:05:24,283 | INFO | Found 130 pending batch file(s).
-2026-04-24 19:05:24,285 | INFO | Processing batch: factor_batches\option8_ALL\option8_ALL_190130_batch_0001.json (500 factors)

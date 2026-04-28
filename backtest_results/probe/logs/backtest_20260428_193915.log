@@ -1,0 +1,122 @@
+2026-04-28 19:39:15,195 | INFO | Backtest logging initialized. Log file: backtest_results\probe\logs\backtest_20260428_193915.log
+2026-04-28 19:39:16,620 | INFO | Session login refreshed successfully.
+2026-04-28 19:39:16,646 | INFO | Loaded result file backtest_results\probe\fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e\fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e_192944_batch_0001.json with 1 completed factor(s).
+2026-04-28 19:39:16,646 | INFO | Processing batch: factor_batches\probe\fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e\fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e_192944_batch_0001.json (112 factors). state_source=result checkpoint=backtest_results\probe\checkpoints\fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e\fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e_192944_batch_0001.json
+2026-04-28 19:39:16,646 | INFO | Pending factors for this batch: 111/112 (already completed: 1)
+2026-04-28 19:39:16,936 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:39:16,938 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:39:18,174 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:39:18,174 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:39:18,219 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:39:18,219 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:40:03,330 | WARNING | Factor backtest attempt 2/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:40:03,330 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:40:04,576 | WARNING | Factor backtest attempt 2/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:40:04,576 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:40:04,585 | WARNING | Factor backtest attempt 2/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:40:04,585 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:40:50,949 | WARNING | Factor backtest attempt 3/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:40:50,983 | WARNING | Factor backtest attempt 3/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:40:51,244 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:40:51,244 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:40:51,282 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:40:51,282 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:41:37,639 | WARNING | Factor backtest attempt 2/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:41:37,639 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:43:33,908 | INFO | Factor backtest success. alpha_id=0melGW26 attempts=2
+2026-04-28 19:43:42,341 | INFO | Factor backtest success. alpha_id=RR23el50 attempts=3
+2026-04-28 19:44:47,743 | INFO | Factor backtest success. alpha_id=E5g7mANG attempts=3
+2026-04-28 19:45:10,247 | INFO | Factor backtest success. alpha_id=2ra0G8VN attempts=1
+2026-04-28 19:45:19,268 | INFO | Factor backtest success. alpha_id=e7dp10gg attempts=1
+2026-04-28 19:47:22,270 | INFO | Factor backtest success. alpha_id=xAP6ljMg attempts=1
+2026-04-28 19:48:38,836 | INFO | Factor backtest success. alpha_id=leQqgr3A attempts=1
+2026-04-28 19:48:58,651 | INFO | Factor backtest success. alpha_id=0melGj5q attempts=1
+2026-04-28 19:49:09,559 | INFO | Factor backtest success. alpha_id=O0bY66w7 attempts=1
+2026-04-28 19:49:39,965 | WARNING | Factor backtest attempt 1/3 failed: HTTPSConnectionPool(host='api.worldquantbrain.com', port=443): Max retries exceeded with url: /simulations/435jfbaFK5ifaYHrxxrrtdt (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+2026-04-28 19:49:39,965 | WARNING | Factor backtest attempt 1/3 failed: HTTPSConnectionPool(host='api.worldquantbrain.com', port=443): Max retries exceeded with url: /simulations/YT5jVfNg4jYbLF13JKrE6bF (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)')))
+2026-04-28 19:49:39,965 | WARNING | Factor backtest attempt 1/3 failed: HTTPSConnectionPool(host='api.worldquantbrain.com', port=443): Max retries exceeded with url: /simulations/4jWeJH6YG4He9qLkqlGenER (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+2026-04-28 19:49:47,017 | WARNING | Factor backtest attempt 2/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:49:47,017 | WARNING | Factor backtest attempt 2/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:49:47,017 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:49:47,020 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:50:32,355 | WARNING | Factor backtest attempt 3/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:50:32,648 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:50:32,650 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:50:35,278 | WARNING | Factor backtest attempt 3/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:50:35,579 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:50:35,581 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:51:03,762 | WARNING | Factor backtest attempt 2/3 failed: HTTPSConnectionPool(host='api.worldquantbrain.com', port=443): Max retries exceeded with url: /simulations/2z7F4he7B5379Gz13sbJ2bdh (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+2026-04-28 19:51:10,981 | WARNING | Factor backtest attempt 3/3 failed: ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))
+2026-04-28 19:51:23,742 | WARNING | Factor backtest attempt 2/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 19:51:23,742 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 19:54:31,342 | INFO | Factor backtest success. alpha_id=kq17v63O attempts=2
+2026-04-28 19:55:30,734 | INFO | Factor backtest success. alpha_id=88aoVMJo attempts=3
+2026-04-28 19:56:00,289 | INFO | Factor backtest success. alpha_id=LLgjmLYL attempts=1
+2026-04-28 19:57:01,723 | INFO | Factor backtest success. alpha_id=1Ya9lQYM attempts=1
+2026-04-28 19:57:03,451 | INFO | Factor backtest success. alpha_id=akAYQq3O attempts=1
+2026-04-28 19:57:52,377 | INFO | Factor backtest success. alpha_id=MPKWewJ8 attempts=1
+2026-04-28 19:59:33,667 | INFO | Factor backtest success. alpha_id=N1gwJnmX attempts=1
+2026-04-28 20:00:59,846 | WARNING | Factor backtest attempt 1/3 failed: HTTPSConnectionPool(host='api.worldquantbrain.com', port=443): Max retries exceeded with url: /simulations/4ePkZe1YK55x94PL9UuEURk (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+2026-04-28 20:00:59,850 | WARNING | Factor backtest attempt 1/3 failed: HTTPSConnectionPool(host='api.worldquantbrain.com', port=443): Max retries exceeded with url: /simulations/4rhxxbyl51Bc631gGBAn2dt (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)')))
+2026-04-28 20:00:59,850 | WARNING | Factor backtest attempt 1/3 failed: HTTPSConnectionPool(host='api.worldquantbrain.com', port=443): Max retries exceeded with url: /simulations/1sFOQ4giu4n89smlc28Eb81 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)')))
+2026-04-28 20:01:07,596 | WARNING | Factor backtest attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))
+2026-04-28 20:01:07,596 | WARNING | Factor backtest attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))
+2026-04-28 20:01:07,596 | WARNING | Factor backtest attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))
+2026-04-28 20:01:13,840 | WARNING | Factor backtest attempt 3/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 20:01:13,874 | WARNING | Factor backtest attempt 3/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 20:01:14,146 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 20:01:14,148 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 20:01:14,169 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 20:01:14,169 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 20:02:02,104 | WARNING | Factor backtest attempt 2/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-28 20:02:02,104 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-28 20:02:55,816 | INFO | Factor backtest success. alpha_id=zqPM2kKE attempts=3
+2026-04-28 20:03:25,779 | INFO | Factor backtest success. alpha_id=QP2JNObX attempts=2
+2026-04-28 20:04:45,157 | INFO | Factor backtest success. alpha_id=3qabkOr0 attempts=1
+2026-04-28 20:05:07,099 | INFO | Factor backtest success. alpha_id=blokr1r6 attempts=1
+2026-04-28 20:06:02,802 | INFO | Factor backtest success. alpha_id=A1gWzRje attempts=1
+2026-04-28 20:06:22,412 | INFO | Factor backtest success. alpha_id=1Ya9KYL6 attempts=3
+2026-04-28 20:07:41,554 | INFO | Factor backtest success. alpha_id=e7dpGoLE attempts=1
+2026-04-28 20:08:09,416 | INFO | Factor backtest success. alpha_id=qMP1GZPv attempts=1
+2026-04-28 20:08:10,736 | INFO | Factor backtest success. alpha_id=QP2JzdVQ attempts=1
+2026-04-28 20:09:37,943 | INFO | Factor backtest success. alpha_id=YP2rzkw6 attempts=1
+2026-04-28 20:09:47,502 | INFO | Factor backtest success. alpha_id=zqPMGJo1 attempts=1
+2026-04-28 20:10:47,144 | INFO | Factor backtest success. alpha_id=O0bYz9a7 attempts=1
+2026-04-28 20:12:30,308 | INFO | Factor backtest success. alpha_id=Vk29zadw attempts=1
+2026-04-28 20:12:33,525 | INFO | Factor backtest success. alpha_id=leQqGv97 attempts=1
+2026-04-28 20:13:03,232 | INFO | Factor backtest success. alpha_id=vReqGOWv attempts=1
+2026-04-28 20:14:38,303 | INFO | Factor backtest success. alpha_id=58ab5eQz attempts=1
+2026-04-28 20:14:52,743 | INFO | Factor backtest success. alpha_id=GrMaz9k0 attempts=1
+2026-04-28 20:15:34,427 | INFO | Factor backtest success. alpha_id=pwVXGe1x attempts=1
+2026-04-28 20:16:18,281 | INFO | Factor backtest success. alpha_id=O0bYz3ev attempts=1
+2026-04-28 20:16:24,231 | INFO | Factor backtest success. alpha_id=zqPMGVjR attempts=1
+2026-04-28 20:18:58,351 | INFO | Factor backtest success. alpha_id=kq17O5n8 attempts=1
+2026-04-28 20:19:37,169 | INFO | Factor backtest success. alpha_id=Xg2reXW5 attempts=1
+2026-04-28 20:19:46,699 | INFO | Factor backtest success. alpha_id=2ra0Wq9Z attempts=1
+2026-04-28 20:21:39,061 | INFO | Factor backtest success. alpha_id=58abevw1 attempts=1
+2026-04-28 20:23:11,588 | INFO | Factor backtest success. alpha_id=78aAMN85 attempts=1
+2026-04-28 20:24:05,614 | INFO | Factor backtest success. alpha_id=6Xa8Jdo7 attempts=1
+2026-04-28 20:24:49,365 | INFO | Factor backtest success. alpha_id=Jjgw1oJ2 attempts=1
+2026-04-28 20:25:29,132 | INFO | Factor backtest success. alpha_id=78aAMMX8 attempts=1
+2026-04-28 20:26:10,883 | INFO | Factor backtest success. alpha_id=KPX0Qpdx attempts=1
+2026-04-28 20:26:17,680 | INFO | Factor backtest success. alpha_id=78aAMrn5 attempts=1
+2026-04-28 20:27:52,959 | INFO | Factor backtest success. alpha_id=pwVX3wo6 attempts=1
+2026-04-28 20:28:01,957 | INFO | Factor backtest success. alpha_id=58abY8X5 attempts=1
+2026-04-28 20:30:10,835 | INFO | Factor backtest success. alpha_id=QP2J6m3M attempts=1
+2026-04-28 20:30:31,498 | INFO | Factor backtest success. alpha_id=QP2J6rxX attempts=1
+2026-04-28 20:30:46,289 | INFO | Factor backtest success. alpha_id=1Ya90LQJ attempts=1
+2026-04-28 20:33:45,735 | INFO | Factor backtest success. alpha_id=E5g7xv7G attempts=1
+2026-04-28 20:33:48,358 | INFO | Factor backtest success. alpha_id=vReqPkaz attempts=1
+2026-04-28 20:34:43,891 | INFO | Factor backtest success. alpha_id=mLr3QYn6 attempts=1
+2026-04-28 20:35:17,636 | INFO | Factor backtest success. alpha_id=leQq1g68 attempts=1
+2026-04-28 20:35:51,668 | INFO | Factor backtest success. alpha_id=om3pZJEJ attempts=1
+2026-04-28 20:36:43,200 | INFO | Factor backtest success. alpha_id=Vk29eROA attempts=1
+2026-04-28 20:37:57,679 | INFO | Factor backtest success. alpha_id=78aAlpXO attempts=1
+2026-04-28 20:38:39,744 | INFO | Factor backtest success. alpha_id=e7dpW7ed attempts=1
+2026-04-28 20:38:52,626 | INFO | Factor backtest success. alpha_id=leQqNpOO attempts=1
+2026-04-28 20:39:42,270 | INFO | Factor backtest success. alpha_id=A1gW2ZLY attempts=1
+2026-04-28 20:40:37,023 | INFO | Factor backtest success. alpha_id=akAYgJd6 attempts=1
+2026-04-28 20:40:55,313 | INFO | Factor backtest success. alpha_id=ZY251kN1 attempts=1
+2026-04-28 20:42:24,024 | INFO | Factor backtest success. alpha_id=om3pk3Kv attempts=1
+2026-04-28 20:42:31,833 | INFO | Factor backtest success. alpha_id=LLgj2nav attempts=1
+2026-04-28 20:43:01,607 | INFO | Factor backtest success. alpha_id=ZY251r93 attempts=1

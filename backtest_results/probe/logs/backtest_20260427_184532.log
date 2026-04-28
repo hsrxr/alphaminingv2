@@ -1,5 +1,0 @@
-2026-04-27 18:45:32,748 | INFO | Backtest logging initialized. Log file: backtest_results\probe\logs\backtest_20260427_184532.log
-2026-04-27 18:45:34,466 | INFO | Session login refreshed successfully.
-2026-04-27 18:45:34,483 | INFO | Loaded checkpoint backtest_results\probe\checkpoints\option8_TPL_GROUP_IVHV_SMOOTH_V1\option8_TPL_GROUP_IVHV_SMOOTH_V1_180150_batch_0001.json with 206 completed factor(s).
-2026-04-27 18:45:34,483 | INFO | Processing batch: factor_batches\probe\option8_TPL_GROUP_IVHV_SMOOTH_V1\option8_TPL_GROUP_IVHV_SMOOTH_V1_180150_batch_0001.json (500 factors). state_source=checkpoint checkpoint=backtest_results\probe\checkpoints\option8_TPL_GROUP_IVHV_SMOOTH_V1\option8_TPL_GROUP_IVHV_SMOOTH_V1_180150_batch_0001.json
-2026-04-27 18:45:34,483 | INFO | Pending factors for this batch: 303/500 (already completed: 197)

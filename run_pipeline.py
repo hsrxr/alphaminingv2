@@ -111,6 +111,8 @@ def phase_probe_gen(args, logger: logging.Logger) -> list[Path]:
     probe_output_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Fetching dataset fields for dataset_id=%s ...", args.dataset_id)
+
+    # 在世坤上抓取数据集字段
     dataset_fields_df = fetch_and_store_datafields(
         dataset_id=args.dataset_id,
         data_type=args.data_type,
@@ -249,19 +251,31 @@ def phase_run_backtest(
     pending = list(iter_unprocessed_batches(input_dir=input_dir, output_dir=output_dir))
     logger.info("Found %d batch file(s) to process.", len(pending))
 
+    failed_batches = []
     for input_file, output_file, checkpoint_file in pending:
-        process_batch_file(
-            session_manager=session_manager,
-            input_file=input_file,
-            output_file=output_file,
-            checkpoint_file=output_dir / DEFAULT_CHECKPOINT_DIRNAME / input_file.relative_to(input_dir),
-            max_workers=max_workers,
-            max_retries=max_retries,
-            retry_sleep_seconds=retry_sleep,
-            logger=br_logger,
-        )
+        try:
+            process_batch_file(
+                session_manager=session_manager,
+                input_file=input_file,
+                output_file=output_file,
+                checkpoint_file=output_dir / DEFAULT_CHECKPOINT_DIRNAME / input_file.relative_to(input_dir),
+                max_workers=max_workers,
+                max_retries=max_retries,
+                retry_sleep_seconds=retry_sleep,
+                logger=br_logger,
+            )
+        except Exception as exc:
+            logger.error("Batch processing failed for %s: %s", input_file, exc, exc_info=True)
+            failed_batches.append((str(input_file), str(exc)))
+            # Continue processing other batches instead of crashing
+            continue
 
-    logger.info("%s complete.", phase_label)
+    if failed_batches:
+        logger.warning("Failed to process %d batch file(s):", len(failed_batches))
+        for batch_path, error_msg in failed_batches:
+            logger.warning("  - %s: %s", batch_path, error_msg)
+
+    logger.info("%s complete. (processed=%d failed=%d)", phase_label, len(pending) - len(failed_batches), len(failed_batches))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -269,9 +283,10 @@ def phase_run_backtest(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def phase_schedule(args, probe_results_dir: Path, expand_batches_dir: Path, logger: logging.Logger) -> dict:
-    """聚合探测回测结果，做出 EXPAND/WATCH/ABANDON 决策，并为 EXPAND Core 生成全量批次。
+    """
+    聚合探测回测结果，做出 EXPAND/WATCH/ABANDON 决策，并为 EXPAND Core 生成全量批次。
 
-    返回调度报告 dict（同时写入 JSON 文件）。
+    返回调度报告 dict(同时写入 JSON 文件）。
     """
     from adaptive_scheduler import (
         load_probe_results,

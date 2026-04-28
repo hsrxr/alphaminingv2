@@ -616,7 +616,21 @@ def process_batch_file(
 
         for future in as_completed(future_to_index):
             index = future_to_index[future]
-            single_result = future.result()
+            try:
+                single_result = future.result()
+            except Exception as exc:
+                logger.error("Factor %s processing failed with exception: %s", index, exc, exc_info=True)
+                # Mark as skipped so we can continue processing other factors
+                single_result = {
+                    "status": "skipped_after_retries",
+                    "error": f"Processing exception: {exc}",
+                    "retryable": True,
+                    "alpha_id": None,
+                    "simulation_summary": {},
+                    "alpha_detail": {},
+                    "attempts": 0,
+                }
+            
             results[index - 1] = single_result
             state["results"] = results
             state["updated_at"] = datetime.now().isoformat(timespec="seconds")

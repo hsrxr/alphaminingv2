@@ -1,9 +1,0 @@
-2026-04-27 18:47:58,493 | INFO | Backtest logging initialized. Log file: backtest_results\probe\logs\backtest_20260427_184758.log
-2026-04-27 18:48:00,198 | INFO | Session login refreshed successfully.
-2026-04-27 18:48:00,217 | INFO | Loaded checkpoint backtest_results\probe\checkpoints\option8_TPL_GROUP_IVHV_SMOOTH_V1\option8_TPL_GROUP_IVHV_SMOOTH_V1_180150_batch_0001.json with 206 completed factor(s).
-2026-04-27 18:48:00,218 | INFO | Processing batch: factor_batches\probe\option8_TPL_GROUP_IVHV_SMOOTH_V1\option8_TPL_GROUP_IVHV_SMOOTH_V1_180150_batch_0001.json (500 factors). state_source=checkpoint checkpoint=backtest_results\probe\checkpoints\option8_TPL_GROUP_IVHV_SMOOTH_V1\option8_TPL_GROUP_IVHV_SMOOTH_V1_180150_batch_0001.json
-2026-04-27 18:48:00,219 | INFO | Pending factors for this batch: 500/500 (already completed: 0)
-2026-04-27 18:48:02,046 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
-2026-04-27 18:48:02,046 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
-2026-04-27 18:48:02,046 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
-2026-04-27 18:48:02,046 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.

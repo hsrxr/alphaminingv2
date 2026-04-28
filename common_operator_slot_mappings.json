@@ -1,13 +1,20 @@
 {
   "operator_slot_mappings": {
-    "group_op": ["group_rank", "group_mean", "group_neutralize"],
+    "arithmetic_op": ["abs", "add", "divide", "inverse", "log", "max", "min", "multiply", "power", "reverse", "sign", "sqrt", "subtract"],
+    "backfill_op": ["group_backfill", "kth_element", "last_diff_value", "ts_backfill"],
+    "cross_sectional_op": ["normalize", "quantile", "rank", "scale", "winsorize", "zscore"],
+    "event_op": ["days_from_last_change", "hump", "trade_when"],
+    "group_compare_op": ["group_mean", "group_rank", "group_scale", "group_zscore"],
+    "group_op": ["group_backfill", "group_mean", "group_neutralize", "group_rank", "group_scale", "group_zscore"],
     "group_rank_op": ["group_rank"],
-    "group_compare_op": ["group_rank", "group_mean"],
-    "ts_op": ["ts_mean", "ts_rank", "ts_zscore", "ts_delta","ts_decay_linear","ts_scale","ts_std_dev","ts_corr"],
-    "ts_smooth_op": ["ts_mean", "ts_decay_linear"],
-    "ts_compare_op": ["ts_rank", "ts_zscore"],
-    "ts_position_op": ["ts_rank", "ts_scale"],
-    "ts_risk_op": ["ts_std_dev", "ts_zscore"],
-    "time_series_op": ["ts_mean", "ts_rank", "ts_zscore"]
+    "logical_op": ["and", "if_else", "is_nan", "not", "or"],
+    "time_series_op": ["ts_av_diff", "ts_backfill", "ts_corr", "ts_decay_linear", "ts_delta", "ts_mean", "ts_rank", "ts_scale", "ts_std_dev", "ts_zscore"],
+    "ts_compare_op": ["ts_av_diff", "ts_quantile", "ts_rank", "ts_zscore"],
+    "ts_op": ["ts_arg_max", "ts_arg_min", "ts_av_diff", "ts_backfill", "ts_corr", "ts_count_nans", "ts_covariance", "ts_decay_linear", "ts_delay", "ts_delta", "ts_mean", "ts_product", "ts_quantile", "ts_rank", "ts_regression", "ts_scale", "ts_std_dev", "ts_step", "ts_zscore"],
+    "ts_position_op": ["ts_quantile", "ts_rank", "ts_scale"],
+    "ts_risk_op": ["ts_corr", "ts_count_nans", "ts_covariance", "ts_regression", "ts_std_dev", "ts_zscore"],
+    "ts_smooth_op": ["hump", "ts_backfill", "ts_decay_linear", "ts_mean"],
+    "transform_op": ["densify", "inverse", "log", "power", "reverse", "sign", "sqrt", "signed_power"],
+    "vector_op": ["vec_avg", "vec_sum"]
   }
 }
