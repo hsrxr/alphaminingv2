@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import re
 from copy import deepcopy
@@ -461,6 +462,16 @@ def iter_alpha_requests(
                     return
 
 
+def _safe_run_label(dataset_id: str, template_id: str, max_len: int = 80) -> str:
+    base = f"{dataset_id}_{template_id}"
+    sanitized = re.sub(r"[^A-Za-z0-9_.-]+", "_", base).strip("_")
+    if len(sanitized) <= max_len:
+        return sanitized
+    digest = hashlib.sha1(sanitized.encode("utf-8")).hexdigest()[:8]
+    keep = max_len - len(digest) - 1
+    return f"{sanitized[:keep]}_{digest}"
+
+
 def write_factor_batches(
     alpha_iter: Iterable[dict],
     output_dir: Path,
@@ -470,7 +481,8 @@ def write_factor_batches(
     generation_context: dict,
 ) -> list[Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
-    run_dir = output_dir / f"{dataset_id}_{template_id}"
+    run_label = _safe_run_label(dataset_id, template_id)
+    run_dir = output_dir / run_label
     run_dir.mkdir(parents=True, exist_ok=True)
 
     written_files = []
@@ -483,7 +495,7 @@ def write_factor_batches(
         if len(batch) < batch_size:
             continue
 
-        file_path = run_dir / f"{dataset_id}_{template_id}_{timestamp}_batch_{batch_index:04d}.json"
+        file_path = run_dir / f"{run_label}_{timestamp}_batch_{batch_index:04d}.json"
         payload = {
             "dataset_id": dataset_id,
             "created_at": datetime.now().isoformat(timespec="seconds"),
@@ -500,7 +512,7 @@ def write_factor_batches(
         batch_index += 1
 
     if batch:
-        file_path = run_dir / f"{dataset_id}_{template_id}_{timestamp}_batch_{batch_index:04d}.json"
+        file_path = run_dir / f"{run_label}_{timestamp}_batch_{batch_index:04d}.json"
         payload = {
             "dataset_id": dataset_id,
             "created_at": datetime.now().isoformat(timespec="seconds"),

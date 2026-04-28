@@ -64,7 +64,7 @@ def create_authenticated_session(username: str, password: str) -> Session:
 
 def fetch_and_store_datafields(
     dataset_id: str,
-    output_dir: Path,
+    output_dir: Path | str,
     instrument_type: str = "EQUITY",
     region: str = "USA",
     delay: int = 1,
@@ -103,6 +103,7 @@ def fetch_and_store_datafields(
         print(f"Loaded {len(merged_results)} data fields from local cache: {latest_run_dir}")
         return pd.DataFrame(merged_results)
 
+    output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     cached_df = load_cached_datafields(output_dir, dataset_id)
     if cached_df is not None:

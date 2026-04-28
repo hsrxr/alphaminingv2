@@ -255,6 +255,200 @@
       "constraints": {
         "not_equal": [["iv_mean_field", "hv_field"]]
       }
+    },
+    {
+      "template_id": "TPL_FUND_PROFIT_ASSET_TS_V1",
+      "source_name": "fund_profitability_over_assets",
+      "description": "group_rank(ts_zscore(profit/assets, d), group)",
+      "expression": "group_rank(<ts_op>(divide(<profit_field>, <asset_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["profit_field", "asset_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "profit_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^income$", "^operating_income$", "^ebit$", "^ebitda$"],
+            "fallback_to_all": false,
+            "max_candidates": 20
+          }
+        },
+        "asset_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^assets$", "^assets_curr$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_FUND_MARGIN_REV_TS_V1",
+      "source_name": "fund_profit_margin_revenue",
+      "description": "group_rank(ts_zscore(profit/revenue, d), group)",
+      "expression": "group_rank(<ts_op>(divide(<profit_field>, <revenue_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["profit_field", "revenue_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "profit_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^income$", "^operating_income$", "^ebit$", "^ebitda$"],
+            "fallback_to_all": false,
+            "max_candidates": 20
+          }
+        },
+        "revenue_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^revenue$", "^sales$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_FUND_CASHFLOW_DEBT_TS_V1",
+      "source_name": "fund_cashflow_debt_coverage",
+      "description": "group_rank(ts_zscore(cashflow/debt, d), group)",
+      "expression": "group_rank(<ts_op>(divide(<cashflow_field>, <debt_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["cashflow_field", "debt_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "cashflow_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^cashflow_op$", "^cashflow$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "debt_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^debt$", "^debt_lt$", "^debt_st$"],
+            "fallback_to_all": false,
+            "max_candidates": 15
+          }
+        },
+        "days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_FUND_CAPEX_ASSET_TS_V1",
+      "source_name": "fund_capex_intensity",
+      "description": "group_rank(ts_zscore(capex/assets, d), group)",
+      "expression": "group_rank(<ts_op>(divide(<capex_field>, <asset_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["capex_field", "asset_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "capex_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^capex$"],
+            "fallback_to_all": false,
+            "max_candidates": 5
+          }
+        },
+        "asset_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^assets$", "^assets_curr$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_FUND_LIQUIDITY_TS_V1",
+      "source_name": "fund_liquidity_quality",
+      "description": "group_rank(ts_zscore(liquidity, d), group)",
+      "expression": "group_rank(<ts_op>(<liquidity_field>, <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["liquidity_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "liquidity_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^current_ratio$", "^inventory_turnover$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_FUND_RETURN_TS_V1",
+      "source_name": "fund_return_metrics",
+      "description": "group_rank(ts_zscore(returns, d), group)",
+      "expression": "group_rank(<ts_op>(<return_field>, <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["return_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "return_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^return_assets$", "^return_equity$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
     }
   ]
 }
