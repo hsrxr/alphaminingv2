@@ -583,9 +583,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     # ── 调度阈值 ──────────────────────────────────────────────────────────────
     grp_sched = parser.add_argument_group("Scheduling Thresholds")
-    grp_sched.add_argument("--expand-min-sharpe", type=float, default=1.0,
+    grp_sched.add_argument("--expand-min-sharpe", type=float, default=0.8,
                            help="Min mean Sharpe to trigger EXPAND.")
-    grp_sched.add_argument("--expand-min-fitness", type=float, default=1.0,
+    grp_sched.add_argument("--expand-min-fitness", type=float, default=0.45,
                            help="Min mean Fitness to trigger EXPAND.")
     grp_sched.add_argument("--expand-max-turnover", type=float, default=0.7,
                            help="Max mean Turnover to allow EXPAND.")
