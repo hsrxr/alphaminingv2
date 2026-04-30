@@ -1,0 +1,34 @@
+2026-04-29 06:03:21,618 | INFO | Pipeline started.
+2026-04-29 06:03:21,620 | INFO |   dataset_id      : fundamental6
+2026-04-29 06:03:21,621 | INFO |   template_ids    : TPL_FUND_PROFIT_ASSET_TS_V1,TPL_FUND_MARGIN_REV_TS_V1,TPL_FUND_CASHFLOW_DEBT_TS_V1,TPL_FUND_CAPEX_ASSET_TS_V1,TPL_FUND_LIQUIDITY_TS_V1,TPL_FUND_RETURN_TS_V1
+2026-04-29 06:03:21,621 | INFO |   probe_batches   : factor_batches/probe
+2026-04-29 06:03:21,621 | INFO |   probe_results   : backtest_results/probe
+2026-04-29 06:03:21,621 | INFO |   expand_batches  : factor_batches/expand
+2026-04-29 06:03:21,621 | INFO |   expand_results  : backtest_results/expand
+2026-04-29 06:03:21,621 | INFO |   dry_run         : False
+2026-04-29 06:03:21,621 | INFO |   probe_only      : False
+2026-04-29 06:03:22,940 | INFO | 
+2026-04-29 06:03:22,940 | INFO | ============================================================
+2026-04-29 06:03:22,940 | INFO |   PHASE 1 — PROBE GENERATION
+2026-04-29 06:03:22,941 | INFO | ============================================================
+2026-04-29 06:03:22,941 | INFO | Fetching dataset fields for dataset_id=fundamental6 ...
+2026-04-29 06:03:22,959 | INFO | Fetched 574 dataset fields.
+2026-04-29 06:03:22,963 | INFO | Selected 6 template(s), 2 settings combination(s). Probe mode: ON
+2026-04-29 06:03:22,973 | INFO | Probe generation complete. Created 1 batch file(s) in factor_batches/probe
+2026-04-29 06:03:22,976 | INFO | 
+2026-04-29 06:03:22,976 | INFO | ============================================================
+2026-04-29 06:03:22,976 | INFO |   PHASE — PROBE BACKTEST (Phase 2)
+2026-04-29 06:03:22,976 | INFO | ============================================================
+2026-04-29 06:03:23,259 | INFO | Found 1 batch file(s) to process.
+2026-04-29 09:23:46,928 | INFO | PROBE BACKTEST (Phase 2) complete. (processed=1 failed=0)
+2026-04-29 09:23:46,956 | INFO | 
+2026-04-29 09:23:46,957 | INFO | ============================================================
+2026-04-29 09:23:46,957 | INFO |   PHASE 3 — ADAPTIVE SCHEDULING
+2026-04-29 09:23:46,957 | INFO | ============================================================
+2026-04-29 09:23:46,957 | INFO | Loading probe results from: backtest_results/probe
+2026-04-29 09:23:47,012 | INFO | Loaded 448 factor results.
+2026-04-29 09:23:47,014 | INFO | Found 0 unique cores.
+2026-04-29 09:23:47,014 | INFO | Scheduling decisions: EXPAND=0  WATCH=0  ABANDON=0
+2026-04-29 09:23:47,016 | INFO | Scheduling report written to: pipeline_report.json
+2026-04-29 09:23:47,021 | INFO | No expand batches were generated (0 EXPAND cores). Pipeline complete.
+2026-04-29 09:23:47,021 | INFO | Total elapsed: 12025.4s
