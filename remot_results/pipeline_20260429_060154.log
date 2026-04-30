@@ -1,0 +1,27 @@
+2026-04-29 06:01:54,229 | INFO | Pipeline started.
+2026-04-29 06:01:54,233 | INFO |   dataset_id      : fundamental6
+2026-04-29 06:01:54,233 | INFO |   template_ids    : TPL_FUND_PROFIT_ASSET_TS_V1,TPL_FUN
+2026-04-29 06:01:54,233 | INFO |   probe_batches   : factor_batches/probe
+2026-04-29 06:01:54,233 | INFO |   probe_results   : backtest_results/probe
+2026-04-29 06:01:54,234 | INFO |   expand_batches  : factor_batches/expand
+2026-04-29 06:01:54,234 | INFO |   expand_results  : backtest_results/expand
+2026-04-29 06:01:54,234 | INFO |   dry_run         : False
+2026-04-29 06:01:54,234 | INFO |   probe_only      : False
+2026-04-29 06:01:55,513 | INFO | 
+2026-04-29 06:01:55,513 | INFO | ============================================================
+2026-04-29 06:01:55,513 | INFO |   PHASE 1 — PROBE GENERATION
+2026-04-29 06:01:55,513 | INFO | ============================================================
+2026-04-29 06:01:55,513 | INFO | Fetching dataset fields for dataset_id=fundamental6 ...
+2026-04-29 06:01:55,556 | INFO | Fetched 574 dataset fields.
+2026-04-29 06:01:55,562 | ERROR | Pipeline failed with unexpected error: Unknown template ids: ['TPL_FUN']
+Traceback (most recent call last):
+  File "/home/sum999724/alphaminingv2/run_pipeline.py", line 628, in main
+    run_pipeline(args, logger)
+  File "/home/sum999724/alphaminingv2/run_pipeline.py", line 442, in run_pipeline
+    phase_probe_gen(args, logger)
+  File "/home/sum999724/alphaminingv2/run_pipeline.py", line 137, in phase_probe_gen
+    selected_ids = parse_selected_template_ids(args.template_ids, all_template_ids)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sum999724/alphaminingv2/main.py", line 107, in parse_selected_template_ids
+    raise ValueError(f"Unknown template ids: {unknown}")
+ValueError: Unknown template ids: ['TPL_FUN']

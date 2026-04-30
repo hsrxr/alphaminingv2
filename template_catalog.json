@@ -449,6 +449,260 @@
           "representative_values": ["industry"]
         }
       }
+    },
+    {
+      "template_id": "TPL_PV_TURNOVER_TS_V1",
+      "source_name": "turnover_liquidity",
+      "description": "group_rank(ts_op(volume/sharesout, days), group). Share turnover as a liquidity measure. Lower turnover stocks earn a liquidity premium (Amihud 2002).",
+      "expression": "group_rank(<ts_op>(divide(volume, sharesout), <days>), <group>)",
+      "applicable_datasets": ["pv1"],
+      "core_slots": [],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_rank", "ts_zscore"]},
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [5, 21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_PV_PRICE_RANGE_V1",
+      "source_name": "price_range_volatility",
+      "description": "group_rank(ts_op((high-low)/close, days), group). Daily price range relative to close as a volatility proxy, capturing intraday uncertainty and information asymmetry.",
+      "expression": "group_rank(<ts_op>(divide(subtract(high, low), close), <days>), <group>)",
+      "applicable_datasets": ["pv1"],
+      "core_slots": [],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_rank", "ts_zscore"]},
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [5, 21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_PV_AMIHUD_ILLIQ_V1",
+      "source_name": "amihud_illiquidity",
+      "description": "group_rank(ts_op(|returns|/volume, days), group). Amihud (2002) illiquidity ratio measuring price impact per dollar of volume. Higher values indicate greater illiquidity.",
+      "expression": "group_rank(<ts_op>(divide(abs(returns), volume), <days>), <group>)",
+      "applicable_datasets": ["pv1"],
+      "core_slots": [],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_rank", "ts_zscore"]},
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [5, 21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_PV_REL_VOLUME_V1",
+      "source_name": "relative_volume_trend",
+      "description": "group_rank(ts_op(volume/adv20, days), group). Volume relative to 20-day average detects informed trading, accumulation/distribution patterns.",
+      "expression": "group_rank(<ts_op>(divide(volume, adv20), <days>), <group>)",
+      "applicable_datasets": ["pv1"],
+      "core_slots": [],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_rank", "ts_zscore"]},
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [5, 21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_PV_RETURN_VOL_V1",
+      "source_name": "return_volatility_lowvol",
+      "description": "group_rank(sign*ts_risk_op(returns, days), group). Low volatility anomaly: low risk stocks earn higher risk-adjusted returns. Sign reverses direction for long-low-vol.",
+      "expression": "group_rank(<sign><ts_risk_op>(returns, <days>), <group>)",
+      "applicable_datasets": ["pv1"],
+      "core_slots": [],
+      "slots": {
+        "sign": {"values": ["", "-"]},
+        "ts_risk_op": {"slot_kind": "operator", "values": ["ts_std_dev", "ts_zscore"]},
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [5, 21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_PV_SIZE_FACTOR_V1",
+      "source_name": "market_cap_size",
+      "description": "group_rank(sign*ts_op(market_cap, days), group). Size effect (Banz 1981; Fama-French 1993): small cap stocks tend to outperform. Sign=- selects small caps.",
+      "expression": "group_rank(<sign><ts_op>(cap, <days>), <group>)",
+      "applicable_datasets": ["pv1"],
+      "core_slots": [],
+      "slots": {
+        "sign": {"values": ["", "-"]},
+        "ts_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_rank", "ts_zscore"]},
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [5, 21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_FUND_DEBT_EQUITY_TS_V1",
+      "source_name": "fund_leverage_ratio",
+      "description": "group_rank(ts_op(debt/equity, days), group). Leverage ratio as a financial distress risk factor (Altman 1968). Higher leverage predicts underperformance and distress.",
+      "expression": "group_rank(<ts_op>(divide(<debt_field>, <equity_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["debt_field", "equity_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "debt_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^debt$", "^debt_lt$", "^liabilities$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "equity_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^equity$", "^bookvalue_ps$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      },
+      "constraints": {
+        "not_equal": [["debt_field", "equity_field"]]
+      }
+    },
+    {
+      "template_id": "TPL_FUND_GROWTH_RATE_TS_V1",
+      "source_name": "fund_growth_rate",
+      "description": "group_rank(ts_op(Δflow/flow, smooth_days), group). Growth rate of earnings or revenue. Earnings momentum predicts returns (Jegadeesh & Livnat 2006).",
+      "expression": "group_rank(<ts_op>(divide(ts_delta(<flow_field>, <delta_days>), <flow_field>), <smooth_days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["flow_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "flow_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^income$", "^operating_income$", "^ebit$", "^ebitda$", "^revenue$", "^sales$"],
+            "fallback_to_all": false,
+            "max_candidates": 20
+          }
+        },
+        "delta_days": {
+          "values": [63, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "smooth_days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_FUND_EARNINGS_QUALITY_TS_V1",
+      "source_name": "fund_earnings_quality",
+      "description": "group_rank(ts_op(cashflow/earnings, days), group). Operating cash flow to earnings ratio measures earnings quality. Higher ratio indicates higher quality (Sloan 1996).",
+      "expression": "group_rank(<ts_op>(divide(<cashflow_field>, <earnings_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["cashflow_field", "earnings_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "cashflow_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^cashflow_op$", "^cashflow$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "earnings_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^income$", "^operating_income$", "^ebit$", "^pretax_income$"],
+            "fallback_to_all": false,
+            "max_candidates": 15
+          }
+        },
+        "days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      },
+      "constraints": {
+        "not_equal": [["cashflow_field", "earnings_field"]]
+      }
+    },
+    {
+      "template_id": "TPL_FUND_INVESTMENT_TS_V1",
+      "source_name": "fund_asset_growth",
+      "description": "group_rank(ts_op(Δassets/assets, smooth_days), group). Asset growth rate (Cooper, Gulen & Schill 2008). High asset growth firms tend to underperform — the investment anomaly.",
+      "expression": "group_rank(<ts_op>(divide(ts_delta(<asset_field>, <delta_days>), <asset_field>), <smooth_days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["asset_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "asset_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^assets$", "^assets_curr$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "delta_days": {
+          "values": [126, 252],
+          "representative_values": [252]
+        },
+        "smooth_days": {
+          "values": [21, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
     }
   ]
 }

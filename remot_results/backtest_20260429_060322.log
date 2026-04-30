@@ -1,0 +1,254 @@
+2026-04-29 06:03:22,977 | INFO | Backtest logging initialized. Log file: backtest_results/probe/logs/backtest_20260429_060322.log
+2026-04-29 06:03:23,258 | INFO | Session login refreshed successfully.
+2026-04-29 06:03:23,262 | INFO | Processing batch: factor_batches/probe/fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e/fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e_060322_batch_0001.json (224 factors). state_source=fresh checkpoint=backtest_results/probe/checkpoints/fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e/fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e_060322_batch_0001.json
+2026-04-29 06:03:23,262 | INFO | Pending factors for this batch: 224/224 (already completed: 0)
+2026-04-29 06:04:53,418 | INFO | Factor backtest success. alpha_id=2ra0oPY5 attempts=1
+2026-04-29 06:05:30,170 | INFO | Factor backtest success. alpha_id=LLgjYOlM attempts=1
+2026-04-29 06:06:15,424 | INFO | Factor backtest success. alpha_id=d5EXr05X attempts=1
+2026-04-29 06:07:20,276 | INFO | Factor backtest success. alpha_id=RR23el50 attempts=1
+2026-04-29 06:07:46,938 | INFO | Factor backtest success. alpha_id=Vk29b3QJ attempts=1
+2026-04-29 06:07:56,773 | INFO | Factor backtest success. alpha_id=9qavOWMx attempts=1
+2026-04-29 06:09:16,778 | INFO | Factor backtest success. alpha_id=d5EXr1qv attempts=1
+2026-04-29 06:09:24,489 | INFO | Factor backtest success. alpha_id=Xg2raOAx attempts=1
+2026-04-29 06:10:03,251 | INFO | Factor backtest success. alpha_id=RR23wx5j attempts=1
+2026-04-29 06:11:40,083 | INFO | Factor backtest success. alpha_id=E5g7mANG attempts=1
+2026-04-29 06:11:40,092 | INFO | Batch progress 10/224
+2026-04-29 06:11:41,154 | INFO | Factor backtest success. alpha_id=QP2JR9pQ attempts=1
+2026-04-29 06:13:32,608 | INFO | Factor backtest success. alpha_id=3qabmYWX attempts=1
+2026-04-29 06:14:00,434 | INFO | Factor backtest success. alpha_id=leQqP1X8 attempts=1
+2026-04-29 06:14:58,927 | INFO | Factor backtest success. alpha_id=Xg2rZPom attempts=1
+2026-04-29 06:15:39,105 | INFO | Factor backtest success. alpha_id=e7dp10gg attempts=1
+2026-04-29 06:16:40,273 | INFO | Factor backtest success. alpha_id=npZJG2Oq attempts=1
+2026-04-29 06:17:13,316 | INFO | Factor backtest success. alpha_id=9qav5jVd attempts=1
+2026-04-29 06:18:43,058 | INFO | Factor backtest success. alpha_id=kq17pdpP attempts=1
+2026-04-29 06:18:52,240 | INFO | Factor backtest success. alpha_id=LLgjoME6 attempts=1
+2026-04-29 06:19:09,856 | INFO | Factor backtest success. alpha_id=0melGj5q attempts=1
+2026-04-29 06:19:09,868 | INFO | Batch progress 20/224
+2026-04-29 06:20:19,507 | INFO | Factor backtest success. alpha_id=ZY25VgXx attempts=1
+2026-04-29 06:20:23,375 | INFO | Factor backtest success. alpha_id=akAY0kw9 attempts=1
+2026-04-29 06:20:56,346 | INFO | Factor backtest success. alpha_id=d5EXJvMw attempts=1
+2026-04-29 06:22:30,098 | INFO | Factor backtest success. alpha_id=6Xa8WveP attempts=1
+2026-04-29 06:22:41,622 | INFO | Factor backtest success. alpha_id=O0bY66w7 attempts=1
+2026-04-29 06:23:13,148 | INFO | Factor backtest success. alpha_id=1Ya98QjR attempts=1
+2026-04-29 06:23:56,212 | INFO | Factor backtest success. alpha_id=E5g7j3jJ attempts=1
+2026-04-29 06:24:22,323 | INFO | Factor backtest success. alpha_id=2ra09l3Z attempts=1
+2026-04-29 06:25:35,016 | INFO | Factor backtest success. alpha_id=3qabKXWQ attempts=1
+2026-04-29 06:26:38,490 | INFO | Factor backtest success. alpha_id=A1gWpLoY attempts=1
+2026-04-29 06:26:38,506 | INFO | Batch progress 30/224
+2026-04-29 06:27:11,587 | INFO | Factor backtest success. alpha_id=kq17v63O attempts=1
+2026-04-29 06:28:07,849 | INFO | Factor backtest success. alpha_id=88ao0x8m attempts=1
+2026-04-29 06:29:49,211 | INFO | Factor backtest success. alpha_id=e7dpj8QN attempts=1
+2026-04-29 06:30:35,425 | INFO | Factor backtest success. alpha_id=O0bYL3lg attempts=1
+2026-04-29 06:30:59,034 | INFO | Factor backtest success. alpha_id=ZY25Jq7j attempts=1
+2026-04-29 06:32:11,565 | INFO | Factor backtest success. alpha_id=KPX01wlp attempts=1
+2026-04-29 06:32:50,433 | INFO | Factor backtest success. alpha_id=leQqm3Xl attempts=1
+2026-04-29 06:33:28,287 | INFO | Factor backtest success. alpha_id=akAYQq3O attempts=1
+2026-04-29 06:35:45,623 | INFO | Factor backtest success. alpha_id=E5g7dxaP attempts=1
+2026-04-29 06:36:09,643 | INFO | Factor backtest success. alpha_id=9qavnG79 attempts=1
+2026-04-29 06:36:09,662 | INFO | Batch progress 40/224
+2026-04-29 06:37:03,978 | INFO | Factor backtest success. alpha_id=1Ya9lQYM attempts=1
+2026-04-29 06:37:16,054 | INFO | Factor backtest success. alpha_id=e7dpXkgN attempts=1
+2026-04-29 06:37:47,649 | INFO | Factor backtest success. alpha_id=mLr3vvap attempts=1
+2026-04-29 06:38:59,772 | INFO | Factor backtest success. alpha_id=N1gwJnmX attempts=1
+2026-04-29 06:39:08,689 | INFO | Factor backtest success. alpha_id=9qavNAwe attempts=1
+2026-04-29 06:40:08,966 | INFO | Factor backtest success. alpha_id=pwVX9ovx attempts=1
+2026-04-29 06:40:27,182 | INFO | Factor backtest success. alpha_id=rKJ3Nlkm attempts=1
+2026-04-29 06:40:54,332 | INFO | Factor backtest success. alpha_id=9qavNPgV attempts=1
+2026-04-29 06:42:25,873 | INFO | Factor backtest success. alpha_id=RR2QJ0jb attempts=1
+2026-04-29 06:42:56,613 | INFO | Factor backtest success. alpha_id=j29Eq0X9 attempts=1
+2026-04-29 06:42:56,637 | INFO | Batch progress 50/224
+2026-04-29 06:45:44,013 | INFO | Factor backtest success. alpha_id=WjaqvleN attempts=1
+2026-04-29 06:46:16,674 | INFO | Factor backtest success. alpha_id=6Xa85lL7 attempts=1
+2026-04-29 06:46:59,220 | INFO | Factor backtest success. alpha_id=QP2JNObX attempts=1
+2026-04-29 06:47:57,585 | INFO | Factor backtest success. alpha_id=e7dwl7YJ attempts=1
+2026-04-29 06:48:46,264 | INFO | Factor backtest success. alpha_id=3qabkOr0 attempts=1
+2026-04-29 06:49:35,156 | INFO | Factor backtest success. alpha_id=KPXdKkjg attempts=1
+2026-04-29 06:50:37,770 | INFO | Factor backtest success. alpha_id=RR2QJv8d attempts=1
+2026-04-29 06:51:15,735 | INFO | Factor backtest success. alpha_id=npZR10nE attempts=1
+2026-04-29 06:51:31,590 | INFO | Factor backtest success. alpha_id=A1gZRw3l attempts=1
+2026-04-29 06:52:42,556 | INFO | Factor backtest success. alpha_id=P0waJP2L attempts=1
+2026-04-29 06:52:42,584 | INFO | Batch progress 60/224
+2026-04-29 06:52:46,906 | INFO | Factor backtest success. alpha_id=9qa1z51x attempts=1
+2026-04-29 06:55:54,527 | INFO | Factor backtest success. alpha_id=QP2JzdVQ attempts=1
+2026-04-29 06:56:57,260 | INFO | Factor backtest success. alpha_id=A1gWzRje attempts=1
+2026-04-29 06:58:15,733 | INFO | Factor backtest success. alpha_id=LLgaPYQm attempts=1
+2026-04-29 06:58:35,374 | INFO | Factor backtest success. alpha_id=rKJgK6Zo attempts=1
+2026-04-29 07:00:57,449 | INFO | Factor backtest success. alpha_id=zqPMGJo1 attempts=1
+2026-04-29 07:01:47,492 | INFO | Factor backtest success. alpha_id=58a08nOk attempts=1
+2026-04-29 07:02:46,321 | INFO | Factor backtest success. alpha_id=bloZlpAR attempts=1
+2026-04-29 07:03:08,650 | INFO | Factor backtest success. alpha_id=xAP8A1GJ attempts=1
+2026-04-29 07:04:27,754 | INFO | Factor backtest success. alpha_id=ZY23Y0Pn attempts=1
+2026-04-29 07:04:27,787 | INFO | Batch progress 70/224
+2026-04-29 07:04:54,974 | INFO | Factor backtest success. alpha_id=Vk2jkpXA attempts=1
+2026-04-29 07:06:20,228 | INFO | Factor backtest success. alpha_id=O0bYz9a7 attempts=1
+2026-04-29 07:06:31,190 | INFO | Factor backtest success. alpha_id=akAZkwe2 attempts=1
+2026-04-29 07:06:39,297 | INFO | Factor backtest success. alpha_id=pwVrwxaq attempts=1
+2026-04-29 07:08:29,679 | INFO | Factor backtest success. alpha_id=1Yabke9R attempts=1
+2026-04-29 07:09:41,764 | INFO | Factor backtest success. alpha_id=Vk29zadw attempts=1
+2026-04-29 07:09:45,968 | INFO | Factor backtest success. alpha_id=vReMwzE3 attempts=1
+2026-04-29 07:11:44,683 | INFO | Factor backtest success. alpha_id=58ab5eQz attempts=1
+2026-04-29 07:12:17,804 | INFO | Factor backtest success. alpha_id=6XaVXW1P attempts=1
+2026-04-29 07:13:38,900 | INFO | Factor backtest success. alpha_id=N1gmxg28 attempts=1
+2026-04-29 07:13:38,937 | INFO | Batch progress 80/224
+2026-04-29 07:16:27,559 | INFO | Factor backtest success. alpha_id=88a9599v attempts=1
+2026-04-29 07:17:01,266 | INFO | Factor backtest success. alpha_id=E5gWOwaG attempts=1
+2026-04-29 07:17:29,856 | INFO | Factor backtest success. alpha_id=P0waQq6M attempts=1
+2026-04-29 07:19:07,763 | INFO | Factor backtest success. alpha_id=RR2QjeJb attempts=1
+2026-04-29 07:19:16,103 | INFO | Factor backtest success. alpha_id=RR2QjAdd attempts=1
+2026-04-29 07:20:15,190 | INFO | Factor backtest success. alpha_id=GrMaz9k0 attempts=1
+2026-04-29 07:20:55,023 | INFO | Factor backtest success. alpha_id=E5gWOzaK attempts=1
+2026-04-29 07:21:12,650 | INFO | Factor backtest success. alpha_id=O0bYz3ev attempts=1
+2026-04-29 07:23:05,198 | INFO | Factor backtest success. alpha_id=zqP6KVNd attempts=1
+2026-04-29 07:24:19,821 | INFO | Factor backtest success. alpha_id=9qa1YgLK attempts=1
+2026-04-29 07:24:19,862 | INFO | Batch progress 90/224
+2026-04-29 07:25:24,738 | INFO | Factor backtest success. alpha_id=QP2kZpKW attempts=1
+2026-04-29 07:25:56,855 | INFO | Factor backtest success. alpha_id=kq17O5n8 attempts=1
+2026-04-29 07:26:36,607 | INFO | Factor backtest success. alpha_id=zqP6Z63o attempts=1
+2026-04-29 07:27:26,322 | INFO | Factor backtest success. alpha_id=wpnxqwnx attempts=1
+2026-04-29 07:28:28,814 | INFO | Factor backtest success. alpha_id=0me3qAKp attempts=1
+2026-04-29 07:29:02,741 | INFO | Factor backtest success. alpha_id=Jjgw1oJ2 attempts=1
+2026-04-29 07:30:06,819 | INFO | Factor backtest success. alpha_id=O0bPOo67 attempts=1
+2026-04-29 07:30:33,978 | INFO | Factor backtest success. alpha_id=zqP6ZgzX attempts=1
+2026-04-29 07:31:15,804 | INFO | Factor backtest success. alpha_id=MPKRO7lo attempts=1
+2026-04-29 07:31:22,787 | INFO | Factor backtest success. alpha_id=58abevw1 attempts=1
+2026-04-29 07:31:22,827 | INFO | Batch progress 100/224
+2026-04-29 07:32:35,694 | INFO | Factor backtest success. alpha_id=P0waW1dw attempts=1
+2026-04-29 07:34:09,143 | INFO | Factor backtest success. alpha_id=GrMAarP0 attempts=1
+2026-04-29 07:34:18,818 | INFO | Factor backtest success. alpha_id=78abA1pZ attempts=1
+2026-04-29 07:34:19,099 | INFO | Factor backtest success. alpha_id=78aAMMX8 attempts=1
+2026-04-29 07:36:19,061 | INFO | Factor backtest success. alpha_id=zqP6MkYR attempts=1
+2026-04-29 07:38:43,179 | INFO | Factor backtest success. alpha_id=LLgaj66e attempts=1
+2026-04-29 07:39:17,311 | INFO | Factor backtest success. alpha_id=npZRJKNw attempts=1
+2026-04-29 07:40:34,646 | INFO | Factor backtest success. alpha_id=E5gWW59L attempts=1
+2026-04-29 07:41:27,879 | INFO | Factor backtest success. alpha_id=78aAMrn5 attempts=1
+2026-04-29 07:42:31,171 | INFO | Factor backtest success. alpha_id=vReMqQx3 attempts=1
+2026-04-29 07:42:31,218 | INFO | Batch progress 110/224
+2026-04-29 07:43:29,448 | INFO | Factor backtest success. alpha_id=QP2J6rxX attempts=1
+2026-04-29 07:44:18,761 | INFO | Factor backtest success. alpha_id=vReMqZeG attempts=1
+2026-04-29 07:44:57,807 | INFO | Factor backtest success. alpha_id=N1gmmmRE attempts=1
+2026-04-29 07:45:42,252 | INFO | Factor backtest success. alpha_id=KPXddbKl attempts=1
+2026-04-29 07:46:38,258 | INFO | Factor backtest success. alpha_id=58a00qxN attempts=1
+2026-04-29 07:47:09,305 | INFO | Factor backtest success. alpha_id=1Ya90LQJ attempts=1
+2026-04-29 07:47:37,556 | INFO | Factor backtest success. alpha_id=P0waa1GM attempts=1
+2026-04-29 07:48:38,063 | INFO | Factor backtest success. alpha_id=j29RR309 attempts=1
+2026-04-29 07:49:44,958 | INFO | Factor backtest success. alpha_id=E5g7xv7G attempts=1
+2026-04-29 07:51:26,352 | INFO | Factor backtest success. alpha_id=Vk2jjb5M attempts=1
+2026-04-29 07:51:26,400 | INFO | Batch progress 120/224
+2026-04-29 07:51:26,730 | INFO | Factor backtest success. alpha_id=npZRR8QM attempts=1
+2026-04-29 07:52:53,729 | INFO | Factor backtest success. alpha_id=RR2QQPN1 attempts=1
+2026-04-29 07:53:59,333 | INFO | Factor backtest success. alpha_id=vReqPkaz attempts=1
+2026-04-29 07:55:05,443 | INFO | Factor backtest success. alpha_id=QP2kLeOw attempts=1
+2026-04-29 07:55:40,585 | INFO | Factor backtest success. alpha_id=RR2QnMMe attempts=1
+2026-04-29 07:56:26,553 | INFO | Factor backtest success. alpha_id=LLgaAeza attempts=1
+2026-04-29 07:56:48,394 | INFO | Factor backtest success. alpha_id=Xg2QQRM0 attempts=1
+2026-04-29 07:58:02,262 | INFO | Factor backtest success. alpha_id=om3pZJEJ attempts=1
+2026-04-29 07:58:14,562 | INFO | Factor backtest success. alpha_id=RR2QnApo attempts=1
+2026-04-29 07:58:33,885 | INFO | Factor backtest success. alpha_id=zqP61O7X attempts=1
+2026-04-29 07:58:33,941 | INFO | Batch progress 130/224
+2026-04-29 08:00:43,852 | INFO | Factor backtest success. alpha_id=A1gZMG0E attempts=1
+2026-04-29 08:01:05,728 | INFO | Factor backtest success. alpha_id=d5EVAaAj attempts=1
+2026-04-29 08:02:15,771 | INFO | Factor backtest success. alpha_id=Vk29eROA attempts=1
+2026-04-29 08:04:07,983 | INFO | Factor backtest success. alpha_id=O0bPapx1 attempts=1
+2026-04-29 08:04:13,803 | INFO | Factor backtest success. alpha_id=e7dpW7ed attempts=1
+2026-04-29 08:04:52,008 | INFO | Factor backtest success. alpha_id=kq1r2A6P attempts=1
+2026-04-29 08:06:00,671 | INFO | Factor backtest success. alpha_id=P0wa9jA7 attempts=1
+2026-04-29 08:06:51,461 | INFO | Factor backtest success. alpha_id=O0bPaGLq attempts=1
+2026-04-29 08:07:47,063 | INFO | Factor backtest success. alpha_id=akAYgJd6 attempts=1
+2026-04-29 08:08:21,288 | INFO | Factor backtest success. alpha_id=leQOXOX5 attempts=1
+2026-04-29 08:08:21,613 | INFO | Batch progress 140/224
+2026-04-29 08:08:58,299 | INFO | Factor backtest success. alpha_id=YP2KqMvJ attempts=1
+2026-04-29 08:10:17,899 | INFO | Factor backtest success. alpha_id=P0wa9oVp attempts=1
+2026-04-29 08:11:49,315 | INFO | Factor backtest success. alpha_id=mLrR9nw9 attempts=1
+2026-04-29 08:13:20,634 | INFO | Factor backtest success. alpha_id=ZY251r93 attempts=1
+2026-04-29 08:14:11,735 | INFO | Factor backtest success. alpha_id=pwVrgOLb attempts=1
+2026-04-29 08:14:48,329 | INFO | Factor backtest success. alpha_id=Vk2jJz3Y attempts=1
+2026-04-29 08:15:12,091 | INFO | Factor backtest success. alpha_id=npZRbVEE attempts=1
+2026-04-29 08:16:27,857 | INFO | Factor backtest success. alpha_id=om3pk3Kv attempts=1
+2026-04-29 08:16:58,547 | INFO | Factor backtest success. alpha_id=N1gmopjX attempts=1
+2026-04-29 08:19:50,768 | INFO | Factor backtest success. alpha_id=E5g72pgK attempts=1
+2026-04-29 08:19:50,826 | INFO | Batch progress 150/224
+2026-04-29 08:20:04,089 | INFO | Factor backtest success. alpha_id=MPKRA58L attempts=1
+2026-04-29 08:20:12,928 | INFO | Factor backtest success. alpha_id=Vk2joJQw attempts=1
+2026-04-29 08:21:48,120 | INFO | Factor backtest success. alpha_id=P0wae0K7 attempts=1
+2026-04-29 08:22:19,244 | INFO | Factor backtest success. alpha_id=om35eWeE attempts=1
+2026-04-29 08:24:58,222 | INFO | Factor backtest success. alpha_id=leQOZV15 attempts=1
+2026-04-29 08:27:06,000 | INFO | Factor backtest success. alpha_id=N1gmoPw7 attempts=1
+2026-04-29 08:28:10,625 | INFO | Factor backtest success. alpha_id=QP2kd6kM attempts=1
+2026-04-29 08:28:52,542 | INFO | Factor backtest success. alpha_id=Xg2QE3w8 attempts=1
+2026-04-29 08:28:52,606 | WARNING | Factor backtest attempt 1/3 failed: 429 Client Error: Too Many Requests for url: https://api.worldquantbrain.com/simulations | response_body={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}
+2026-04-29 08:28:52,606 | WARNING | Brain concurrency limit hit (CONCURRENT_SIMULATION_LIMIT_EXCEEDED); waiting 45.0s before retry.
+2026-04-29 08:29:49,695 | INFO | Factor backtest success. alpha_id=leQOZ1Ln attempts=1
+2026-04-29 08:31:08,554 | INFO | Factor backtest success. alpha_id=LLgaxQ0e attempts=1
+2026-04-29 08:31:08,627 | INFO | Batch progress 160/224
+2026-04-29 08:31:08,952 | INFO | Factor backtest success. alpha_id=N1gmM0gE attempts=2
+2026-04-29 08:32:44,735 | INFO | Factor backtest success. alpha_id=88a9AqKX attempts=1
+2026-04-29 08:33:40,910 | INFO | Factor backtest success. alpha_id=RR2QXdnd attempts=1
+2026-04-29 08:35:32,731 | INFO | Factor backtest success. alpha_id=1Yabv1QX attempts=1
+2026-04-29 08:35:43,300 | INFO | Factor backtest success. alpha_id=88a9AQal attempts=1
+2026-04-29 08:36:01,558 | INFO | Factor backtest success. alpha_id=kq1rRL0O attempts=1
+2026-04-29 08:37:45,520 | INFO | Factor backtest success. alpha_id=E5gW3p7r attempts=1
+2026-04-29 08:39:39,504 | INFO | Factor backtest success. alpha_id=O0bPeVdq attempts=1
+2026-04-29 08:39:51,898 | INFO | Factor backtest success. alpha_id=1YabvPbM attempts=1
+2026-04-29 08:40:24,813 | INFO | Factor backtest success. alpha_id=E5gW3pmr attempts=1
+2026-04-29 08:40:24,883 | INFO | Batch progress 170/224
+2026-04-29 08:41:16,240 | INFO | Factor backtest success. alpha_id=E5gW3LX1 attempts=1
+2026-04-29 08:41:23,063 | INFO | Factor backtest success. alpha_id=9qa1o53o attempts=1
+2026-04-29 08:43:02,556 | INFO | Factor backtest success. alpha_id=gJRO76Wm attempts=1
+2026-04-29 08:43:24,554 | INFO | Factor backtest success. alpha_id=3qargQGz attempts=1
+2026-04-29 08:43:57,172 | INFO | Factor backtest success. alpha_id=O0bPe3lJ attempts=1
+2026-04-29 08:45:00,788 | INFO | Factor backtest success. alpha_id=leQOJJ7O attempts=1
+2026-04-29 08:46:04,731 | INFO | Factor backtest success. alpha_id=N1gmkwvw attempts=1
+2026-04-29 08:47:01,578 | INFO | Factor backtest success. alpha_id=88a9gKYz attempts=1
+2026-04-29 08:47:14,582 | INFO | Factor backtest success. alpha_id=rKJgQOl8 attempts=1
+2026-04-29 08:48:28,893 | INFO | Factor backtest success. alpha_id=mLrReqm6 attempts=1
+2026-04-29 08:48:28,962 | INFO | Batch progress 180/224
+2026-04-29 08:48:37,987 | INFO | Factor backtest success. alpha_id=j29RNrO5 attempts=1
+2026-04-29 08:50:39,678 | INFO | Factor backtest success. alpha_id=gJRO7X80 attempts=1
+2026-04-29 08:50:51,202 | INFO | Factor backtest success. alpha_id=pwVrQaKj attempts=1
+2026-04-29 08:50:55,647 | INFO | Factor backtest success. alpha_id=QP2kmpJ5 attempts=1
+2026-04-29 08:52:46,259 | INFO | Factor backtest success. alpha_id=qMPreJp1 attempts=1
+2026-04-29 08:53:40,513 | INFO | Factor backtest success. alpha_id=P0warERM attempts=1
+2026-04-29 08:53:48,470 | INFO | Factor backtest success. alpha_id=rKJg6KL3 attempts=1
+2026-04-29 08:54:12,430 | INFO | Factor backtest success. alpha_id=qMPrkmnZ attempts=1
+2026-04-29 08:55:38,248 | INFO | Factor backtest success. alpha_id=gJROqPA0 attempts=1
+2026-04-29 08:57:06,208 | INFO | Factor backtest success. alpha_id=9qa1P2Vr attempts=1
+2026-04-29 08:57:06,284 | INFO | Batch progress 190/224
+2026-04-29 08:57:46,343 | INFO | Factor backtest success. alpha_id=j29RlwPO attempts=1
+2026-04-29 08:58:30,942 | INFO | Factor backtest success. alpha_id=wpnxweRY attempts=1
+2026-04-29 08:58:33,770 | INFO | Factor backtest success. alpha_id=9qa1PV51 attempts=1
+2026-04-29 09:00:02,222 | INFO | Factor backtest success. alpha_id=d5EV8jrj attempts=1
+2026-04-29 09:00:40,624 | INFO | Factor backtest success. alpha_id=P0warLjL attempts=1
+2026-04-29 09:01:29,921 | INFO | Factor backtest success. alpha_id=akAZ2a85 attempts=1
+2026-04-29 09:01:59,765 | INFO | Factor backtest success. alpha_id=78abqpAO attempts=1
+2026-04-29 09:02:52,475 | INFO | Factor backtest success. alpha_id=Xg2QPmja attempts=1
+2026-04-29 09:03:46,966 | INFO | Factor backtest success. alpha_id=gJROwpze attempts=1
+2026-04-29 09:04:01,343 | INFO | Factor backtest success. alpha_id=gJROw7VK attempts=1
+2026-04-29 09:04:01,417 | INFO | Batch progress 200/224
+2026-04-29 09:04:36,994 | INFO | Factor backtest success. alpha_id=9qa1b9VK attempts=1
+2026-04-29 09:05:13,159 | INFO | Factor backtest success. alpha_id=1Yab18GW attempts=1
+2026-04-29 09:05:58,100 | INFO | Factor backtest success. alpha_id=O0bPq8Ap attempts=1
+2026-04-29 09:06:33,456 | INFO | Factor backtest success. alpha_id=O0bPqZvb attempts=1
+2026-04-29 09:07:13,121 | INFO | Factor backtest success. alpha_id=xAP89VMn attempts=1
+2026-04-29 09:08:30,045 | INFO | Factor backtest success. alpha_id=WjaQdjLZ attempts=1
+2026-04-29 09:09:44,756 | INFO | Factor backtest success. alpha_id=3qar38W0 attempts=1
+2026-04-29 09:10:06,488 | INFO | Factor backtest success. alpha_id=3qarxbbX attempts=1
+2026-04-29 09:10:41,691 | INFO | Factor backtest success. alpha_id=vReMx6Rz attempts=1
+2026-04-29 09:12:17,757 | INFO | Factor backtest success. alpha_id=akAZlZPR attempts=1
+2026-04-29 09:12:17,848 | INFO | Batch progress 210/224
+2026-04-29 09:12:19,406 | INFO | Factor backtest success. alpha_id=1YabLE8W attempts=1
+2026-04-29 09:12:23,270 | INFO | Factor backtest success. alpha_id=qMPrdv1A attempts=1
+2026-04-29 09:13:44,548 | INFO | Factor backtest success. alpha_id=JjgEmGWW attempts=1
+2026-04-29 09:13:51,885 | INFO | Factor backtest success. alpha_id=RR2QY0an attempts=1
+2026-04-29 09:15:40,078 | INFO | Factor backtest success. alpha_id=MPKR8nEM attempts=1
+2026-04-29 09:17:11,169 | INFO | Factor backtest success. alpha_id=0me3dxaG attempts=1
+2026-04-29 09:17:47,046 | INFO | Factor backtest success. alpha_id=WjaQdx7G attempts=1
+2026-04-29 09:19:23,080 | INFO | Factor backtest success. alpha_id=6XaV1QaJ attempts=1
+2026-04-29 09:19:58,800 | INFO | Factor backtest success. alpha_id=d5EV7gOx attempts=1
+2026-04-29 09:20:02,752 | INFO | Factor backtest success. alpha_id=9qa1KaJ9 attempts=1
+2026-04-29 09:20:02,835 | INFO | Batch progress 220/224
+2026-04-29 09:21:14,667 | INFO | Factor backtest success. alpha_id=RR2QaQVd attempts=1
+2026-04-29 09:21:38,959 | INFO | Factor backtest success. alpha_id=QP2klnOp attempts=1
+2026-04-29 09:21:50,468 | INFO | Factor backtest success. alpha_id=d5EV7gX2 attempts=1
+2026-04-29 09:23:46,732 | INFO | Factor backtest success. alpha_id=6XaVqdKJ attempts=1
+2026-04-29 09:23:46,826 | INFO | Batch progress 224/224
+2026-04-29 09:23:46,921 | INFO | Wrote backtest results: backtest_results/probe/fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e/fundamental6_TPL_FUND_PROFIT_ASSET_TS_V1_TPL_FUND_MARGIN_REV_TS_V1_TPL__8ec2b73e_060322_batch_0001.json (ok=224 skipped_after_retries=0)
