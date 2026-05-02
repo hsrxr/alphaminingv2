@@ -1,0 +1,1267 @@
+{
+  "dataset_id": "analyst4",
+  "created_at": "2026-05-02T22:06:21",
+  "page_index": 8,
+  "offset": 350,
+  "count": 50,
+  "request": {
+    "instrumentType": "EQUITY",
+    "region": "USA",
+    "delay": 1,
+    "universe": "TOP3000",
+    "data_type": "MATRIX",
+    "search": ""
+  },
+  "results": [
+    {
+      "id": "max_tangible_book_value_per_share_guidance",
+      "description": "Tangible Book Value per Share - maximum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 71,
+      "alphaCount": 77,
+      "themes": []
+    },
+    {
+      "id": "max_total_assets_guidance",
+      "description": "The maximum guidance value for Total Assets.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 69,
+      "alphaCount": 70,
+      "themes": []
+    },
+    {
+      "id": "max_total_assets_guidance_2",
+      "description": "The maximum guidance value for Total Assets",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 84,
+      "alphaCount": 91,
+      "themes": []
+    },
+    {
+      "id": "max_total_goodwill_guidance",
+      "description": "The maximum guidance value for Total Goodwill.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 58,
+      "alphaCount": 63,
+      "themes": []
+    },
+    {
+      "id": "max_total_goodwill_guidance_2",
+      "description": "The maximum guidance value for Total Goodwill on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 45,
+      "alphaCount": 47,
+      "themes": []
+    },
+    {
+      "id": "median_sales_estimate",
+      "description": "Sales - median of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 46,
+      "alphaCount": 49,
+      "themes": []
+    },
+    {
+      "id": "min_adjusted_funds_from_operations_adj_guidance",
+      "description": "Minimum guidance value for Adjusted funds from operation",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 36,
+      "alphaCount": 38,
+      "themes": []
+    },
+    {
+      "id": "min_adjusted_funds_from_operations_guidance",
+      "description": "Funds from operation - minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 34,
+      "alphaCount": 36,
+      "themes": []
+    },
+    {
+      "id": "min_adjusted_funds_from_operations_guidance_2",
+      "description": "Adjusted funds from operation - minimum guidance for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 45,
+      "alphaCount": 49,
+      "themes": []
+    },
+    {
+      "id": "min_adjusted_net_income_guidance",
+      "description": "Adjusted net income - minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 1107,
+      "alphaCount": 1410,
+      "themes": []
+    },
+    {
+      "id": "min_basic_shares_guidance",
+      "description": "Shares Basic - Minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 50,
+      "alphaCount": 54,
+      "themes": []
+    },
+    {
+      "id": "min_book_value_per_share_guidance",
+      "description": "Book value per share - minimum guidance value for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 40,
+      "alphaCount": 43,
+      "themes": []
+    },
+    {
+      "id": "min_capex_guidance",
+      "description": "Minimum guidance value for Capital Expenditures",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 52,
+      "alphaCount": 58,
+      "themes": []
+    },
+    {
+      "id": "min_capital_expenditure_guidance",
+      "description": "Minimum guidance value for Capital Expenditures",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 16,
+      "alphaCount": 19,
+      "themes": []
+    },
+    {
+      "id": "min_custom_eps_guidance",
+      "description": "Custom Earnings per share - Minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 27,
+      "alphaCount": 27,
+      "themes": []
+    },
+    {
+      "id": "min_customized_eps_guidance",
+      "description": "Customized Earnings per share - Minimum guidance value for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 24,
+      "alphaCount": 25,
+      "themes": []
+    },
+    {
+      "id": "min_ebit_guidance",
+      "description": "Minimum guidance value for Earnings Before Interest and Taxes (EBIT)",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 52,
+      "alphaCount": 57,
+      "themes": []
+    },
+    {
+      "id": "min_ebit_guidance_2",
+      "description": "Minimum guidance value for Earnings Before Interest and Taxes (EBIT) on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 42,
+      "alphaCount": 45,
+      "themes": []
+    },
+    {
+      "id": "min_ebitda_guidance",
+      "description": "Minimum guidance value for Earnings Before Interest, Taxes, Depreciation, and Amortization (EBITDA) - Annual",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 23,
+      "alphaCount": 26,
+      "themes": []
+    },
+    {
+      "id": "min_financing_cashflow_guidance",
+      "description": "Minimum guidance value for Cash Flow From Financing",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 26,
+      "alphaCount": 27,
+      "themes": []
+    },
+    {
+      "id": "min_financing_cashflow_guidance_2",
+      "description": "Minimum guidance value for Cash Flow From Financing on an annual basis",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 47,
+      "alphaCount": 49,
+      "themes": []
+    },
+    {
+      "id": "min_free_cash_flow_guidance",
+      "description": "The minimum guidance value for Free Cash Flow on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 25,
+      "alphaCount": 30,
+      "themes": []
+    },
+    {
+      "id": "min_free_cash_flow_per_share_guidance",
+      "description": "Free cash flow per share - minimum guidance value for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 46,
+      "alphaCount": 47,
+      "themes": []
+    },
+    {
+      "id": "min_free_cashflow_guidance",
+      "description": "Minimum guidance value for Free Cash Flow",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 34,
+      "alphaCount": 37,
+      "themes": []
+    },
+    {
+      "id": "min_free_cashflow_per_share_guidance",
+      "description": "Free cash flow per share - minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 44,
+      "alphaCount": 45,
+      "themes": []
+    },
+    {
+      "id": "min_funds_from_operations_guidance",
+      "description": "Funds from operation - minimum guidance value for annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 35,
+      "alphaCount": 35,
+      "themes": []
+    },
+    {
+      "id": "min_gross_income_guidance",
+      "description": "The minimum guidance value for Gross Income.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 26,
+      "alphaCount": 27,
+      "themes": []
+    },
+    {
+      "id": "min_gross_income_guidance_2",
+      "description": "The minimum guidance for Gross Income on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 18,
+      "alphaCount": 20,
+      "themes": []
+    },
+    {
+      "id": "min_investing_cashflow_guidance",
+      "description": "Cash Flow From Investing - Minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 52,
+      "alphaCount": 54,
+      "themes": []
+    },
+    {
+      "id": "min_investing_cashflow_guidance_2",
+      "description": "Cash Flow From Investing - Minimum guidance value for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 48,
+      "alphaCount": 52,
+      "themes": []
+    },
+    {
+      "id": "min_net_debt_guidance",
+      "description": "The minimum guidance value for Net Debt on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 54,
+      "alphaCount": 62,
+      "themes": []
+    },
+    {
+      "id": "min_net_income_guidance",
+      "description": "Net profit - minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 70,
+      "alphaCount": 79,
+      "themes": []
+    },
+    {
+      "id": "min_net_profit_guidance",
+      "description": "Minimum guidance value for Net Profit on an annual basis",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 32,
+      "alphaCount": 34,
+      "themes": []
+    },
+    {
+      "id": "min_operating_cashflow_guidance",
+      "description": "Minimum guidance value for Cash Flow from Operations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 33,
+      "alphaCount": 35,
+      "themes": []
+    },
+    {
+      "id": "min_pretax_profit_guidance",
+      "description": "Minimum guidance value for Pretax income",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 35,
+      "alphaCount": 38,
+      "themes": []
+    },
+    {
+      "id": "min_pretax_profit_guidance_2",
+      "description": "The minimum guidance value for Pretax income on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 50,
+      "alphaCount": 55,
+      "themes": []
+    },
+    {
+      "id": "min_reported_eps_guidance",
+      "description": "Reported Earnings Per Share - Minimum guidance value for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 18,
+      "alphaCount": 20,
+      "themes": []
+    },
+    {
+      "id": "min_research_development_expense_guidance",
+      "description": "Minimum guidance value for Research & Development Expense",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 25,
+      "alphaCount": 28,
+      "themes": []
+    },
+    {
+      "id": "min_research_development_expense_guidance_2",
+      "description": "Minimum guidance value for Research & Development Expense on an annual basis",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 23,
+      "alphaCount": 24,
+      "themes": []
+    },
+    {
+      "id": "min_sg_and_a_expense_guidance",
+      "description": "Selling, General & Administrative Expense - Minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 25,
+      "alphaCount": 28,
+      "themes": []
+    },
+    {
+      "id": "min_share_buyback_guidance",
+      "description": "Shares Basic - Minimum guidance value for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 35,
+      "alphaCount": 42,
+      "themes": []
+    },
+    {
+      "id": "min_share_count_guidance",
+      "description": "Minimum guidance for shares on an annual basis",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 41,
+      "alphaCount": 45,
+      "themes": []
+    },
+    {
+      "id": "min_shareholders_equity_guidance",
+      "description": "Minimum guidance value for Shareholders' Equity",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 50,
+      "alphaCount": 52,
+      "themes": []
+    },
+    {
+      "id": "min_shares_outstanding_guidance",
+      "description": "Minimum guidance value for Shares",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 36,
+      "alphaCount": 37,
+      "themes": []
+    },
+    {
+      "id": "min_stock_option_expense_guidance",
+      "description": "Stock option expense - minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 83,
+      "alphaCount": 93,
+      "themes": []
+    },
+    {
+      "id": "min_stock_option_expense_guidance_2",
+      "description": "Minimum guidance value for stock option expense on an annual basis",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 35,
+      "alphaCount": 35,
+      "themes": []
+    },
+    {
+      "id": "min_tangible_book_value_per_share_guidance",
+      "description": "Tangible Book Value per Share - minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 35,
+      "alphaCount": 40,
+      "themes": []
+    },
+    {
+      "id": "min_tangible_book_value_per_share_guidance_2",
+      "description": "Tangible Book Value per Share - Minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 72,
+      "alphaCount": 79,
+      "themes": []
+    },
+    {
+      "id": "min_total_assets_guidance",
+      "description": "Minimum guidance value for Total Assets",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 21,
+      "alphaCount": 22,
+      "themes": []
+    },
+    {
+      "id": "min_total_assets_guidance_2",
+      "description": "Minimum guidance value for Total Assets on an annual basis",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 37,
+      "alphaCount": 37,
+      "themes": []
+    }
+  ]
+}

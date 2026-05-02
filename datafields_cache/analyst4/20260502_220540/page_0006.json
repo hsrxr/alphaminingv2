@@ -1,0 +1,1239 @@
+{
+  "dataset_id": "analyst4",
+  "created_at": "2026-05-02T22:06:08",
+  "page_index": 6,
+  "offset": 250,
+  "count": 50,
+  "request": {
+    "instrumentType": "EQUITY",
+    "region": "USA",
+    "delay": 1,
+    "universe": "TOP3000",
+    "data_type": "MATRIX",
+    "search": ""
+  },
+  "results": [
+    {
+      "id": "earnings_per_share_estimate_count",
+      "description": "Earnings per share - number of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 272,
+      "alphaCount": 320,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_guidance_value",
+      "description": "Earnings Per Share - guidance value for annual frequency",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.36,
+      "userCount": 57,
+      "alphaCount": 59,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_max_guidance",
+      "description": "The maximum guidance value for Earnings Per Share on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 33,
+      "alphaCount": 35,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_maximum",
+      "description": "Earnings per share - The highest estimation",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 33,
+      "alphaCount": 35,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_median_value",
+      "description": "Earnings per share - median of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 44,
+      "alphaCount": 62,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_min_guidance",
+      "description": "Minimum guidance value for Earnings Per Share on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 31,
+      "alphaCount": 32,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_minimum",
+      "description": "Earnings per share - The lowest estimation",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 25,
+      "alphaCount": 31,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_nongaap_value",
+      "description": "Non-GAAP Earnings Per Share - Actual Value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7978,
+      "userCount": 44,
+      "alphaCount": 50,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_reported",
+      "description": "Reported Earnings Per Share - Actual Value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.957,
+      "userCount": 79,
+      "alphaCount": 85,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_reported_value",
+      "description": "Reported Earnings Per Share - Actual Value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9902,
+      "userCount": 107,
+      "alphaCount": 123,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_standard_deviation",
+      "description": "Earnings per share - standard deviation of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7237,
+      "userCount": 232,
+      "alphaCount": 273,
+      "themes": []
+    },
+    {
+      "id": "ebit_reported_value",
+      "description": "Earnings Before Interest & Taxes - actual value for the quarter",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9483,
+      "userCount": 83,
+      "alphaCount": 122,
+      "themes": []
+    },
+    {
+      "id": "ebitda_reported_value",
+      "description": "EBITDA value for the quarter.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8132,
+      "userCount": 119,
+      "alphaCount": 131,
+      "themes": []
+    },
+    {
+      "id": "eps_adjusted_min_guidance_qtr",
+      "description": "Minimum guidance value for adjusted Earnings per share excluding extraordinary items and stock option expenses.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 24,
+      "alphaCount": 28,
+      "themes": []
+    },
+    {
+      "id": "eps_adjusted_min_guidance_value",
+      "description": "The minimum guidance value for adjusted earnings per share excluding extraordinary items and stock option expenses on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 22,
+      "alphaCount": 24,
+      "themes": []
+    },
+    {
+      "id": "eps_guidance_value_quarterly",
+      "description": "Earnings Per Share - Basic value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.3007,
+      "userCount": 20,
+      "alphaCount": 26,
+      "themes": []
+    },
+    {
+      "id": "eps_max_guidance_quarterly",
+      "description": "The maximum guidance value for Earnings Per Share.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 65,
+      "alphaCount": 79,
+      "themes": []
+    },
+    {
+      "id": "eps_min_guidance_quarterly",
+      "description": "Minimum guidance value for Earnings per Share",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 43,
+      "alphaCount": 52,
+      "themes": []
+    },
+    {
+      "id": "eps_reported_min_guidance_qtr",
+      "description": "Reported Earnings Per Share - Minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 46,
+      "alphaCount": 48,
+      "themes": []
+    },
+    {
+      "id": "est_bookvalue_ps",
+      "description": "Book value per share - average of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.6751,
+      "userCount": 648,
+      "alphaCount": 1348,
+      "themes": []
+    },
+    {
+      "id": "est_capex",
+      "description": "Capital Expenditures - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.6427,
+      "userCount": 1059,
+      "alphaCount": 5151,
+      "themes": []
+    },
+    {
+      "id": "est_cashflow_fin",
+      "description": "Cash Flow From Financing - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.6205,
+      "userCount": 363,
+      "alphaCount": 843,
+      "themes": []
+    },
+    {
+      "id": "est_cashflow_invst",
+      "description": "Cash Flow From Investing - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.6155,
+      "userCount": 394,
+      "alphaCount": 668,
+      "themes": []
+    },
+    {
+      "id": "est_cashflow_op",
+      "description": "Cash Flow From Operations - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.6518,
+      "userCount": 964,
+      "alphaCount": 2016,
+      "themes": []
+    },
+    {
+      "id": "est_cashflow_ps",
+      "description": "Cash Flow Per Share - average of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.3273,
+      "userCount": 159,
+      "alphaCount": 292,
+      "themes": []
+    },
+    {
+      "id": "est_dividend_ps",
+      "description": "Dividend per share - average of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.4857,
+      "userCount": 218,
+      "alphaCount": 366,
+      "themes": []
+    },
+    {
+      "id": "est_ebit",
+      "description": "Earnings before interest and taxes - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7309,
+      "userCount": 385,
+      "alphaCount": 1959,
+      "themes": []
+    },
+    {
+      "id": "est_ebitda",
+      "description": "Earnings before interest, taxes, depreciation, and amortization - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.6046,
+      "userCount": 439,
+      "alphaCount": 1835,
+      "themes": []
+    },
+    {
+      "id": "est_eps",
+      "description": "Earnings per share - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7848,
+      "userCount": 3575,
+      "alphaCount": 6459,
+      "themes": []
+    },
+    {
+      "id": "est_epsa",
+      "description": "Earnings per share adjusted by excluding extraordinary items and stock option expenses - average of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.1579,
+      "userCount": 622,
+      "alphaCount": 1429,
+      "themes": []
+    },
+    {
+      "id": "est_epsr",
+      "description": "GAAP Earnings per share - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7405,
+      "userCount": 832,
+      "alphaCount": 2660,
+      "themes": []
+    },
+    {
+      "id": "est_fcf",
+      "description": "Free Cash Flow - Mean of Estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.5777,
+      "userCount": 954,
+      "alphaCount": 1338,
+      "themes": []
+    },
+    {
+      "id": "est_fcf_ps",
+      "description": "Free Cash Flow Per Share - Mean of Estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.4642,
+      "userCount": 187,
+      "alphaCount": 263,
+      "themes": []
+    },
+    {
+      "id": "est_ffo",
+      "description": "Funds From Operation - Summary on Estimations, Mean",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.0411,
+      "userCount": 32,
+      "alphaCount": 44,
+      "themes": []
+    },
+    {
+      "id": "est_grossincome",
+      "description": "Gross income - Mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.6246,
+      "userCount": 501,
+      "alphaCount": 1238,
+      "themes": []
+    },
+    {
+      "id": "est_netdebt",
+      "description": "Net debt - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.5434,
+      "userCount": 145,
+      "alphaCount": 290,
+      "themes": []
+    },
+    {
+      "id": "est_netprofit",
+      "description": "Net profit - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7861,
+      "userCount": 1184,
+      "alphaCount": 2224,
+      "themes": []
+    },
+    {
+      "id": "est_netprofit_adj",
+      "description": "Adjusted net income - Mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7731,
+      "userCount": 744,
+      "alphaCount": 1354,
+      "themes": []
+    },
+    {
+      "id": "est_ptp",
+      "description": "Pretax income - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7527,
+      "userCount": 1179,
+      "alphaCount": 1997,
+      "themes": []
+    },
+    {
+      "id": "est_ptpr",
+      "description": "Reported pretax income - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.4374,
+      "userCount": 292,
+      "alphaCount": 551,
+      "themes": []
+    },
+    {
+      "id": "est_rd_expense",
+      "description": "Research and Development Expense - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.3131,
+      "userCount": 2577,
+      "alphaCount": 4686,
+      "themes": []
+    },
+    {
+      "id": "est_sales",
+      "description": "Sales - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7458,
+      "userCount": 966,
+      "alphaCount": 2621,
+      "themes": []
+    },
+    {
+      "id": "est_sga",
+      "description": "SGA - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.5121,
+      "userCount": 167,
+      "alphaCount": 493,
+      "themes": []
+    },
+    {
+      "id": "est_shequity",
+      "description": "Mean of SH Equity segment - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7598,
+      "userCount": 525,
+      "alphaCount": 1152,
+      "themes": []
+    },
+    {
+      "id": "est_tbv_ps",
+      "description": "Tangible Book Value per Share - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.3473,
+      "userCount": 132,
+      "alphaCount": 198,
+      "themes": []
+    },
+    {
+      "id": "est_tot_assets",
+      "description": "Total Assets - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7522,
+      "userCount": 597,
+      "alphaCount": 1216,
+      "themes": []
+    },
+    {
+      "id": "est_tot_goodwill",
+      "description": "Total Goodwill - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.5652,
+      "userCount": 230,
+      "alphaCount": 471,
+      "themes": []
+    },
+    {
+      "id": "financing_cashflow_reported_value",
+      "description": "Cash Flow From Financing - Value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.4781,
+      "userCount": 156,
+      "alphaCount": 193,
+      "themes": []
+    },
+    {
+      "id": "free_cash_flow_per_share",
+      "description": "Free cash flow per share - actual financial value for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.4912,
+      "userCount": 82,
+      "alphaCount": 97,
+      "themes": []
+    },
+    {
+      "id": "free_cash_flow_per_share_actual_value",
+      "description": "Free cash flow per share- announced financial value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.3514,
+      "userCount": 20,
+      "alphaCount": 22,
+      "themes": []
+    }
+  ]
+}

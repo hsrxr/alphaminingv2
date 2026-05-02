@@ -1,0 +1,317 @@
+{
+  "dataset_id": "socialmedia12",
+  "created_at": "2026-05-02T22:04:24",
+  "page_index": 1,
+  "offset": 0,
+  "count": 12,
+  "request": {
+    "instrumentType": "EQUITY",
+    "region": "USA",
+    "delay": 1,
+    "universe": "TOP3000",
+    "data_type": "MATRIX",
+    "search": ""
+  },
+  "results": [
+    {
+      "id": "scl12_buzz",
+      "description": "relative sentiment volume",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 13406,
+      "alphaCount": 20199,
+      "themes": []
+    },
+    {
+      "id": "scl12_buzz_fast_d1",
+      "description": "relative sentiment volume",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9756,
+      "userCount": 104,
+      "alphaCount": 121,
+      "themes": []
+    },
+    {
+      "id": "scl12_sentiment",
+      "description": "sentiment",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 1200,
+      "alphaCount": 3256,
+      "themes": []
+    },
+    {
+      "id": "scl12_sentiment_fast_d1",
+      "description": "sentiment",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9756,
+      "userCount": 114,
+      "alphaCount": 130,
+      "themes": []
+    },
+    {
+      "id": "snt_buzz",
+      "description": "Negative relative sentiment volume measure for current day, with missing values filled as 0",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 3003,
+      "alphaCount": 9186,
+      "themes": []
+    },
+    {
+      "id": "snt_buzz_bfl",
+      "description": "Negative relative sentiment volume measure for current day, with missing values filled as 1",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 2569,
+      "alphaCount": 5831,
+      "themes": []
+    },
+    {
+      "id": "snt_buzz_bfl_fast_d1",
+      "description": "Negative relative sentiment volume measure for current day, with missing values filled as 1",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9998,
+      "userCount": 109,
+      "alphaCount": 117,
+      "themes": []
+    },
+    {
+      "id": "snt_buzz_fast_d1",
+      "description": "Negative relative sentiment volume measure for current day, with missing values filled as 0",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9769,
+      "userCount": 122,
+      "alphaCount": 137,
+      "themes": []
+    },
+    {
+      "id": "snt_buzz_ret",
+      "description": "negative return of relative sentiment volume",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 1736,
+      "alphaCount": 3864,
+      "themes": []
+    },
+    {
+      "id": "snt_buzz_ret_fast_d1",
+      "description": "negative return of relative sentiment volume",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9769,
+      "userCount": 44,
+      "alphaCount": 54,
+      "themes": []
+    },
+    {
+      "id": "snt_value",
+      "description": "Negative sentiment score/indicator for current day, with missing values filled as 0",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 840,
+      "alphaCount": 2472,
+      "themes": []
+    },
+    {
+      "id": "snt_value_fast_d1",
+      "description": "Negative sentiment score/indicator for current day, with missing values filled as 0",
+      "dataset": {
+        "id": "socialmedia12",
+        "name": "Sentiment Data for Equity"
+      },
+      "category": {
+        "id": "socialmedia",
+        "name": "Social Media"
+      },
+      "subcategory": {
+        "id": "socialmedia-social-media",
+        "name": "Social Media"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9769,
+      "userCount": 126,
+      "alphaCount": 172,
+      "themes": []
+    }
+  ]
+}

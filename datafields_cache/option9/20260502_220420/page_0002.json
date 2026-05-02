@@ -1,0 +1,617 @@
+{
+  "dataset_id": "option9",
+  "created_at": "2026-05-02T22:04:27",
+  "page_index": 2,
+  "offset": 50,
+  "count": 24,
+  "request": {
+    "instrumentType": "EQUITY",
+    "region": "USA",
+    "delay": 1,
+    "universe": "TOP3000",
+    "data_type": "MATRIX",
+    "search": ""
+  },
+  "results": [
+    {
+      "id": "pcr_vol_1080",
+      "description": "Ratio of put volume to call volume on a stock's options with expiration 1080 days in the future.",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 255,
+      "alphaCount": 464,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_120",
+      "description": "Ratio of put options volume to call options volume for contracts expiring in 120 days on a stock's options",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 197,
+      "alphaCount": 302,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_150",
+      "description": "Ratio of total put options volume to call options volume for options expiring in 150 days, reflecting short-term options flow sentiment",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 169,
+      "alphaCount": 297,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_180",
+      "description": "Ratio of total put option volume to call option volume for options expiring in 180 days, capturing short-term options flow sentiment",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 333,
+      "alphaCount": 494,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_20",
+      "description": "Ratio of put option volume to call option volume for options expiring in 20 days, signaling short-term options flow sentiment",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 163,
+      "alphaCount": 228,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_270",
+      "description": "Ratio of total put options volume to call options volume for contracts expiring 270 days in the future, indicating short-term options flow sentiment at longer tenor",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 310,
+      "alphaCount": 544,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_30",
+      "description": "Ratio of put volume to call volume on a stock's options with expiration 30 days in the future",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 146,
+      "alphaCount": 245,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_360",
+      "description": "Ratio of put volume to call volume on a stock's options with expiration 360 days in the future",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 237,
+      "alphaCount": 441,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_60",
+      "description": "Ratio of total put options volume to call options volume for contracts expiring 60 days in the future, indicating short-term options flow sentiment",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 168,
+      "alphaCount": 240,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_720",
+      "description": "Ratio of put options volume to call options volume for contracts expiring in 720 days on a stock's options",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 167,
+      "alphaCount": 239,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_90",
+      "description": "Ratio of put options volume to call options volume for stock options expiring in 90 days, indicating short-term options flow sentiment",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 149,
+      "alphaCount": 184,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_all",
+      "description": "Ratio of total put option volume to call option volume aggregated across all maturities, measuring short-term options flow sentiment",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 199,
+      "alphaCount": 367,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_10",
+      "description": "Open interest-weighted mean breakeven price for put options expiring in 10 days, average price at which put buyers break even",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 553,
+      "alphaCount": 911,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_1080",
+      "description": "Price at which a stock's put options with expiration 1080 days in the future break even based on its recent bid/ask mean",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 533,
+      "alphaCount": 775,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_120",
+      "description": "Price at which a stock's put options with expiration 120 days in the future break even based on its recent bid/ask mean",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 238,
+      "alphaCount": 400,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_150",
+      "description": "Open-interest-weighted mean breakeven price at which buyers of put options break even for options expiring in 150 days",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 172,
+      "alphaCount": 366,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_180",
+      "description": "Weighted mean breakeven price of put options expiring in 180 days derived from open interest or volume, indicating the price at which put buyers break even",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 188,
+      "alphaCount": 299,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_20",
+      "description": "Price at which a stock's put options with expiration 20 days in the future break even based on its recent bid/ask mean, weighted by open interest or volume",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 212,
+      "alphaCount": 338,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_270",
+      "description": "Weighted mean breakeven price of put options expiring in 270 days indicating the break even price for put buyers based on recent bids and asks",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 155,
+      "alphaCount": 333,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_30",
+      "description": "The weighted mean break-even price of put options expiring in 30 days based on recent bid/ask prices",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 208,
+      "alphaCount": 350,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_360",
+      "description": "Open-interest-weighted mean breakeven price at which buyers of put options break even for options expiring in 360 days",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 208,
+      "alphaCount": 377,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_60",
+      "description": "Price at which a stock's put options with expiration 60 days in the future break even based on its recent bid/ask mean, weighted by open interest or volume",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 163,
+      "alphaCount": 320,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_720",
+      "description": "Weighted mean breakeven price of put options expiring in 720 days indicating the put buyers break-even price based on recent bid/ask",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 237,
+      "alphaCount": 386,
+      "themes": []
+    },
+    {
+      "id": "put_breakeven_90",
+      "description": "Open-interest-weighted mean breakeven price at which buyers of put options break even for options expiring in 90 days",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7012,
+      "userCount": 213,
+      "alphaCount": 403,
+      "themes": []
+    }
+  ]
+}

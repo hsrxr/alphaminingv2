@@ -1,0 +1,1267 @@
+{
+  "dataset_id": "news12",
+  "created_at": "2026-05-02T22:05:41",
+  "page_index": 1,
+  "offset": 0,
+  "count": 50,
+  "request": {
+    "instrumentType": "EQUITY",
+    "region": "USA",
+    "delay": 1,
+    "universe": "TOP3000",
+    "data_type": "MATRIX",
+    "search": ""
+  },
+  "results": [
+    {
+      "id": "news_all_vwap",
+      "description": "VWAP across all sessions (pre, main, post)",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.728,
+      "userCount": 619,
+      "alphaCount": 1489,
+      "themes": []
+    },
+    {
+      "id": "news_atr14",
+      "description": "14-day Average True Range",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8947,
+      "userCount": 694,
+      "alphaCount": 3666,
+      "themes": []
+    },
+    {
+      "id": "news_atr_ratio",
+      "description": "Ratio of current day's price range to 20-day average true range",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7967,
+      "userCount": 732,
+      "alphaCount": 2275,
+      "themes": []
+    },
+    {
+      "id": "news_cap",
+      "description": "Reported total market capitalization for the calendar day of the session",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8272,
+      "userCount": 1813,
+      "alphaCount": 6575,
+      "themes": []
+    },
+    {
+      "id": "news_close_vol",
+      "description": "Main session close volume",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6909,
+      "userCount": 506,
+      "alphaCount": 1634,
+      "themes": []
+    },
+    {
+      "id": "news_curr_vol",
+      "description": "Current day's session volume",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7769,
+      "userCount": 416,
+      "alphaCount": 872,
+      "themes": []
+    },
+    {
+      "id": "news_dividend_yield",
+      "description": "Reported annual dividend yield percentage for the calendar day of the session",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8534,
+      "userCount": 214,
+      "alphaCount": 392,
+      "themes": []
+    },
+    {
+      "id": "news_eod_close",
+      "description": "Session closing price",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8778,
+      "userCount": 1206,
+      "alphaCount": 2883,
+      "themes": []
+    },
+    {
+      "id": "news_eod_high",
+      "description": "Highest price from the time of news to end of session",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9707,
+      "userCount": 434,
+      "alphaCount": 1250,
+      "themes": []
+    },
+    {
+      "id": "news_eod_low",
+      "description": "Lowest price from the time of news to end of session",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9707,
+      "userCount": 278,
+      "alphaCount": 858,
+      "themes": []
+    },
+    {
+      "id": "news_eod_vwap",
+      "description": "VWAP from the time of news to the end of the session",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9673,
+      "userCount": 598,
+      "alphaCount": 1078,
+      "themes": []
+    },
+    {
+      "id": "news_eps_actual",
+      "description": "Actual Earnings Per Share reported in the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9646,
+      "userCount": 537,
+      "alphaCount": 1377,
+      "themes": []
+    },
+    {
+      "id": "news_high_exc_stddev",
+      "description": "Standardized measure of price movement from end-of-day high to last price in the time-of-news window, divided by 30-day closing price standard deviation",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9652,
+      "userCount": 453,
+      "alphaCount": 1194,
+      "themes": []
+    },
+    {
+      "id": "news_indx_perf",
+      "description": "Difference in percent return between the stock and the S&P 500 ETF over the session: ((EODClose - TONLast) / TONLast) - ((SPYClose - SPYLast) / SPYLast)",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9713,
+      "userCount": 433,
+      "alphaCount": 1306,
+      "themes": []
+    },
+    {
+      "id": "news_low_exc_stddev",
+      "description": "Standardized measure of price movement from last price in time-of-news window to end-of-day low, divided by 30-day closing price standard deviation",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9707,
+      "userCount": 434,
+      "alphaCount": 1077,
+      "themes": []
+    },
+    {
+      "id": "news_ls",
+      "description": "Indicates if a long or short position would have been more advantageous, based on comparison of (EODHigh - Last) and (Last - EODLow)",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.488,
+      "userCount": 254,
+      "alphaCount": 681,
+      "themes": []
+    },
+    {
+      "id": "news_main_vwap",
+      "description": "Main session volume-weighted average price",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9707,
+      "userCount": 348,
+      "alphaCount": 910,
+      "themes": []
+    },
+    {
+      "id": "news_max_dn_amt",
+      "description": "Price at the time of the news minus the after-news low",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9704,
+      "userCount": 378,
+      "alphaCount": 1348,
+      "themes": []
+    },
+    {
+      "id": "news_max_dn_ret",
+      "description": "Percent change from price at time of news to lowest price after news",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9704,
+      "userCount": 581,
+      "alphaCount": 1137,
+      "themes": []
+    },
+    {
+      "id": "news_max_up_amt",
+      "description": "After-news high minus the price at the time of the news",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9692,
+      "userCount": 350,
+      "alphaCount": 890,
+      "themes": []
+    },
+    {
+      "id": "news_max_up_ret",
+      "description": "Percent change from price at time of news to highest price after news",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8458,
+      "userCount": 1141,
+      "alphaCount": 1939,
+      "themes": []
+    },
+    {
+      "id": "news_mins_10_chg",
+      "description": "Minimum value among L or S for each minute bucket, indicating the fastest reaction time at the 10th percentile",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7395,
+      "userCount": 439,
+      "alphaCount": 1304,
+      "themes": []
+    },
+    {
+      "id": "news_mins_10_pct_dn",
+      "description": "Number of minutes elapsed before price decreases by 10 percentage points after the event",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.0428,
+      "userCount": 3357,
+      "alphaCount": 7689,
+      "themes": []
+    },
+    {
+      "id": "news_mins_10_pct_up",
+      "description": "Number of minutes before the price increased by at least 10 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6282,
+      "userCount": 922,
+      "alphaCount": 1836,
+      "themes": []
+    },
+    {
+      "id": "news_mins_1_chg",
+      "description": "Minimum number of minutes taken for price to move (up or down) 1 percentage point after the event",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9175,
+      "userCount": 260,
+      "alphaCount": 548,
+      "themes": []
+    },
+    {
+      "id": "news_mins_1_pct_dn",
+      "description": "Number of minutes before the price decreased by at least 1 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8309,
+      "userCount": 203,
+      "alphaCount": 573,
+      "themes": []
+    },
+    {
+      "id": "news_mins_1_pct_up",
+      "description": "Number of minutes before the price increased by at least 1 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.1857,
+      "userCount": 320,
+      "alphaCount": 573,
+      "themes": []
+    },
+    {
+      "id": "news_mins_20_chg",
+      "description": "The minimum of L or S above for 20-minute bucket",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9142,
+      "userCount": 1081,
+      "alphaCount": 2189,
+      "themes": []
+    },
+    {
+      "id": "news_mins_20_pct_dn",
+      "description": "Number of minutes that elapsed before price went down 20 percentage points",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9678,
+      "userCount": 528,
+      "alphaCount": 1053,
+      "themes": []
+    },
+    {
+      "id": "news_mins_20_pct_up",
+      "description": "Number of minutes that elapsed before price went up 20 percentage points",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9673,
+      "userCount": 270,
+      "alphaCount": 443,
+      "themes": []
+    },
+    {
+      "id": "news_mins_2_chg",
+      "description": "Minimum number of minutes taken for price to move (up or down) 2 percentage points after the event",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5275,
+      "userCount": 153,
+      "alphaCount": 348,
+      "themes": []
+    },
+    {
+      "id": "news_mins_2_pct_dn",
+      "description": "Number of minutes before the price decreased by at least 2 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.4407,
+      "userCount": 162,
+      "alphaCount": 336,
+      "themes": []
+    },
+    {
+      "id": "news_mins_2_pct_up",
+      "description": "Number of minutes before the price increased by at least 2 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.2845,
+      "userCount": 206,
+      "alphaCount": 551,
+      "themes": []
+    },
+    {
+      "id": "news_mins_3_chg",
+      "description": "Minimum number of minutes taken for price to move (up or down) 3 percentage points after the event",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9174,
+      "userCount": 176,
+      "alphaCount": 374,
+      "themes": []
+    },
+    {
+      "id": "news_mins_3_pct_dn",
+      "description": "Number of minutes before the price decreased by at least 3 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9174,
+      "userCount": 203,
+      "alphaCount": 351,
+      "themes": []
+    },
+    {
+      "id": "news_mins_3_pct_up",
+      "description": "Number of minutes before the price increased by at least 3 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9209,
+      "userCount": 383,
+      "alphaCount": 719,
+      "themes": []
+    },
+    {
+      "id": "news_mins_4_chg",
+      "description": "Minimum value among L or S (minutes to reach positive/negative return thresholds) for each minute bucket, representing the fastest reaction time at the 4th percentile",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9209,
+      "userCount": 165,
+      "alphaCount": 332,
+      "themes": []
+    },
+    {
+      "id": "news_mins_4_pct_dn",
+      "description": "Number of minutes before the price decreased by at least 4 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.971,
+      "userCount": 222,
+      "alphaCount": 365,
+      "themes": []
+    },
+    {
+      "id": "news_mins_4_pct_up",
+      "description": "Number of minutes before the price increased by at least 4 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9673,
+      "userCount": 236,
+      "alphaCount": 476,
+      "themes": []
+    },
+    {
+      "id": "news_mins_5_chg",
+      "description": "Minimum value among L or S for each minute bucket, indicating the fastest reaction time at the 5th percentile",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9671,
+      "userCount": 337,
+      "alphaCount": 1129,
+      "themes": []
+    },
+    {
+      "id": "news_mins_5_pct_dn",
+      "description": "Number of minutes before the price decreased by at least 5 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8467,
+      "userCount": 587,
+      "alphaCount": 1010,
+      "themes": []
+    },
+    {
+      "id": "news_mins_5_pct_up",
+      "description": "Number of minutes before the price increased by at least 5 percent after the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.9214,
+      "userCount": 574,
+      "alphaCount": 1116,
+      "themes": []
+    },
+    {
+      "id": "news_mins_7_5_chg",
+      "description": "Minimum value among L or S for each minute bucket, indicating the fastest reaction time at the 75th percentile",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.2994,
+      "userCount": 160,
+      "alphaCount": 483,
+      "themes": []
+    },
+    {
+      "id": "news_mins_7_5_pct_dn",
+      "description": "Number of minutes elapsed before price decreases by 7.5 percentage points after the event",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8817,
+      "userCount": 500,
+      "alphaCount": 892,
+      "themes": []
+    },
+    {
+      "id": "news_mins_7_5_pct_up",
+      "description": "Number of minutes elapsed before price increases by 7.5 percentage points after the event",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.0728,
+      "userCount": 242,
+      "alphaCount": 472,
+      "themes": []
+    },
+    {
+      "id": "news_mov_vol",
+      "description": "30-day moving average of session volume",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.8046,
+      "userCount": 553,
+      "alphaCount": 1439,
+      "themes": []
+    },
+    {
+      "id": "news_open",
+      "description": "Price at the session open",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7145,
+      "userCount": 557,
+      "alphaCount": 1067,
+      "themes": []
+    },
+    {
+      "id": "news_open_gap",
+      "description": "Percent difference between current day's open and previous day's close",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6247,
+      "userCount": 435,
+      "alphaCount": 715,
+      "themes": []
+    },
+    {
+      "id": "news_open_vol",
+      "description": "Main session open volume",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.4361,
+      "userCount": 139,
+      "alphaCount": 364,
+      "themes": []
+    },
+    {
+      "id": "news_pct_10min",
+      "description": "Percent change in price during the first 10 minutes following the news release",
+      "dataset": {
+        "id": "news12",
+        "name": "US News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7657,
+      "userCount": 377,
+      "alphaCount": 673,
+      "themes": []
+    }
+  ]
+}

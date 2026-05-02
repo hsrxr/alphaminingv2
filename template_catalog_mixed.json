@@ -1,0 +1,474 @@
+{
+  "naming": {
+    "standard": "TPL_<DOMAIN>_<SIGNAL>_<SHAPE>_V1",
+    "regex": "^TPL_[A-Z0-9]+(?:_[A-Z0-9]+){2,}_V1$",
+    "segments": {
+      "TPL": "Template prefix",
+      "DOMAIN": "Signal domain such as PV, FUND, OPTION, SENTIMENT, NEWS",
+      "SIGNAL": "Signal intent keyword",
+      "SHAPE": "Expression shape keyword",
+      "V1": "Template version"
+    }
+  },
+  "templates": [
+    {
+      "template_id": "TPL_PV_VOLUME_RETURN_CORR_V1",
+      "source_name": "volume_return_correlation",
+      "description": "group_rank(ts_corr(volume, returns, <days>), <group>). Volume-return correlation measures trend conviction (Karpoff 1987). Positive = volume confirms price direction (strong trend); negative = divergence. Unique among PV templates - uses ts_corr of two distinct fields rather than a ratio or single-field transform.",
+      "expression": "group_rank(ts_corr(volume, returns, <days>), <group>)",
+      "applicable_datasets": ["pv1"],
+      "core_slots": [],
+      "slots": {
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126, 252],
+          "representative_values": [5, 21, 126]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_PV_ACCUM_TS_V1",
+      "source_name": "accumulation_distribution",
+      "description": "group_rank(<ts_op>(multiply(ts_delta(close, <delta_days>), volume), <smooth_days>), <group>). Volume-weighted price change as accumulation/distribution proxy. Positive = smart money buying into strength; negative = selling pressure. Unique - multiply combines two distinct PV signals (price change x volume) into a single interaction term.",
+      "expression": "group_rank(<ts_op>(multiply(ts_delta(close, <delta_days>), volume), <smooth_days>), <group>)",
+      "applicable_datasets": ["pv1"],
+      "core_slots": [],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_zscore"]},
+        "delta_days": {
+          "values": [1, 3, 5, 10, 21],
+          "representative_values": [1, 5, 21]
+        },
+        "smooth_days": {
+          "values": [3, 5, 10, 21, 63, 126],
+          "representative_values": [5, 21, 63]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_PV_REVERSAL_CORR_V1",
+      "source_name": "return_autocorrelation",
+      "description": "group_rank(<sign><ts_op>(ts_corr(returns, ts_delay(returns, <lag_days>), <corr_days>), <smooth_days>), <group>). Return autocorrelation (Jegadeesh 1990). Positive = momentum persistence; negative = reversal. Uses ts_delay to create lagged returns for autocorrelation - unique pattern not in existing templates.",
+      "expression": "group_rank(<sign><ts_op>(ts_corr(returns, ts_delay(returns, <lag_days>), <corr_days>), <smooth_days>), <group>)",
+      "applicable_datasets": ["pv1"],
+      "core_slots": [],
+      "slots": {
+        "sign": {"values": ["", "-"]},
+        "ts_op": {"slot_kind": "operator", "values": ["ts_mean", "ts_zscore"]},
+        "lag_days": {
+          "values": [1, 2, 3, 5, 10],
+          "representative_values": [1, 5]
+        },
+        "corr_days": {
+          "values": [5, 10, 21, 63, 126],
+          "representative_values": [10, 63]
+        },
+        "smooth_days": {
+          "values": [3, 5, 10, 21, 63],
+          "representative_values": [5, 21]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_FUND_EARNINGS_YIELD_TS_V1",
+      "source_name": "earnings_yield",
+      "description": "group_rank(<ts_op>(divide(<earnings_field>, <val_field>), <days>), <group>). Earnings yield (earnings / enterprise value) - comprehensive value metric (Fama & French 2006). Higher earnings yield signals undervaluation. Distinct from TPL_FUND_PROFIT_ASSET_TS_V1 (profit/assets = profitability), this captures valuation level.",
+      "expression": "group_rank(<ts_op>(divide(<earnings_field>, <val_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["earnings_field", "val_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "earnings_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^income$", "^ebit$", "^operating_income$", "^ebitda$", "^pretax_income$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "val_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^enterprise_value$"],
+            "fallback_to_all": false,
+            "max_candidates": 3
+          }
+        },
+        "days": {
+          "values": [21, 63, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      },
+      "constraints": {
+        "not_equal": [["earnings_field", "val_field"]]
+      }
+    },
+    {
+      "template_id": "TPL_FUND_INTEREST_COVER_TS_V1",
+      "source_name": "interest_coverage",
+      "description": "group_rank(<ts_op>(divide(<earnings_field>, <interest_field>), <days>), <group>). Interest coverage ratio (EBIT / interest expense) measures debt service capacity and financial safety (Altman 1968). Unlike TPL_FUND_DEBT_EQUITY_TS_V1 (leverage level), this captures the ability to service debt.",
+      "expression": "group_rank(<ts_op>(divide(<earnings_field>, <interest_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["earnings_field", "interest_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "earnings_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^ebit$", "^operating_income$"],
+            "fallback_to_all": false,
+            "max_candidates": 5
+          }
+        },
+        "interest_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^interest_expense$"],
+            "fallback_to_all": false,
+            "max_candidates": 3
+          }
+        },
+        "days": {
+          "values": [21, 63, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      },
+      "constraints": {
+        "not_equal": [["earnings_field", "interest_field"]]
+      }
+    },
+    {
+      "template_id": "TPL_FUND_CASHFLOW_YIELD_TS_V1",
+      "source_name": "cashflow_yield",
+      "description": "group_rank(<ts_op>(divide(<cashflow_field>, <val_field>), <days>), <group>). Cash flow yield (operating cash flow / enterprise value). More robust than earnings yield - less subject to accrual manipulation (Sloan 1996). Distinct from TPL_FUND_EARNINGS_YIELD_TS_V1 (cash flow vs earnings).",
+      "expression": "group_rank(<ts_op>(divide(<cashflow_field>, <val_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["cashflow_field", "val_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "cashflow_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^cashflow_op$", "^cashflow$"],
+            "fallback_to_all": false,
+            "max_candidates": 5
+          }
+        },
+        "val_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^enterprise_value$"],
+            "fallback_to_all": false,
+            "max_candidates": 3
+          }
+        },
+        "days": {
+          "values": [21, 63, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      },
+      "constraints": {
+        "not_equal": [["cashflow_field", "val_field"]]
+      }
+    },
+    {
+      "template_id": "TPL_FUND_SALES_TURNOVER_TS_V1",
+      "source_name": "asset_turnover",
+      "description": "group_rank(<ts_op>(divide(<revenue_field>, <asset_field>), <days>), <group>). Asset turnover (revenue / assets) measures operational efficiency. Higher = more asset utilization efficiency. Distinct from TPL_FUND_PROFIT_ASSET_TS_V1 (profit margin) and TPL_FUND_MARGIN_REV_TS_V1 (margin) - captures top-line efficiency.",
+      "expression": "group_rank(<ts_op>(divide(<revenue_field>, <asset_field>), <days>), <group>)",
+      "applicable_datasets": ["fundamental6"],
+      "core_slots": ["revenue_field", "asset_field"],
+      "slots": {
+        "ts_op": {"slot_kind": "operator", "values": ["ts_rank", "ts_zscore"]},
+        "revenue_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^revenue$", "^sales$"],
+            "fallback_to_all": false,
+            "max_candidates": 5
+          }
+        },
+        "asset_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^assets$", "^invested_capital$"],
+            "fallback_to_all": false,
+            "max_candidates": 5
+          }
+        },
+        "days": {
+          "values": [21, 63, 126, 252],
+          "representative_values": [126, 252]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      },
+      "constraints": {
+        "not_equal": [["revenue_field", "asset_field"]]
+      }
+    },
+    {
+      "template_id": "TPL_OPTION_TERM_SLOPE_TS_V1",
+      "source_name": "vol_term_structure",
+      "description": "group_rank(ts_zscore(subtract(<short_iv>, <long_iv>), <days>), <group>). Volatility term structure slope: short-term IV minus long-term IV. Steep positive = near-term fear premium / hedging demand. Distinct from TPL_GROUP_IVHV_SMOOTH_V1 (IV minus HV) - compares IV across maturities rather than IV vs historical.",
+      "expression": "group_rank(ts_zscore(subtract(<short_iv>, <long_iv>), <days>), <group>)",
+      "applicable_datasets": ["option8"],
+      "core_slots": ["short_iv", "long_iv"],
+      "slots": {
+        "short_iv": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^implied_volatility_(call|mean|put)_(10|20|30|60)$"],
+            "fallback_to_all": false,
+            "max_candidates": 20
+          }
+        },
+        "long_iv": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^implied_volatility_(call|mean|put)_(180|360|720|1080)$"],
+            "fallback_to_all": false,
+            "max_candidates": 20
+          }
+        },
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126],
+          "representative_values": [5, 21, 63]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      },
+      "constraints": {
+        "not_equal": [["short_iv", "long_iv"]]
+      }
+    },
+    {
+      "template_id": "TPL_OPTION_VOLOFVOL_TS_V1",
+      "source_name": "vol_of_vol",
+      "description": "group_rank(ts_zscore(ts_std_dev(<vol_field>, <lookback_days>), <smooth_days>), <group>). Volatility of volatility: higher-order uncertainty. When vol itself is highly variable, risk premiums expand. Unique - nested ts_std_dev inside ts_zscore is a pattern no existing template uses.",
+      "expression": "group_rank(ts_zscore(ts_std_dev(<vol_field>, <lookback_days>), <smooth_days>), <group>)",
+      "applicable_datasets": ["option8"],
+      "core_slots": ["vol_field"],
+      "slots": {
+        "vol_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^(implied_volatility_mean_|historical_volatility_|parkinson_volatility_)"],
+            "fallback_to_all": false,
+            "max_candidates": 15
+          }
+        },
+        "lookback_days": {
+          "values": [10, 21, 63, 126],
+          "representative_values": [21, 63]
+        },
+        "smooth_days": {
+          "values": [3, 5, 10, 21, 63],
+          "representative_values": [5, 21]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_OPTION_PCR_DELTA_TS_V1",
+      "source_name": "pcr_momentum",
+      "description": "group_rank(ts_zscore(ts_delta(<pcr_field>, <delta_days>), <smooth_days>), <group>). Put/Call ratio momentum: rate of change in option-implied sentiment. Rising PCR = increasing bearishness. Based on option9 data (~70% coverage) - consider nanHandling=ON to avoid missing data gaps.",
+      "expression": "group_rank(ts_zscore(ts_delta(<pcr_field>, <delta_days>), <smooth_days>), <group>)",
+      "applicable_datasets": ["option9"],
+      "core_slots": ["pcr_field"],
+      "slots": {
+        "pcr_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^pcr_(oi|vol)_"],
+            "fallback_to_all": false,
+            "max_candidates": 15
+          }
+        },
+        "delta_days": {
+          "values": [3, 5, 10, 21],
+          "representative_values": [5, 21]
+        },
+        "smooth_days": {
+          "values": [5, 10, 21, 63],
+          "representative_values": [10, 21]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_OPTION_PCRSPREAD_TS_V1",
+      "source_name": "pcr_cross_tenor_spread",
+      "description": "group_rank(ts_zscore(subtract(<short_pcr>, <long_pcr>), <days>), <group>). Cross-tenor PCR divergence: short-term minus long-term put/call ratio. Short PCR > long PCR signals acute near-term bearishness. Analogous to volatility term structure but applied to option sentiment.",
+      "expression": "group_rank(ts_zscore(subtract(<short_pcr>, <long_pcr>), <days>), <group>)",
+      "applicable_datasets": ["option9"],
+      "core_slots": ["short_pcr", "long_pcr"],
+      "slots": {
+        "short_pcr": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^pcr_(oi|vol)_(10|20|30)$"],
+            "fallback_to_all": false,
+            "max_candidates": 10
+          }
+        },
+        "long_pcr": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^pcr_(oi|vol)_(90|180|360|720|all)$"],
+            "fallback_to_all": false,
+            "max_candidates": 15
+          }
+        },
+        "days": {
+          "values": [3, 5, 10, 21, 63],
+          "representative_values": [5, 21]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      },
+      "constraints": {
+        "not_equal": [["short_pcr", "long_pcr"]]
+      }
+    },
+    {
+      "template_id": "TPL_SENTIMENT_REVISION_TS_V1",
+      "source_name": "estimate_revision_momentum",
+      "description": "group_rank(ts_zscore(<revision_field>, <days>), <group>). Analyst estimate revision momentum (Jegadeesh & Livnat 2006). Fields like earnings revision, target price changes, and net recommendation shifts. Coverage ~55% - nanHandling=ON strongly recommended for this dataset.",
+      "expression": "group_rank(ts_zscore(<revision_field>, <days>), <group>)",
+      "applicable_datasets": ["sentiment1"],
+      "core_slots": ["revision_field"],
+      "slots": {
+        "revision_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["snt1_d1_(net)?earningsrevision$", "snt1_d1_earningssurprise$", "snt1_d1_nettargetpercent$", "snt1_d1_netrecpercent$"],
+            "fallback_to_all": false,
+            "max_candidates": 8
+          }
+        },
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126],
+          "representative_values": [5, 21, 63]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_SENTIMENT_CONSENSUS_TS_V1",
+      "source_name": "analyst_consensus_strength",
+      "description": "group_rank(ts_zscore(<consensus_field>, <days>), <group>). Analyst consensus strength: buy recommendations, composite/equity scores, and focus ranks. Higher values = stronger positive consensus. Coverage ~55% - nanHandling=ON recommended to avoid losing stocks without analyst coverage.",
+      "expression": "group_rank(ts_zscore(<consensus_field>, <days>), <group>)",
+      "applicable_datasets": ["sentiment1"],
+      "core_slots": ["consensus_field"],
+      "slots": {
+        "consensus_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["snt1_d1_buyrecpercent$", "snt1_d1_stockrank$", "snt1_cored1_score$", "snt1_d1_dynamicfocusrank$", "snt1_d1_fundamentalfocusrank$"],
+            "fallback_to_all": false,
+            "max_candidates": 8
+          }
+        },
+        "days": {
+          "values": [3, 5, 10, 21, 63, 126],
+          "representative_values": [5, 21, 63]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_SENTIMENT_SOCIAL_TS_V1",
+      "source_name": "social_sentiment_momentum",
+      "description": "group_rank(ts_zscore(<sentiment_field>, <days>), <group>). Social media / news sentiment momentum (Chen et al. 2014). Covers social sentiment, buzz, and negative sentiment scores. High coverage (99%) - robust with both nanHandling=ON and OFF.",
+      "expression": "group_rank(ts_zscore(<sentiment_field>, <days>), <group>)",
+      "applicable_datasets": ["socialmedia12"],
+      "core_slots": ["sentiment_field"],
+      "slots": {
+        "sentiment_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^(scl12_sentiment$|scl12_buzz$|snt_value$|snt_buzz$)"],
+            "fallback_to_all": false,
+            "max_candidates": 5
+          }
+        },
+        "days": {
+          "values": [1, 3, 5, 10, 21, 63],
+          "representative_values": [1, 5, 21]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    },
+    {
+      "template_id": "TPL_NEWS_REACTION_TS_V1",
+      "source_name": "news_reaction_momentum",
+      "description": "group_rank(ts_zscore(<reaction_field>, <days>), <group>). News price reaction strength: tracks magnitude of post-news price moves at various intervals. Underreaction (anchoring) predicts continuation; overreaction predicts reversal. Uses news12 fields for event-driven signals.",
+      "expression": "group_rank(ts_zscore(<reaction_field>, <days>), <group>)",
+      "applicable_datasets": ["news12"],
+      "core_slots": ["reaction_field"],
+      "slots": {
+        "reaction_field": {
+          "source": "dataset_field",
+          "search_domain": {
+            "include_regex": ["^news_max_up_ret$", "^news_max_dn_ret$", "^news_pct_.*min$", "^news_open_gap$"],
+            "fallback_to_all": false,
+            "max_candidates": 20
+          }
+        },
+        "days": {
+          "values": [1, 3, 5, 10, 21, 63],
+          "representative_values": [1, 5, 21]
+        },
+        "group": {
+          "values": ["market", "sector", "industry"],
+          "representative_values": ["industry"]
+        }
+      }
+    }
+  ]
+}

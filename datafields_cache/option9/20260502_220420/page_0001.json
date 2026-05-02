@@ -1,0 +1,1267 @@
+{
+  "dataset_id": "option9",
+  "created_at": "2026-05-02T22:04:21",
+  "page_index": 1,
+  "offset": 0,
+  "count": 50,
+  "request": {
+    "instrumentType": "EQUITY",
+    "region": "USA",
+    "delay": 1,
+    "universe": "TOP3000",
+    "data_type": "MATRIX",
+    "search": ""
+  },
+  "results": [
+    {
+      "id": "call_breakeven_10",
+      "description": "Price at which a stock's call options with expiration 10 days in the future break even based on its recent bid/ask mean, weighted by open interest or volume",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 1113,
+      "alphaCount": 2413,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_1080",
+      "description": "Price at which a stock's call options with expiration 1080 days in the future break even based on its recent bid/ask mean.",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 457,
+      "alphaCount": 1102,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_120",
+      "description": "Price at which a stock's call options with expiration 120 days in the future break even based on its recent bid/ask mean, weighted by open interest or volume",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 344,
+      "alphaCount": 900,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_150",
+      "description": "Price at which a stock's call options with expiration 150 days in the future break even based on its recent bid/ask mean, weighted by open interest or volume",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 244,
+      "alphaCount": 641,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_180",
+      "description": "Open-interest-weighted mean breakeven price at which buyers of call options break even for options expiring in 180 days",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 300,
+      "alphaCount": 835,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_20",
+      "description": "Open-interest-weighted average breakeven price of call options expiring in 20 days, representing the price at which call buyers break even",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 1023,
+      "alphaCount": 1673,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_270",
+      "description": "Price at which a stock's call options with expiration 270 days in the future break even based on its recent bid/ask mean",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 247,
+      "alphaCount": 627,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_30",
+      "description": "Open-interest-weighted average breakeven price of call options expiring in 30 days, representing the price at which call buyers break even",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 372,
+      "alphaCount": 944,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_360",
+      "description": "Weighted mean break-even price of call options expiring in 360 days, based on recent bid/ask prices",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 241,
+      "alphaCount": 554,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_60",
+      "description": "Open interest-weighted mean breakeven price for call options expiring in 60 days, showing average price at which call buyers break even",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 239,
+      "alphaCount": 557,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_720",
+      "description": "Weighted mean breakeven price of call options expiring in 720 days indicating the price at which call buyers break even",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 247,
+      "alphaCount": 547,
+      "themes": []
+    },
+    {
+      "id": "call_breakeven_90",
+      "description": "Price at which a stock's call options with expiration 90 days in the future break even based on its recent bid/ask mean",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7043,
+      "userCount": 251,
+      "alphaCount": 400,
+      "themes": []
+    },
+    {
+      "id": "forward_price_10",
+      "description": "Synthetic forward price for the underlying at 10 days derived from put-call parity using ATM options and adjusted for interest rates and dividends",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 458,
+      "alphaCount": 1036,
+      "themes": []
+    },
+    {
+      "id": "forward_price_1080",
+      "description": "Synthetic forward price at 1080 days derived from at-the-money call and put option prices, reflecting market consensus for the underlying at that tenor",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 270,
+      "alphaCount": 480,
+      "themes": []
+    },
+    {
+      "id": "forward_price_120",
+      "description": "Synthetic forward price at 120 days derived from at-the-money call and put options reflecting the market's forward expectation of the underlying security",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 276,
+      "alphaCount": 357,
+      "themes": []
+    },
+    {
+      "id": "forward_price_150",
+      "description": "Synthetic forward price at 150 days derived from at-the-money call and put options reflecting the market's forward expectation of the underlying security",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 207,
+      "alphaCount": 379,
+      "themes": []
+    },
+    {
+      "id": "forward_price_180",
+      "description": "Synthetic forward price at 180 days derived from put-call parity using at-the-money calls and puts reflecting market consensus forward expectation",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 252,
+      "alphaCount": 527,
+      "themes": []
+    },
+    {
+      "id": "forward_price_20",
+      "description": "Synthetic forward price for the underlying at 20 days derived from put-call parity using ATM options and adjusted for interest rates and dividends",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 316,
+      "alphaCount": 664,
+      "themes": []
+    },
+    {
+      "id": "forward_price_270",
+      "description": "Synthetic forward price at 270 days expiry derived from ATM calls and puts reflecting the market-consensus forward expectation",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 201,
+      "alphaCount": 475,
+      "themes": []
+    },
+    {
+      "id": "forward_price_30",
+      "description": "Synthetic forward price at 30 days expiry, derived from at-the-money call and put options, reflecting market consensus forward expectation",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 275,
+      "alphaCount": 574,
+      "themes": []
+    },
+    {
+      "id": "forward_price_360",
+      "description": "Synthetic forward price at 360 days derived from put-call parity using ATM call and put prices, reflecting the market-consensus forward expectation of the underlying",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 204,
+      "alphaCount": 552,
+      "themes": []
+    },
+    {
+      "id": "forward_price_60",
+      "description": "Synthetic forward price at 60 days derived from at-the-money call and put options reflecting the market's forward expectation of the underlying security",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 233,
+      "alphaCount": 397,
+      "themes": []
+    },
+    {
+      "id": "forward_price_720",
+      "description": "Synthetic forward price at 720 days derived from at-the-money call and put options reflecting the market's forward expectation of the underlying security",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 250,
+      "alphaCount": 523,
+      "themes": []
+    },
+    {
+      "id": "forward_price_90",
+      "description": "Synthetic forward price at 90 days derived from put-call parity using ATM call and put prices, reflecting the market-consensus forward expectation of the underlying",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7037,
+      "userCount": 208,
+      "alphaCount": 372,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_10",
+      "description": "Open-interest-weighted mean breakeven price at which buyers of calls and puts combined break even for options expiring in 10 days",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 271,
+      "alphaCount": 664,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_1080",
+      "description": "Open-interest-weighted mean breakeven price at which buyers of calls and puts combined break even for options expiring in 1080 days",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 188,
+      "alphaCount": 509,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_120",
+      "description": "Weighted mean breakeven price for combined call and put options with expiration 120 days in the future, based on recent bid/ask mid-prices and weighted by open interest or volume",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 210,
+      "alphaCount": 515,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_150",
+      "description": "Price at which a stock's options with expiration 150 days in the future break even based on its recent bid/ask mean",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 150,
+      "alphaCount": 317,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_180",
+      "description": "Weighted mean break-even price for combined call and put options expiring in 180 days, based on recent bid/ask prices",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 202,
+      "alphaCount": 449,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_20",
+      "description": "Price at which a stock's options with expiration 20 days in the future break even based on its recent bid/ask mean",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 242,
+      "alphaCount": 412,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_270",
+      "description": "The weighted mean price at which buyers of call and put options combined break even at 270 days to expiry based on recent bid/ask prices",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 178,
+      "alphaCount": 560,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_30",
+      "description": "Open-interest-weighted average breakeven price of all call and put options expiring in 30 days, representing the price at which option buyers collectively break even",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 211,
+      "alphaCount": 387,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_360",
+      "description": "Open-interest-weighted average breakeven price of all call and put options expiring in 360 days, representing the price at which option buyers collectively break even",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 153,
+      "alphaCount": 376,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_60",
+      "description": "The weighted mean price at which buyers of call and put options combined break even at 60 days to expiry based on recent bid/ask prices",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 157,
+      "alphaCount": 277,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_720",
+      "description": "Price at which a stock's options with expiration 720 days in the future break even based on its recent bid/ask mean",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 119,
+      "alphaCount": 245,
+      "themes": []
+    },
+    {
+      "id": "option_breakeven_90",
+      "description": "Open-interest-weighted mean breakeven price at which buyers of calls and puts combined break even for options expiring in 90 days",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7057,
+      "userCount": 176,
+      "alphaCount": 327,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_10",
+      "description": "Ratio of put open interest to call open interest for options expiring in 10 days, indicating short-term positioning",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 551,
+      "alphaCount": 1367,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_1080",
+      "description": "Ratio of put option open interest to call option open interest for stock options expiring in 1080 days, representing longer-term positioning",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 562,
+      "alphaCount": 1171,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_120",
+      "description": "Ratio of total put option open interest to total call option open interest for options expiring in 120 days, indicating longer-term put-call positioning",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 572,
+      "alphaCount": 1449,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_150",
+      "description": "Ratio of total put option open interest to total call option open interest for options expiring in 150 days, indicating longer-term put-call positioning",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 846,
+      "alphaCount": 1343,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_180",
+      "description": "Ratio of total put option open interest to call option open interest for options expiring in 180 days, representing longer-term positioning",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 1621,
+      "alphaCount": 2559,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_20",
+      "description": "Ratio of put open interest to call open interest on a stock's options with expiration 20 days in the future",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 307,
+      "alphaCount": 609,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_270",
+      "description": "Ratio of put open interest to call open interest for options expiring in 270 days, indicating longer-term position skew",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 7496,
+      "alphaCount": 12104,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_30",
+      "description": "Ratio of put open interest to call open interest for options expiring in 30 days, reflecting medium-term option positioning",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 394,
+      "alphaCount": 836,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_360",
+      "description": "Ratio of total put option open interest to call option open interest for options expiring in 360 days",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 445,
+      "alphaCount": 1009,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_60",
+      "description": "Ratio of put open interest to call open interest for options expiring in 60 days, reflecting medium-to-long term option positioning",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 493,
+      "alphaCount": 931,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_720",
+      "description": "Ratio of put open interest to call open interest for options expiring in 720 days, indicating very long-term option sentiment",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 492,
+      "alphaCount": 826,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_90",
+      "description": "Ratio of put open interest to call open interest for options expiring in 90 days, reflecting longer-term positioning",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 444,
+      "alphaCount": 1152,
+      "themes": []
+    },
+    {
+      "id": "pcr_oi_all",
+      "description": "Ratio of total put option open interest to call option open interest aggregated across all option maturities for the stock",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7058,
+      "userCount": 382,
+      "alphaCount": 865,
+      "themes": []
+    },
+    {
+      "id": "pcr_vol_10",
+      "description": "Ratio of total put option volume to call option volume for options expiring in 10 days, reflecting very short-term sentiment flow",
+      "dataset": {
+        "id": "option9",
+        "name": "Options Analytics"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-analytics",
+        "name": "Option Analytics"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7029,
+      "userCount": 252,
+      "alphaCount": 433,
+      "themes": []
+    }
+  ]
+}

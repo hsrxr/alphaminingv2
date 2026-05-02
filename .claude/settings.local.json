@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(python3 -c ' *)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Read(//d/D11150/vscode/project/alphamining/**)",
+      "Bash(python *)"
     ]
   }
 }

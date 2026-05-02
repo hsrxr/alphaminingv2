@@ -1,0 +1,1252 @@
+{
+  "dataset_id": "analyst4",
+  "created_at": "2026-05-02T22:06:02",
+  "page_index": 5,
+  "offset": 200,
+  "count": 50,
+  "request": {
+    "instrumentType": "EQUITY",
+    "region": "USA",
+    "delay": 1,
+    "universe": "TOP3000",
+    "data_type": "MATRIX",
+    "search": ""
+  },
+  "results": [
+    {
+      "id": "anl4_tbvps_median",
+      "description": "Tangible Book Value per Share - median of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.3321,
+      "userCount": 85,
+      "alphaCount": 142,
+      "themes": []
+    },
+    {
+      "id": "anl4_tbvps_number",
+      "description": "Tangible Book Value per Share - number of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.3321,
+      "userCount": 1322,
+      "alphaCount": 1428,
+      "themes": []
+    },
+    {
+      "id": "anl4_tot_gw_ft",
+      "description": "Total Goodwill - forecast type (revision/new/...)",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.8515,
+      "userCount": 1870,
+      "alphaCount": 6575,
+      "themes": []
+    },
+    {
+      "id": "anl4_totassets_flag",
+      "description": "Total Assets - forecast type (revision/new/...)",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.8122,
+      "userCount": 4161,
+      "alphaCount": 10934,
+      "themes": []
+    },
+    {
+      "id": "anl4_totassets_high",
+      "description": "Total Assets - The highest estimation",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7213,
+      "userCount": 399,
+      "alphaCount": 692,
+      "themes": []
+    },
+    {
+      "id": "anl4_totassets_low",
+      "description": "Total Assets - The lowest estimation",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7213,
+      "userCount": 1174,
+      "alphaCount": 2258,
+      "themes": []
+    },
+    {
+      "id": "anl4_totassets_mean",
+      "description": "Total Assets - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7213,
+      "userCount": 312,
+      "alphaCount": 508,
+      "themes": []
+    },
+    {
+      "id": "anl4_totassets_median",
+      "description": "Total Assets - median of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7213,
+      "userCount": 284,
+      "alphaCount": 439,
+      "themes": []
+    },
+    {
+      "id": "anl4_totassets_number",
+      "description": "Total Assets - number of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7213,
+      "userCount": 3508,
+      "alphaCount": 5631,
+      "themes": []
+    },
+    {
+      "id": "anl4_totassets_std",
+      "description": "Total Assets - standard deviation of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.3233,
+      "userCount": 1027,
+      "alphaCount": 1181,
+      "themes": []
+    },
+    {
+      "id": "anl4_totassets_value",
+      "description": "Total Assets - actual value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6486,
+      "userCount": 458,
+      "alphaCount": 1246,
+      "themes": []
+    },
+    {
+      "id": "anl4_totgw_high",
+      "description": "Total Goodwill - The highest estimation",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.5374,
+      "userCount": 99,
+      "alphaCount": 153,
+      "themes": []
+    },
+    {
+      "id": "anl4_totgw_low",
+      "description": "Total Goodwill - The lowest estimation",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.5374,
+      "userCount": 112,
+      "alphaCount": 173,
+      "themes": []
+    },
+    {
+      "id": "anl4_totgw_mean",
+      "description": "Total Goodwill - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.5374,
+      "userCount": 95,
+      "alphaCount": 221,
+      "themes": []
+    },
+    {
+      "id": "anl4_totgw_median",
+      "description": "Total Goodwill - median of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.5374,
+      "userCount": 96,
+      "alphaCount": 147,
+      "themes": []
+    },
+    {
+      "id": "anl4_totgw_number",
+      "description": "Total Goodwill - number of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.5374,
+      "userCount": 143,
+      "alphaCount": 235,
+      "themes": []
+    },
+    {
+      "id": "basic_shares_max_guidance_qtr",
+      "description": "The maximum guidance value for Basic Shares.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 89,
+      "alphaCount": 97,
+      "themes": []
+    },
+    {
+      "id": "book_value_per_share_2",
+      "description": "Book Value Per Share - Actual Value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7481,
+      "userCount": 47,
+      "alphaCount": 64,
+      "themes": []
+    },
+    {
+      "id": "book_value_per_share_min_guidance_qtr",
+      "description": "Book value per share - minimum guidance value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 38,
+      "alphaCount": 43,
+      "themes": []
+    },
+    {
+      "id": "book_value_per_share_reported_value",
+      "description": "Book Value Per Share - Actual Value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5245,
+      "userCount": 64,
+      "alphaCount": 106,
+      "themes": []
+    },
+    {
+      "id": "capital_expenditure_amount",
+      "description": "Capital Expenditures - Total value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7524,
+      "userCount": 28,
+      "alphaCount": 31,
+      "themes": []
+    },
+    {
+      "id": "capital_expenditure_guidance_value",
+      "description": "Capital Expenditures - Total value for the annual guidance",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.3587,
+      "userCount": 25,
+      "alphaCount": 28,
+      "themes": []
+    },
+    {
+      "id": "capital_expenditure_max_guidance_qtr",
+      "description": "The maximum guidance value for Capital Expenditures",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 27,
+      "alphaCount": 33,
+      "themes": []
+    },
+    {
+      "id": "capital_expenditure_reported_value",
+      "description": "Capital Expenditures - Total (Cash Flow/Investing) (Millions)",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6592,
+      "userCount": 29,
+      "alphaCount": 34,
+      "themes": []
+    },
+    {
+      "id": "cash_flow_financing_max_guidance",
+      "description": "Cash Flow From Financing - Maximum guidance value provided annually",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 59,
+      "alphaCount": 65,
+      "themes": []
+    },
+    {
+      "id": "cash_flow_from_financing",
+      "description": "Cash Flow From Financing - Value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6432,
+      "userCount": 38,
+      "alphaCount": 42,
+      "themes": []
+    },
+    {
+      "id": "cash_flow_from_investing",
+      "description": "Cash Flow from Investing - Value",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6481,
+      "userCount": 48,
+      "alphaCount": 69,
+      "themes": []
+    },
+    {
+      "id": "cash_flow_from_operations",
+      "description": "Cash Flow from Operations - Value for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.7137,
+      "userCount": 220,
+      "alphaCount": 261,
+      "themes": []
+    },
+    {
+      "id": "cash_flow_operations_min_guidance",
+      "description": "Minimum guidance value for Cash Flow from Operations on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 16,
+      "alphaCount": 16,
+      "themes": []
+    },
+    {
+      "id": "cashflow_per_share_average",
+      "description": "Cash Flow Per Share - average of estimations with a delay of 1 quarter",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.3977,
+      "userCount": 24,
+      "alphaCount": 26,
+      "themes": []
+    },
+    {
+      "id": "cashflow_per_share_estimate_count",
+      "description": "Cash Flow Per Share - number of estimations - delay1",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.3977,
+      "userCount": 24,
+      "alphaCount": 24,
+      "themes": []
+    },
+    {
+      "id": "cashflow_per_share_max_guidance",
+      "description": "The maximum guidance value for Cash Flow Per Share on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 27,
+      "alphaCount": 28,
+      "themes": []
+    },
+    {
+      "id": "cashflow_per_share_max_guidance_quarterly",
+      "description": "The maximum guidance value for Cash Flow Per Share.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 37,
+      "alphaCount": 39,
+      "themes": []
+    },
+    {
+      "id": "cashflow_per_share_maximum",
+      "description": "Cash Flow - The highest estimation, per share, with a delay of 1 quarter",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.3977,
+      "userCount": 7,
+      "alphaCount": 8,
+      "themes": []
+    },
+    {
+      "id": "cashflow_per_share_median_value",
+      "description": "Cash Flow Per Share - Median value among forecasts",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.3977,
+      "userCount": 11,
+      "alphaCount": 11,
+      "themes": []
+    },
+    {
+      "id": "cashflow_per_share_min_guidance",
+      "description": "Cash Flow Per Share - Minimum guidance value for the annual period",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 33,
+      "alphaCount": 33,
+      "themes": []
+    },
+    {
+      "id": "cashflow_per_share_min_guidance_quarterly",
+      "description": "Minimum guidance value for Cash Flow Per Share",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 31,
+      "alphaCount": 39,
+      "themes": []
+    },
+    {
+      "id": "cashflow_per_share_minimum",
+      "description": "Cash Flow Per Share - The lowest estimation, delay 1 quarter",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.3977,
+      "userCount": 5,
+      "alphaCount": 5,
+      "themes": []
+    },
+    {
+      "id": "dividend_estimate_average",
+      "description": "Dividend per share - average of estimations - delay 1",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6151,
+      "userCount": 5,
+      "alphaCount": 5,
+      "themes": []
+    },
+    {
+      "id": "dividend_estimate_count",
+      "description": "Dividend per share - number of estimations with a delay of 1 quarter",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6151,
+      "userCount": 16,
+      "alphaCount": 21,
+      "themes": []
+    },
+    {
+      "id": "dividend_estimate_maximum",
+      "description": "Dividend per share - The highest value among forecasts with a delay of 1 quarter",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6151,
+      "userCount": 9,
+      "alphaCount": 9,
+      "themes": []
+    },
+    {
+      "id": "dividend_estimate_median_value",
+      "description": "Dividend per share - median of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6151,
+      "userCount": 12,
+      "alphaCount": 13,
+      "themes": []
+    },
+    {
+      "id": "dividend_estimate_minimum",
+      "description": "Dividend per share - The lowest value among forecasts - D1",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6151,
+      "userCount": 29,
+      "alphaCount": 35,
+      "themes": []
+    },
+    {
+      "id": "dividend_estimate_standard_deviation",
+      "description": "Dividend per share - standard deviation of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.2742,
+      "userCount": 4,
+      "alphaCount": 4,
+      "themes": []
+    },
+    {
+      "id": "dividend_estimate_stddev_quarterly",
+      "description": "Dividend per share - standard deviation of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.2742,
+      "userCount": 4,
+      "alphaCount": 4,
+      "themes": []
+    },
+    {
+      "id": "dividend_max_guidance_quarterly",
+      "description": "Maximum guidance value for Dividend per share",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 86,
+      "alphaCount": 98,
+      "themes": []
+    },
+    {
+      "id": "dividend_max_guidance_value",
+      "description": "The maximum guidance value for Dividend per share on an annual basis.",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 95,
+      "alphaCount": 127,
+      "themes": []
+    },
+    {
+      "id": "dividend_min_guidance_quarterly",
+      "description": "Minimum guidance value for Dividend per share",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 62,
+      "alphaCount": 64,
+      "themes": []
+    },
+    {
+      "id": "dividend_min_guidance_value",
+      "description": "Minimum guidance value for Dividend per share on an annual basis",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 74,
+      "alphaCount": 84,
+      "themes": []
+    },
+    {
+      "id": "earnings_per_share_average",
+      "description": "Earnings per share - mean of estimations",
+      "dataset": {
+        "id": "analyst4",
+        "name": "Analyst Estimate Data for Equity"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-analyst-estimates",
+        "name": "Analyst Estimates"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 1.0,
+      "userCount": 141,
+      "alphaCount": 182,
+      "themes": []
+    }
+  ]
+}

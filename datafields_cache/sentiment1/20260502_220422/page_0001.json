@@ -1,0 +1,442 @@
+{
+  "dataset_id": "sentiment1",
+  "created_at": "2026-05-02T22:04:22",
+  "page_index": 1,
+  "offset": 0,
+  "count": 17,
+  "request": {
+    "instrumentType": "EQUITY",
+    "region": "USA",
+    "delay": 1,
+    "universe": "TOP3000",
+    "data_type": "MATRIX",
+    "search": ""
+  },
+  "results": [
+    {
+      "id": "snt1_cored1_score",
+      "description": "Proprietary composite analyst score; bearish if < 5, bullish if > 5, neutral if between -5 and 5",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.6329,
+      "userCount": 556,
+      "alphaCount": 3754,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_analystcoverage",
+      "description": "Number of analysts providing an earnings estimate for the stock",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5573,
+      "userCount": 539,
+      "alphaCount": 4135,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_buyrecpercent",
+      "description": "Percentage of analysts recommending a buy, calculated as (# of analysts recommending buy) / (# of all analysts)",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5557,
+      "userCount": 332,
+      "alphaCount": 2767,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_downtargetpercent",
+      "description": "Percent of analysts who have lowered their price target recently, out of all analysts covering the stock",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5508,
+      "userCount": 350,
+      "alphaCount": 3558,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_dtstsespe",
+      "description": "Standard deviation (dispersion) among analysts' earnings estimates for the next fiscal year",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5572,
+      "userCount": 380,
+      "alphaCount": 2868,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_dynamicfocusrank",
+      "description": "Composite rank (0-100) emphasizing dynamic, short-term analyst sentiment signals; higher values indicate stronger buy signals, lower values indicate sell signals",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5651,
+      "userCount": 299,
+      "alphaCount": 1879,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_earningsrevision",
+      "description": "One-month change in the mean (average) analyst earnings estimate divided by the stock price",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.558,
+      "userCount": 366,
+      "alphaCount": 3549,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_earningssurprise",
+      "description": "Difference between actual reported earnings and expected earnings (consensus), divided by share price",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5575,
+      "userCount": 274,
+      "alphaCount": 2810,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_earningstorpedo",
+      "description": "Difference between expected (FY1) earnings and previous four quarters' actual earnings divided by price; flags possible negative inflection",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5522,
+      "userCount": 180,
+      "alphaCount": 2083,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_fundamentalfocusrank",
+      "description": "Rank (0-100) emphasizing longer-term, fundamental/value metrics; higher values for buy signal, lower for sell signal",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5684,
+      "userCount": 245,
+      "alphaCount": 2523,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_longtermepsgrowthest",
+      "description": "Median expected long-term (3-5 years) growth rate in operating earnings as forecasted by analysts",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5413,
+      "userCount": 246,
+      "alphaCount": 2178,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_netearningsrevision",
+      "description": "Net percentage of analysts raising minus lowering earnings estimates, out of total analysts covering the stock",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.556,
+      "userCount": 201,
+      "alphaCount": 2016,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_netrecpercent",
+      "description": "Percentage difference between analysts recommending buy and those recommending sell, divided by total number of analysts",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5557,
+      "userCount": 331,
+      "alphaCount": 3994,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_nettargetpercent",
+      "description": "Net percentage of analysts raising minus lowering price targets, divided by total number of analysts",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5508,
+      "userCount": 199,
+      "alphaCount": 2858,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_sellrecpercent",
+      "description": "Percentage of analysts recommending a sell, calculated as (# of analysts recommending sell) / (# of all analysts)",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5557,
+      "userCount": 349,
+      "alphaCount": 2468,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_stockrank",
+      "description": "Rank (0-100) based on equity-style factors, where higher values reflect a stronger buy signal and lower values a sell signal",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5672,
+      "userCount": 234,
+      "alphaCount": 2161,
+      "themes": []
+    },
+    {
+      "id": "snt1_d1_uptargetpercent",
+      "description": "Percent of analysts who have increased their price target recently, out of all analysts covering the stock",
+      "dataset": {
+        "id": "sentiment1",
+        "name": "Research Sentiment Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "USA",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "dateCoverage": 1.0,
+      "coverage": 0.5508,
+      "userCount": 234,
+      "alphaCount": 2301,
+      "themes": []
+    }
+  ]
+}

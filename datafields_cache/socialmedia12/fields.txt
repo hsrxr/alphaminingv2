@@ -1,0 +1,12 @@
+scl12_buzz
+scl12_buzz_fast_d1
+scl12_sentiment
+scl12_sentiment_fast_d1
+snt_buzz
+snt_buzz_bfl
+snt_buzz_bfl_fast_d1
+snt_buzz_fast_d1
+snt_buzz_ret
+snt_buzz_ret_fast_d1
+snt_value
+snt_value_fast_d1

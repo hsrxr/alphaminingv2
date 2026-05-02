@@ -140,20 +140,22 @@ def aggregate_by_core(results: list[dict]) -> dict[str, dict]:
     for core_id, metric_list in core_groups.items():
         n = len(metric_list)
         sharpes = [m["sharpe"] for m in metric_list]
+        abs_sharpes = [abs(m["sharpe"]) for m in metric_list]
         fitnesses = [m["fitness"] for m in metric_list if m["fitness"] is not None]
+        abs_fitnesses = [abs(m["fitness"]) for m in metric_list if m["fitness"] is not None]
         turnovers = [m["turnover"] for m in metric_list if m["turnover"] is not None]
 
         aggregated[core_id] = {
             "pipeline_core_id": core_id,
             "pipeline_template_id": metric_list[0]["pipeline_template_id"] if metric_list else "",
             "probe_count": n,
-            "sharpe_mean": sum(sharpes) / n,
+            "sharpe_mean": sum(abs_sharpes) / n,
             "sharpe_max": max(sharpes),
             "sharpe_min": min(sharpes),
-            "fitness_mean": sum(fitnesses) / len(fitnesses) if fitnesses else None,
+            "fitness_mean": sum(abs_fitnesses) / len(fitnesses) if fitnesses else None,
             "turnover_mean": sum(turnovers) / len(turnovers) if turnovers else None,
-            "best_alpha_id": max(metric_list, key=lambda m: m["sharpe"])["alpha_id"],
-            "best_expression": max(metric_list, key=lambda m: m["sharpe"])["regular"],
+            "best_alpha_id": max(metric_list, key=lambda m: abs(m["sharpe"]))["alpha_id"],
+            "best_expression": max(metric_list, key=lambda m: abs(m["sharpe"]))["regular"],
             "all_metrics": metric_list,
         }
 
