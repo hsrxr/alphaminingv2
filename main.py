@@ -24,7 +24,7 @@ SIMULATION_SETTINGS = {
     "region": "USA",
     "universe": "TOP3000",
     "delay": 1,
-    "decay": 6,
+    "decay": 5,
     "neutralization": "MARKET",
     "truncation": 0.08,
     "pasteurization": "ON",
