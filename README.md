@@ -1,19 +1,113 @@
 # AlphaMiningV2
 
-面向 WorldQuant Brain 的本地因子批量生产与闭环回测流水线。
-
-AlphaMiningV2 采用了 **Probe-Expand（探测-展开）闭环架构**。系统不再机械地遍历所有参数组合，而是通过少量代表性参数（Probe）快速验证核心金融逻辑（Core）的有效性，随后自动对表现优异的 Core 进行全量参数展开（Expand），从而将算力效率提升 70% 以上。
+面向 WorldQuant Brain 的本地因子批量生产与闭环回测流水线，以及基于 LLM 的全自主因子搜索 Agent。
 
 ---
 
-## 1. 核心工作流 (The Closed-Loop Pipeline)
+## 1. 系统架构
+
+AlphaMiningV2 包含两套子系统，可独立或协同工作：
+
+### Pipeline — Probe-Expand 闭环流水线
+
+通过**探测-展开（Probe-Expand）**架构高效验证因子：先用代表性参数（Probe）快速筛选核心逻辑（Core），再对表现优异的 Core 展开全量参数网格（Expand），算力效率提升 70% 以上。
+
+```
+模板 + 数据集 → Probe 生成 → Probe 回测 → 调度决策 → Expand 生成 → Expand 回测 → 结果分析
+                                              ├─ EXPAND
+                                              ├─ WATCH
+                                              └─ ABANDON
+```
+
+### Agent — 全自主因子搜索 Agent
+
+在 Pipeline 之上构建的 LLM 驱动智能体，实现 **Idea → Template → Probe → Analyze → Decide** 完整闭环：
+
+```
+金融直觉 (Idea)
+    ↓
+[LLM] 生成因子模板
+    ↓
+[Pipeline] Probe 生成 + 回测
+    ↓
+[LLM] 分析结果，诊断问题
+    ↓
+  ┌─ EXPAND   → 全量参数网格回测
+  ├─ MUTATE   → 变异表达式 → 重新 Probe
+  ├─ ABANDON  → 记录并放弃
+  └─ FINALIZE → 报告优秀因子
+    ↑______________|  (循环直至收敛)
+```
+
+---
+
+## 2. 目录结构
+
+```
+alphaminingv2/
+├── pipeline/                       # Probe-Expand 流水线核心
+│   ├── main.py                     #   模板驱动因子生成器（支持 --probe）
+│   ├── backtest_runner.py          #   并发回测执行引擎（Brain API）
+│   ├── adaptive_scheduler.py       #   Probe-Expand 闭环调度器
+│   ├── result_filter.py            #   结果筛选与 Core 聚合分析
+│   ├── datafields_store.py         #   数据字段缓存管理器
+│   └── run_pipeline.py             #   一键式闭环流水线入口
+│
+├── agent/                          # LLM 驱动因子搜索 Agent
+│   ├── orchestrator.py             #   主循环：全自主搜索（Phase 3）
+│   ├── feedback_loop.py            #   交互式 Agent 循环（Phase 1）
+│   ├── llm_client.py               #   DeepSeek API 客户端
+│   ├── expression_validator.py     #   WQ 表达式语法校验
+│   ├── template_generator.py       #   金融直觉 → 因子模板（Phase 2）
+│   ├── mutation_engine.py          #   因子变异引擎（规则 + LLM）
+│   ├── result_analyzer.py          #   回测结果 LLM 深度分析
+│   ├── convergence.py              #   收敛检测与停止决策
+│   └── memory.py                   #   因子迭代记忆与持久化
+│
+├── adaptive_scheduler.py           # ┐
+├── backtest_runner.py              # │
+├── datafields_store.py             # ├ 根层薄封装，委托给 pipeline/
+├── main.py                         # │ 保持向后兼容，可直接运行
+├── result_filter.py                # │
+├── run_pipeline.py                 # ┘
+│
+├── agent_feedback_loop.py          # ┐
+├── agent_llm_client.py             # ├ 根层薄封装，委托给 agent/
+├── expression_validator.py         # │
+├── mutation_engine.py              # │
+├── result_analyzer.py              # │
+└── template_generator.py           # ┘
+│
+├── template_catalog.json           # 配置：预定义因子模板及槽位约束
+├── template_catalog_mixed.json     # 配置：多数据集混合模板库
+├── common_operator_slot_mappings.json # 配置：通用算子映射表
+├── wq_operators_cleaned.json       # 配置：50 个 WQ 算子定义
+├── .env.example                    # 环境变量模板
+│
+├── test_pipeline.py                # Pipeline 逻辑测试（24 项）
+├── test_improvements.py            # 架构改进端到端验证（33 项）
+├── run_all_new_templates.sh        # 批量运行全部模板的脚本
+│
+├── docs/                           # 文档
+│   ├── LLM_Agent_Architecture_Design.md
+│   ├── Architecture_Diagnosis_and_Improvement.md
+│   └── template_naming_guide.md
+│
+├── agent_output/                   # Agent 会话输出（自动创建）
+├── factor_batches/                 # 因子 JSON 批次（自动创建）
+├── backtest_results/               # 回测结果与 Checkpoints（自动创建）
+├── datafields_cache/               # 数据字段本地缓存（自动创建）
+└── pipeline_logs/                  # 流水线日志（自动创建）
+```
+
+---
+
+## 3. Pipeline 快速开始
 
 ### 一键运行（推荐）
 
-使用 `run_pipeline.py` 将四个阶段合并为单一命令，自动完成探测生成 → 探测回测 → 调度决策 → 扩展回测的完整闭环：
-
 ```bash
-# 最简调用：使用所有默认参数
+# 最简调用
 python run_pipeline.py --dataset-id option8
 
 # 指定模板与决策阈值
@@ -23,80 +117,108 @@ python run_pipeline.py \
   --expand-min-sharpe 1.0 \
   --expand-max-turnover 0.7
 
-# 干跑模式：仅打印调度决策，不生成扩展批次
+# 干跑模式：仅打印调度决策
 python run_pipeline.py --dataset-id option8 --dry-run
 
-# 仅运行探测阶段（生成 + 回测），不做调度与扩展
+# 仅运行探测阶段
 python run_pipeline.py --dataset-id option8 --probe-only
 
-# 跳过已完成的阶段（如探测批次和回测结果已存在）
+# 跳过已完成阶段
 python run_pipeline.py --dataset-id option8 --skip-probe-gen --skip-probe-run
 ```
 
-流水线完成后，使用以下命令查看 Core 级别结果摘要：
-
-```bash
-python result_filter.py --results-dir backtest_results/expand --group-by-core
-```
-
-### 各阶段单独运行（高级用法）
-
-各阶段脚本仍可独立调用，适合调试或局部重跑：
+### 分阶段运行
 
 ```bash
 # 阶段 1：探测批次生成
-python main.py --dataset-id option8 --template-ids TPL_GROUP_IVHV_SMOOTH_V1 --probe
+python main.py --dataset-id option8 --template-ids ALL --probe
 
 # 阶段 2：探测回测
-python backtest_runner.py --input-dir factor_batches/probe --output-dir backtest_results/probe --once
+python backtest_runner.py --input-dir factor_batches/probe/option8 --output-dir backtest_results/probe/option8 --once
 
 # 阶段 3：调度决策 + 扩展批次生成
-python adaptive_scheduler.py --probe-results-dir backtest_results/probe --dataset-id option8
+python adaptive_scheduler.py --probe-results-dir backtest_results/probe/option8 --dataset-id option8
 
 # 阶段 4：扩展回测
-python backtest_runner.py --input-dir factor_batches/expand --output-dir backtest_results/expand --once
+python backtest_runner.py --input-dir factor_batches/expand/option8 --output-dir backtest_results/expand/option8 --once
 
 # 结果分析
-python result_filter.py --results-dir backtest_results/expand --group-by-core
+python result_filter.py --results-dir backtest_results/expand/option8 --group-by-core
+```
+
+### 批量运行所有模板
+
+```bash
+bash run_all_new_templates.sh
 ```
 
 ---
 
-## 2. 目录结构
+## 4. Agent 快速开始
 
-整理后的根目录保持清爽，将文档与示例配置归类存放：
+### 交互式 Agent 循环（Phase 1）
 
-```text
-alphaminingv2/
-├── run_pipeline.py             # 入口：一键式闭环流水线（推荐使用）
-├── main.py                     # 核心：模板驱动的因子生成器（支持 --probe 模式）
-├── backtest_runner.py          # 核心：并发回测执行引擎
-├── adaptive_scheduler.py       # 核心：Probe-Expand 闭环调度器
-├── result_filter.py            # 核心：因子筛选与 Core 级别聚合分析
-├── datafields_store.py         # 工具：数据字段缓存管理器
-├── template_catalog.json       # 配置：11 个预定义因子模板及槽位约束
-├── common_operator_slot_mappings.json # 配置：通用算子映射表
-├── test_improvements.py        # 测试：架构改进端到端验证（33 项）
-├── test_pipeline.py            # 测试：run_pipeline.py 逻辑验证（24 项）
-│
-├── docs/                       # 文档与架构设计报告
-│   ├── Architecture_Diagnosis_and_Improvement.md
-│   ├── LLM_Agent_Architecture_Design.md
-│   ├── template_naming_guide.md
-│   └── assets/                 # 文档配图
-│
-├── examples/                   # 示例配置文件
-│   ├── settings_grid.example.json
-│   └── slot_overrides.example.json
-│
-├── factor_batches/             # 生成的因子 JSON 批次（自动创建）
-├── backtest_results/           # 回测结果与 Checkpoints（自动创建）
-└── datafields_cache/           # 数据字段本地缓存（自动创建）
+加载已完成的 Probe 结果，逐 Core 展示 LLM 诊断并接受决策指令：
+
+```bash
+python -m agent.feedback_loop \
+  --probe-results-dir backtest_results/probe/option8 \
+  --dataset-id option8
+```
+
+自动模式（不等待交互）：
+
+```bash
+python -m agent.feedback_loop \
+  --probe-results-dir backtest_results/probe/option8 \
+  --dataset-id option8 \
+  --auto
+```
+
+### 全自主因子搜索 Agent（Phase 3）
+
+从金融直觉出发，自动完成模板生成 → Probe → 分析 → 变异/扩展的全循环：
+
+```bash
+# 需要设置 DEEPSEEK_API_KEY 环境变量或 .env 文件
+python -m agent.orchestrator \
+  --dataset-id option8 \
+  --idea "IV skew minus HV skew for volatility risk premium" \
+  --iterations 5
+```
+
+使用现有模板（跳过生成阶段）：
+
+```bash
+python -m agent.orchestrator \
+  --dataset-id option8 \
+  --template-path agent_output/<session_id>/templates/catalog_TPL_xxx.json \
+  --iterations 5
+```
+
+### Agent 输出结构
+
+```
+agent_output/<session_id>/
+├── templates/                  # 生成的模板与变异模板
+│   ├── catalog_TPL_xxx.json    #   初始模板目录
+│   └── mutations_round_N.json  #   第 N 轮的变异模板
+├── batches/                    # 因子批次
+│   ├── probe_round_1/          #   每轮 Probe 批次
+│   ├── probe_round_2/
+│   └── expand/                 #   Expand 批次
+├── results/                    # 回测结果
+│   ├── probe_round_1/
+│   ├── probe_round_2/
+│   └── expand/
+├── memory/                     # 会话状态（可恢复）
+│   └── session_<id>.json
+└── report.json                 # 完整会话报告
 ```
 
 ---
 
-## 3. 环境要求与配置
+## 5. 环境要求与配置
 
 - **Python** >= 3.12
 - **依赖**：`requests>=2.31`, `pandas>=2.0`
@@ -106,53 +228,98 @@ alphaminingv2/
 
 ### 凭证配置
 
-脚本会按以下顺序读取凭证：
+按以下优先级读取：
+
 1. 项目根目录 `.env` 文件
 2. 进程环境变量
 
-需要提供以下变量：
-```env
-BRAIN_USERNAME=your_username
-BRAIN_PASSWORD=your_password
+| 变量 | 用途 | 必需 |
+|------|------|------|
+| `BRAIN_USERNAME` | WorldQuant Brain 用户名 | Pipeline |
+| `BRAIN_PASSWORD` | WorldQuant Brain 密码 | Pipeline |
+| `DEEPSEEK_API_KEY` | DeepSeek API 密钥 | Agent |
+
+### 数据集
+
+本地已缓存以下数据集字段定义：
+
+| 数据集 | 字段数 | 用途 |
+|--------|--------|------|
+| `option8` | 64 | 期权 IV/HV |
+| `pv1` | 135 | 价格与成交量 |
+| `fundamental6` | 574 | 基本面 |
+| `sentiment1` | 17 | 情绪 |
+| `news12` | 75 | 新闻 |
+| `analyst4` | 469 | 分析师预期 |
+| `option9` | - | 期权 PCR |
+| `socialmedia12` | - | 社交媒体 |
+
+---
+
+## 6. 核心模块详解
+
+### 6.1 `pipeline/main.py` — Factor Generator
+
+模板驱动的因子表达式生成器。
+- **Probe 模式** (`--probe`)：数值/分类槽位使用 `representative_values`，大幅缩减笛卡尔积
+- **Core ID**：每条记录携带 `pipeline_core_id`（如 `iv_mean_field=iv_30d|hv_field=hv_30d`），用于聚合
+- **元数据**：自动附加 `template_id`、`run_label`、时间戳
+
+### 6.2 `pipeline/backtest_runner.py` — Execution Engine
+
+WorldQuant Brain 并发回测执行引擎。
+- 最大 3 并发 worker（Brain API 限制）
+- 指数退避重试（401/403/408/409/425/429/5xx）
+- 周期性重登录（13800s）
+- Checkpoint 机制，中断后无缝续跑
+
+### 6.3 `pipeline/adaptive_scheduler.py` — Closed-Loop Scheduler
+
+按 `core_id` 聚合 Probe 结果，以 Sharpe / fitness / turnover 为阈值决策：
+- **EXPAND** (Sharpe ≥ 0.8)：自动调用 `main.py` 生成全量参数网格
+- **WATCH** (Sharpe ≥ 0.5)：记录但暂不展开
+- **ABANDON** (Sharpe < 0.5)：直接抛弃
+
+### 6.4 `agent/` — LLM 驱动智能体
+
+| 模块 | 功能 |
+|------|------|
+| `llm_client.py` | DeepSeek API 封装，支持 `chat()` 与 `chat_structured()` |
+| `expression_validator.py` | 校验 WQ FASTEXPR 语法、算子名、字段引用 |
+| `template_generator.py` | 金融直觉 → 带槽位的模板（含验证与持久化） |
+| `mutation_engine.py` | 12 种规则变异 + LLM 创意变异 |
+| `result_analyzer.py` | 加载回测结果，LLM 逐 Core 诊断 |
+| `convergence.py` | 收敛检测：超参配置最大轮次/耐心值/优秀 Sharpe 阈值 |
+| `memory.py` | 全量状态持久化，支持断点恢复 |
+| `orchestrator.py` | 主循环编排：生成 → 回测 → 分析 → 决策 |
+| `feedback_loop.py` | 交互式诊断界面 |
+
+---
+
+## 7. Agent 决策流程
+
+每轮迭代中，对每个 Core 执行以下分类：
+
+```
+                    Sharpe ≥ 1.5? ───→ FINALIZE
+                          ↓
+              0.8 ≤ Sharpe < 1.5?    且 turnover ≤ 0.7, fitness ≥ 0.3?
+                    ├─ yes → EXPAND
+                    └─ no  → continue
+                          ↓
+              0.3 ≤ Sharpe < 0.8? ───→ MUTATE → 生成变异 → 下一轮 Probe
+                          ↓
+                    Sharpe < 0.3? ───→ ABANDON
 ```
 
----
-
-## 4. 核心模块详解
-
-### 4.1 `main.py` (Factor Generator)
-负责“拉字段 + 组装表达式 + 写批次”。
-- **新增特性**：支持 `--probe` 模式。开启后，数值/分类槽位将使用 `template_catalog.json` 中定义的 `representative_values`，大幅缩减无效的笛卡尔积。
-- **元数据**：生成的每条记录都会携带 `core_id`（如 `iv_mean_field=iv_30d|hv_field=hv_30d`），为后续聚合提供基础。
-
-### 4.2 `backtest_runner.py` (Execution Engine)
-负责读取批次文件并并发提交给 Brain 平台。
-- 并发 worker 上限严格钳制到 3，避免 HTTP 429。
-- 支持常驻模式（不带 `--once`），会持续轮询 `factor_batches/` 目录的新文件。
-- 每处理一个因子即落盘 checkpoint，中断后可无缝续跑。
-
-### 4.3 `adaptive_scheduler.py` (Closed-Loop Brain)
-读取 `backtest_results/probe` 中的结果，按 `core_id` 聚合计算 `sharpe_mean`、`fitness_mean` 等指标，并做出决策：
-- **EXPAND**：核心逻辑有效，自动调用 `main.py` 生成该 Core 的全量参数网格。
-- **WATCH**：表现平庸，记录但暂不展开。
-- **ABANDON**：表现极差，直接抛弃。
-
-### 4.4 `result_filter.py` (Result Analyzer)
-除了传统的单因子指标筛选，新增了 `--group-by-core` 模式，可输出 Core 级别的表现摘要表格，帮助研究员快速定位最强信号源。
+检测到以下任一条件时停止：
+- Core 达到 `max_rounds`（默认 5）且无足够改善
+- Core 变异次数达到 `max_mutations`（默认 8）
+- 无活跃 Core 剩余
+- 会话达到 `session_max_rounds`（默认 20）
 
 ---
 
-## 5. 架构演进与 LLM Agent 展望
-
-本项目正从传统的“机械枚举”向“智能 Agent”架构演进。当前的 Probe-Expand 机制构成了坚实的**代码规则闭环**。
-
-在 `docs/LLM_Agent_Architecture_Design.md` 中，我们详细规划了下一阶段的 Hybrid Agent 架构：
-- **LLM Planner**：负责根据金融直觉设计新模板（Template Design）。
-- **LLM Evaluator**：负责对表现平庸（WATCH）的 Core 提出变异建议（如引入非线性算子或改变中性化方式）。
-- **Code Rules**：负责并发调度、字段合法性硬校验与回测执行。
-
----
-
-## 6. 免责声明
+## 8. 许可证与免责声明
 
 本项目仅用于量化研究与流程自动化示例。请严格遵守 WorldQuant Brain 平台规则与账户条款，控制请求频率与并发，避免对服务造成不必要压力。

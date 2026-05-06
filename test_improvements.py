@@ -11,7 +11,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 # ─── 导入被测模块 ─────────────────────────────────────────────────────────────
-from main import (
+from pipeline.main import (
     apply_dataset_field_domain,
     build_dataset_field_candidates,
     compute_pipeline_core_id,
@@ -19,8 +19,8 @@ from main import (
     resolve_slot_values,
     load_template_catalog,
 )
-from result_filter import collect_result_rows, build_core_summary
-from adaptive_scheduler import aggregate_by_core, classify_core
+from pipeline.result_filter import collect_result_rows, build_core_summary
+from pipeline.adaptive_scheduler import aggregate_by_core, classify_core
 
 PASS = "\033[92m[PASS]\033[0m"
 FAIL = "\033[91m[FAIL]\033[0m"

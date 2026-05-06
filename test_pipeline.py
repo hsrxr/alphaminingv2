@@ -45,7 +45,7 @@ def test_import():
 
 # ─── 测试 2：build_parser 默认值正确 ─────────────────────────────────────────
 def test_parser_defaults():
-    from run_pipeline import build_parser
+    from pipeline.run_pipeline import build_parser
     parser = build_parser()
     args = parser.parse_args([])
 
@@ -70,7 +70,7 @@ def test_parser_defaults():
 
 # ─── 测试 3：--skip-probe-gen / --skip-probe-run 标志解析正确 ─────────────────
 def test_skip_flags():
-    from run_pipeline import build_parser
+    from pipeline.run_pipeline import build_parser
     parser = build_parser()
     args = parser.parse_args(["--skip-probe-gen", "--skip-probe-run", "--dataset-id", "option8"])
     check("skip_probe_gen_flag", args.skip_probe_gen is True)
@@ -80,7 +80,7 @@ def test_skip_flags():
 
 # ─── 测试 4：--probe-only 模式下 run_pipeline 不进入调度阶段 ─────────────────
 def test_probe_only_skips_scheduling():
-    from run_pipeline import build_parser, run_pipeline
+    from pipeline.run_pipeline import build_parser, run_pipeline
 
     parser = build_parser()
     args = parser.parse_args([
@@ -104,7 +104,7 @@ def test_probe_only_skips_scheduling():
 
 # ─── 测试 5：--dry-run 模式下 phase_schedule 不调用 generate_expand_batch ────
 def test_dry_run_no_expand_batch(tmp_path):
-    from run_pipeline import build_parser, phase_schedule
+    from pipeline.run_pipeline import build_parser, phase_schedule
 
     # 准备 mock 探测结果文件
     probe_results_dir = tmp_path / "probe_results"
@@ -158,7 +158,7 @@ def test_dry_run_no_expand_batch(tmp_path):
 
 # ─── 测试 6：--dry-run 模式下 run_pipeline 不进入 phase_run_backtest（阶段4）─
 def test_dry_run_skips_expand_backtest():
-    from run_pipeline import build_parser, run_pipeline
+    from pipeline.run_pipeline import build_parser, run_pipeline
 
     parser = build_parser()
     args = parser.parse_args([
@@ -185,7 +185,7 @@ def test_dry_run_skips_expand_backtest():
 
 # ─── 测试 7：正常流程下 phase_run_backtest 被调用两次（probe + expand）────────
 def test_full_pipeline_calls_backtest_twice():
-    from run_pipeline import build_parser, run_pipeline
+    from pipeline.run_pipeline import build_parser, run_pipeline
 
     parser = build_parser()
     args = parser.parse_args([

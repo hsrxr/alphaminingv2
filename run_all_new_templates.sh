@@ -1,5 +1,5 @@
 #!/bin/bash
-# run_all_new_templates.sh — 持续跑完所有新模板的完整 Pipeline
+# run_all_new_templates.sh — 跑完 template_catalog_mixed.json 全部 15 个模板的完整 Pipeline
 # 用法: bash run_all_new_templates.sh
 # 推荐: tmux new-session -d -s alphamining 'bash run_all_new_templates.sh'
 
@@ -12,118 +12,121 @@ LOG_DIR="pipeline_logs"
 REPORT_DIR="pipeline_reports"
 mkdir -p "$LOG_DIR" "$REPORT_DIR"
 
-# 用 uv 管理包环境（GCP VM 上 python 命令不存在，需用 python3 或 uv run）
-PYTHON_CMD="uv run python3"
+# Python 命令（按环境调整）
+PYTHON_CMD="python"
 
-# 定义 pv1 模板（6 个）
-PV1_TEMPLATES="TPL_PV_TURNOVER_TS_V1,\
-TPL_PV_PRICE_RANGE_V1,\
-TPL_PV_AMIHUD_ILLIQ_V1,\
-TPL_PV_REL_VOLUME_V1,\
-TPL_PV_RETURN_VOL_V1,\
-TPL_PV_SIZE_FACTOR_V1"
+# ══════════════════════════════════════════════════════════════════════
+# 模板分组（template_catalog_mixed.json）
+# ══════════════════════════════════════════════════════════════════════
 
-# 定义 fundamental6 模板（4 个）
-F6_TEMPLATES="TPL_FUND_DEBT_EQUITY_TS_V1,\
-TPL_FUND_GROWTH_RATE_TS_V1,\
-TPL_FUND_EARNINGS_QUALITY_TS_V1,\
-TPL_FUND_INVESTMENT_TS_V1"
+PV1_TEMPLATES="\
+TPL_PV_VOLUME_RETURN_CORR_V1,\
+TPL_PV_ACCUM_TS_V1,\
+TPL_PV_REVERSAL_CORR_V1"
 
-# ──────────────────────────────────────────────────
-# Pipeline 1: pv1
-# ──────────────────────────────────────────────────
-echo "========================================"
-echo " Pipeline 1/2: pv1 (6 new templates)"
-echo "========================================"
+F6_TEMPLATES="\
+TPL_FUND_EARNINGS_YIELD_TS_V1,\
+TPL_FUND_INTEREST_COVER_TS_V1,\
+TPL_FUND_CASHFLOW_YIELD_TS_V1,\
+TPL_FUND_SALES_TURNOVER_TS_V1"
 
-nohup $PYTHON_CMD run_pipeline.py \
-  --dataset-id pv1 \
-  --data-type MATRIX \
-  --template-ids "$PV1_TEMPLATES" \
-  --expand-min-sharpe 0.7 \
-  --expand-min-fitness 0.45 \
-  --expand-max-turnover 0.7 \
-  --watch-min-sharpe 0.5 \
-  --min-probe-count 1 \
-  --max-workers 3 \
-  --max-retries 5 \
-  --retry-sleep 5 \
-  --relogin-interval-seconds 13800 \
-  --log-level INFO \
-  --probe-batches-dir factor_batches/probe/pv1 \
-  --probe-results-dir backtest_results/probe/pv1 \
-  --expand-batches-dir factor_batches/expand/pv1 \
-  --expand-results-dir backtest_results/expand/pv1 \
-  --report-file "$REPORT_DIR/pv1_report.json" \
-  > "$LOG_DIR/pipeline_pv1.log" 2>&1 &
+OPT8_TEMPLATES="\
+TPL_OPTION_TERM_SLOPE_TS_V1,\
+TPL_OPTION_VOLOFVOL_TS_V1"
 
-PV1_PID=$!
-echo "pv1 pipeline started (PID=$PV1_PID)"
-echo "  log:    $LOG_DIR/pipeline_pv1.log"
-echo "  report: $REPORT_DIR/pv1_report.json"
-echo ""
-echo "  Monitor: tail -f $LOG_DIR/pipeline_pv1.log"
-echo ""
+OPT9_TEMPLATES="\
+TPL_OPTION_PCR_DELTA_TS_V1,\
+TPL_OPTION_PCRSPREAD_TS_V1"
 
-# wait 返回非零时不中断脚本（pipeline 可能部分失败但仍要继续跑 fundamental6）
-wait $PV1_PID
-PV1_EXIT=$?
-echo "pv1 pipeline finished (exit code: $PV1_EXIT)"
+SENT1_TEMPLATES="\
+TPL_SENTIMENT_REVISION_TS_V1,\
+TPL_SENTIMENT_CONSENSUS_TS_V1"
 
-# ──────────────────────────────────────────────────
-# Pipeline 2: fundamental6
-# ──────────────────────────────────────────────────
-echo ""
-echo "========================================"
-echo " Pipeline 2/2: fundamental6 (4 new templates)"
-echo "========================================"
+SOCIAL12_TEMPLATES="\
+TPL_SENTIMENT_SOCIAL_TS_V1"
 
-nohup $PYTHON_CMD run_pipeline.py \
-  --dataset-id fundamental6 \
-  --data-type MATRIX \
-  --template-ids "$F6_TEMPLATES" \
-  --expand-min-sharpe 0.7 \
-  --expand-min-fitness 0.45 \
-  --expand-max-turnover 0.7 \
-  --watch-min-sharpe 0.5 \
-  --min-probe-count 1 \
-  --max-workers 3 \
-  --max-retries 5 \
-  --retry-sleep 5 \
-  --relogin-interval-seconds 13800 \
-  --log-level INFO \
-  --probe-batches-dir factor_batches/probe/fundamental6 \
-  --probe-results-dir backtest_results/probe/fundamental6 \
-  --expand-batches-dir factor_batches/expand/fundamental6 \
-  --expand-results-dir backtest_results/expand/fundamental6 \
-  --report-file "$REPORT_DIR/fundamental6_report.json" \
-  > "$LOG_DIR/pipeline_fundamental6.log" 2>&1 &
+NEWS12_TEMPLATES="\
+TPL_NEWS_REACTION_TS_V1"
 
-F6_PID=$!
-echo "fundamental6 pipeline started (PID=$F6_PID)"
-echo "  log:    $LOG_DIR/pipeline_fundamental6.log"
-echo "  report: $REPORT_DIR/fundamental6_report.json"
-echo ""
-echo "  Monitor: tail -f $LOG_DIR/pipeline_fundamental6.log"
-echo ""
+# ══════════════════════════════════════════════════════════════════════
+# 通用 Pipeline 函数
+# ══════════════════════════════════════════════════════════════════════
 
-wait $F6_PID
-F6_EXIT=$?
-echo "fundamental6 pipeline finished (exit code: $F6_EXIT)"
+run_pipeline() {
+    local dataset_id=$1
+    local template_ids=$2
+    local label=$3
 
-# ──────────────────────────────────────────────────
+    echo ""
+    echo "========================================"
+    echo " Pipeline $label: $dataset_id"
+    echo "========================================"
+
+    nohup $PYTHON_CMD run_pipeline.py \
+      --dataset-id "$dataset_id" \
+      --template-doc template_catalog_mixed.json \
+      --template-ids "$template_ids" \
+      --expand-min-sharpe 0.8 \
+      --expand-min-fitness 0.45 \
+      --expand-max-turnover 0.7 \
+      --watch-min-sharpe 0.5 \
+      --min-probe-count 1 \
+      --max-workers 3 \
+      --max-retries 5 \
+      --retry-sleep 5 \
+      --relogin-interval-seconds 13800 \
+      --log-level INFO \
+      --probe-batches-dir "factor_batches/probe/${dataset_id}" \
+      --probe-results-dir "backtest_results/probe/${dataset_id}" \
+      --expand-batches-dir "factor_batches/expand/${dataset_id}" \
+      --expand-results-dir "backtest_results/expand/${dataset_id}" \
+      --report-file "${REPORT_DIR}/${dataset_id}_report.json" \
+      > "${LOG_DIR}/pipeline_${dataset_id}.log" 2>&1 &
+
+    local pid=$!
+    echo "  PID=$pid"
+    echo "  log:    ${LOG_DIR}/pipeline_${dataset_id}.log"
+    echo "  report: ${REPORT_DIR}/${dataset_id}_report.json"
+
+    wait $pid
+    local exit_code=$?
+    echo "  exit code: $exit_code"
+    return $exit_code
+}
+
+# ══════════════════════════════════════════════════════════════════════
+# 执行全部 7 个 Pipeline（串行）
+# ══════════════════════════════════════════════════════════════════════
+
+ALL_EXIT=0
+
+run_pipeline "pv1"           "$PV1_TEMPLATES"     "1/7"   || ALL_EXIT=1
+run_pipeline "fundamental6"  "$F6_TEMPLATES"      "2/7"   || ALL_EXIT=1
+run_pipeline "option8"       "$OPT8_TEMPLATES"    "3/7"   || ALL_EXIT=1
+run_pipeline "option9"       "$OPT9_TEMPLATES"    "4/7"   || ALL_EXIT=1
+run_pipeline "sentiment1"    "$SENT1_TEMPLATES"   "5/7"   || ALL_EXIT=1
+run_pipeline "socialmedia12" "$SOCIAL12_TEMPLATES" "6/7"   || ALL_EXIT=1
+run_pipeline "news12"        "$NEWS12_TEMPLATES"  "7/7"   || ALL_EXIT=1
+
+# ══════════════════════════════════════════════════════════════════════
 # 汇总
-# ──────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════
+
 echo ""
 echo "========================================"
 echo " ALL PIPELINES COMPLETE"
+echo "   15 templates across 7 datasets"
 echo "========================================"
-echo "  pv1:           exit=$PV1_EXIT  report=$REPORT_DIR/pv1_report.json"
-echo "  fundamental6:  exit=$F6_EXIT  report=$REPORT_DIR/fundamental6_report.json"
 echo ""
-echo "  Logs: $LOG_DIR/"
+for ds in pv1 fundamental6 option8 option9 sentiment1 socialmedia12 news12; do
+    echo "  $ds:  report=${REPORT_DIR}/${ds}_report.json"
+done
 echo ""
-echo "  Post-analysis:"
-echo "    python3 result_filter.py --results-dir backtest_results/expand/pv1 --group-by-core --top-n 20"
-echo "    python3 result_filter.py --results-dir backtest_results/expand/fundamental6 --group-by-core --top-n 20"
+echo "  Logs: ${LOG_DIR}/"
+echo ""
+echo "  Post-analysis examples:"
+echo "    python result_filter.py --results-dir backtest_results/expand/pv1 --group-by-core --top-n 20"
+echo "    python result_filter.py --results-dir backtest_results/expand/fundamental6 --group-by-core --top-n 20"
 echo "========================================"
+
+exit $ALL_EXIT
