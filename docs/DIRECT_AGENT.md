@@ -80,6 +80,7 @@ Agent 通过以下工具与 WorldQuant Brain 交互。工具分为四类：
 | 工具 | 参数 | 返回 |
 |------|------|------|
 | `search_knowledge` | keyword | 按关键词搜索知识库条目 |
+| `add_knowledge` | topic, insight, source | 添加经验条目到知识库 |
 | `list_knowledge_topics` | — | 所有知识库主题及条目数 |
 
 ### 响应协议
@@ -170,6 +171,17 @@ Agent 保存知识条目、标记被替换的 job、校验并提交改进表达�
 ## 运行模式
 
 ### 模式 1：从投资直觉出发（推荐）
+
+不指定数据集，让 Agent 自主探索：
+
+```bash
+python -m agent.direct_agent \
+  --idea "Momentum combined with low volatility"
+```
+
+Agent 会先调用 `list_datasets()` 查看可用数据集，然后选择最相关的进行探索。
+
+也可以指定数据集加速：
 
 ```bash
 python -m agent.direct_agent \

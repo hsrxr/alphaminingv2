@@ -13,11 +13,14 @@ Research → Submit 3 factors → Poll → Analyze → Improve → ... → Conve
 ## 快速开始
 
 ```bash
-# 从投资直觉出发，全自动挖掘因子
+# 从投资直觉出发，让 Agent 自主选择数据集
+python -m agent.direct_agent \
+  --idea "Momentum combined with low volatility"
+
+# 指定数据集（跳过探索步骤，更快）
 python -m agent.direct_agent \
   --dataset-id pv13 \
-  --idea "Momentum combined with low volatility" \
-  --iterations 10
+  --idea "Momentum combined with low volatility"
 
 # 改进已有表达式
 python -m agent.direct_agent \
@@ -146,3 +149,4 @@ Agent 每次迭代会将成功/失败的经验写入 `agent_output/knowledge_bas
 | -------------------------------------------- | ----------------------------------------- |
 | [docs/DIRECT_AGENT.md](docs/DIRECT_AGENT.md) | Direct Agent 完整架构、工具协议、运行模式 |
 | [docs/PIPELINE.md](docs/PIPELINE.md)         | 回测流水线（独立于 Agent 使用）           |
+| [docs/BRAIN_API_REFERENCE.md](docs/BRAIN_API_REFERENCE.md) | Brain 回测 API 传参与返回参数参考 |

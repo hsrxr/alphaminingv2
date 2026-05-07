@@ -44,6 +44,7 @@ SETTINGS_SCHEMA: dict[str, dict] = {
         "values": ["EQUITY"],
         "default": "EQUITY",
         "description": "Type of instrument to trade. EQUITY for stocks, FUTURE for futures, OPTION for options.",
+        "_api": True,
     },
     "region": {
         "type": "categorical",
@@ -54,42 +55,49 @@ SETTINGS_SCHEMA: dict[str, dict] = {
         "values": ["USA"],
         "default": "USA",
         "description": "Trading region/market. USA is the largest and most liquid.",
+        "_api": True,
     },
     "universe": {
         "type": "categorical",
         "values": ["TOP3000", "TOP2000", "TOP1000", "TOP500", "TOP200", "TOPSP500"],
         "default": "TOP3000",
         "description": "Size of the stock universe. TOP3000 = largest 3000 by volume.",
+        "_api": True,
     },
     "delay": {
         "type": "integer",
         "values": [0, 1],
         "default": 1,
         "description": "Days between signal and trade. delay=1 means today's signal trades tomorrow. Higher delay reduces look-ahead bias.",
+        "_api": True,
     },
     "decay": {
         "type": "integer",
         "values": "Any positive integer",
         "default": 5,
         "description": "Half-life in days for the weighting scheme. Lower decay = more responsive to recent signals. Higher decay = smoother, lower turnover.",
+        "_api": True,
     },
     "neutralization": {
         "type": "categorical",
         "values": ["MARKET", "INDUSTRY", "SECTOR", "SUBINDUSTRY", "NONE"],
         "default": "MARKET",
         "description": "Neutralization: Adjust alpha weights such that they sum to zero within each group of the selected type. Risk neutralization level. MARKET = subtract market-wide return. INDUSTRY = neutralize within industries. Finer neutralization reduces capacity.",
+        "_api": True,
     },
     "truncation": {
         "type": "float",
         "values": "0.00-1.00, resolution 0.01",
         "default": 0.08,
         "description": "Daily truncation limit as fraction of the weight distribution. 0.08 means weights are capped at 8% per tail. Higher = more concentrated.",
+        "_api": True,
     },
     "pasteurization": {
         "type": "categorical",
         "values": ["ON", "OFF"],
         "default": "ON",
         "description": "Pasteurization: Replaces operator input values with NaN for instruments not in the universe",
+        "_api": True,
     },
     "unitHandling": {
         "type": "categorical",
@@ -97,19 +105,29 @@ SETTINGS_SCHEMA: dict[str, dict] = {
         "values": ["VERIFY"],
         "default": "VERIFY",
         "description": "Unit Handling: Raises a warning when incompatible units are used in an operator",
+        "_api": True,
     },
     "nanHandling": {
         "type": "categorical",
         "values": ["ON", "OFF"],
         "default": "OFF",
         "description": "Allows aggregation operators to output numeric values when input values are NaN for a given instrument and date. When ON, replaces NaN values with 0. When OFF, NaN values propagate and may cause no-trade days.",
+        "_api": True,
     },
-    "Test period": {
-        "type": "categorical",
-        "values": ["0", "1", "2", "3", "4", "5", "6"],
-        "default": "0",
-        "description": "Length of the backtest period. Despite this setting, all backtests to date have been conducted over a fixed five-year period from 2019 to 2023.",
+    "visualization": {
+        "type": "boolean",
+        "values": [False],
+        "default": False,
+        "description": "Whether to show charts for this simulation on the Brain website. Only False is available for this account.",
+        "_api": True,
     },
+    # "Test period": {
+    #     "type": "categorical",
+    #     "values": ["0", "1", "2", "3", "4", "5", "6"],
+    #     "default": "0",
+    #     "description": "Length of the backtest period. Despite this setting, all backtests to date have been conducted over a fixed five-year period from 2019 to 2023.",
+    #     # "_api": False,  # informational only, not sent to API
+    # },
 }
 
 
@@ -393,7 +411,10 @@ class WQTools:
 
     def get_setting_schema(self) -> dict[str, dict]:
         """Return the full simulation settings schema with defaults and descriptions."""
-        return {k: dict(v) for k, v in SETTINGS_SCHEMA.items()}
+        return {
+            k: {sk: sv for sk, sv in v.items() if not sk.startswith("_")}
+            for k, v in SETTINGS_SCHEMA.items()
+        }
 
     # ── Tool 7: get_setting_detail ─────────────────────────────────────
 
@@ -402,7 +423,11 @@ class WQTools:
         name_lower = name.lower().replace("_", "")
         for key, info in SETTINGS_SCHEMA.items():
             if key.lower() == name_lower:
-                return {"parameter": key, **info}
+                entry = {"parameter": key}
+                for sk, sv in info.items():
+                    if not sk.startswith("_"):
+                        entry[sk] = sv
+                return entry
         return None
 
     # ── Tool 8: get_settings_guide ────────────────────────────────────
@@ -472,16 +497,22 @@ class WQTools:
         """
         self._ensure_session()
 
-        # Build payload.
-        resolved_settings = dict(SETTINGS_SCHEMA)  # copy schema defaults
+        # Build payload — only include fields with _api: True.
         payload_settings = {}
         for key, info in SETTINGS_SCHEMA.items():
-            payload_settings[key] = info["default"]
+            if info.get("_api", True):
+                payload_settings[key] = info["default"]
         if settings:
-            payload_settings.update(settings)
+            # Merge user settings, but skip non-API keys.
+            for k, v in settings.items():
+                if k in SETTINGS_SCHEMA and SETTINGS_SCHEMA[k].get("_api", True):
+                    payload_settings[k] = v
+                elif k in SETTINGS_SCHEMA:
+                    pass  # silently skip informational-only keys
+                else:
+                    payload_settings[k] = v  # pass through unknown keys
         payload_settings["language"] = "FASTEXPR"
 
-        # Include dataset_id as metadata (not sent to Brain).
         factor_payload = {
             "type": "regular",
             "settings": payload_settings,
@@ -785,16 +816,24 @@ class WQTools:
 
     @staticmethod
     def _extract_metrics(alpha_detail: dict) -> dict:
-        """Extract key performance metrics from alpha detail."""
-        stats = alpha_detail.get("statistics", alpha_detail.get("stats", {}))
-        # Brain API may return statistics in various structures.
+        """Extract key performance metrics from alpha detail.
+
+        Brain API returns in-sample statistics under the ``is`` key:
+          is.sharpe, is.turnover, is.fitness, is.returns,
+          is.drawdown, is.margin, is.pnl, is.longCount, is.shortCount
+        """
+        stats = alpha_detail.get("is") or alpha_detail.get("statistics") or alpha_detail.get("stats") or {}
         if isinstance(stats, dict):
             return {
-                "sharpe": stats.get("sharpe", stats.get("mean", 0)),
-                "turnover": stats.get("turnover", stats.get("turnoverMean", 0)),
-                "fitness": stats.get("fitness", stats.get("fitnessMean", 0)),
-                "mean_return": stats.get("meanReturn", stats.get("returnsMean", 0)),
-                "std_dev": stats.get("standardDeviation", stats.get("returnsStd", 0)),
+                "sharpe": stats.get("sharpe", 0),
+                "turnover": stats.get("turnover", 0),
+                "fitness": stats.get("fitness", 0),
+                "mean_return": stats.get("returns", stats.get("meanReturn", stats.get("mean", 0))),
+                "drawdown": stats.get("drawdown", 0),
+                "margin": stats.get("margin", 0),
+                "pnl": stats.get("pnl", 0),
+                "long_count": stats.get("longCount", 0),
+                "short_count": stats.get("shortCount", 0),
                 "days": stats.get("numDays", stats.get("days", 0)),
             }
         return {}

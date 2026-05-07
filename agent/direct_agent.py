@@ -57,8 +57,9 @@ Call any tool below by responding with `{"type": "tool_call", "reasoning": "..."
 | 8 | `get_setting_detail` | name | Detail for one setting parameter |
 | 9 | `get_settings_guide` | — | Fetch official Brain settings documentation |
 | 10 | `validate_expression` | expression, dataset_id | Check FASTEXPR syntax and field refs |
-| 11 | `search_knowledge` | keyword | Search persistent knowledge base |
-| 12 | `list_knowledge_topics` | — | Overview of all KB topics |
+| 11 | `add_knowledge` | topic, insight, source | Save insight to persistent knowledge base |
+| 12 | `search_knowledge` | keyword | Search persistent knowledge base |
+| 13 | `list_knowledge_topics` | — | Overview of all KB topics |
 
 ## Response Protocol
 
@@ -99,13 +100,14 @@ After research, submit factors or conclude the session:
 - pasteurization: ON or OFF
 - unitHandling: VERIFY only
 - nanHandling: ON or OFF
+- visualization: false only (no permission for true)
 
 ## Strategy
 
 1. **Research** — Explore the dataset, understand available fields, find relevant operators
 2. **Generate** — Construct 3 diverse, well-reasoned expressions
 3. **Iterate** — Analyze backtest results, learn from failures, improve
-4. **Record** — Save insights to the knowledge base for future sessions"""
+4. **Record** — Use `add_knowledge` to save insights at any time, not just during analysis. If you discover something interesting during research, save it immediately."""
 
 
 # ─── Direct Agent ─────────────────────────────────────────────────────────
@@ -131,7 +133,7 @@ class DirectAgent:
 
     def __init__(
         self,
-        dataset_id: str,
+        dataset_id: str = "",
         api_key: Optional[str] = None,
         model: str = "deepseek-chat",
         output_dir: str = "agent_output",
@@ -205,15 +207,29 @@ class DirectAgent:
 
     def _build_context(self) -> str:
         """Build the initial user message based on the active mode."""
-        parts: list[str] = [f"Dataset: {self.dataset_id}"]
+        parts: list[str] = []
+
+        if self.dataset_id:
+            parts.append(f"Dataset: {self.dataset_id}")
+            parts.append(
+                "Research the dataset and available operators, "
+                "then generate 3 diverse factors.\n"
+                "Call tools one at a time. When ready, submit via type 'submit'."
+            )
+        else:
+            parts.append(
+                "No dataset specified. Start by calling `list_datasets()` to see available datasets, "
+                "then explore fields with `list_fields()` and `get_field_detail()`. "
+                "You may combine fields from multiple datasets in one expression."
+            )
 
         if self.idea:
             parts.append(f"Financial idea: {self.idea}")
-            parts.append(
-                "Research the dataset and available operators, "
-                "then generate 3 diverse factors that capture this idea.\n"
-                "Call tools one at a time. When ready, submit via type 'submit'."
-            )
+            if not self.dataset_id:
+                parts.append(
+                    "Choose the most suitable dataset(s) for this idea."
+                )
+
         if self.expression:
             parts.append(f"Existing expression: {self.expression}")
             if self.critique:
@@ -237,11 +253,12 @@ class DirectAgent:
         seen: set[int] = set()
         entries: list[dict] = []
 
-        # Search by dataset id.
-        for e in self.tools.search_knowledge(self.dataset_id):
-            if e["id"] not in seen:
-                seen.add(e["id"])
-                entries.append(e)
+        # Search by dataset id (if specified).
+        if self.dataset_id:
+            for e in self.tools.search_knowledge(self.dataset_id):
+                if e["id"] not in seen:
+                    seen.add(e["id"])
+                    entries.append(e)
 
         # Search by idea keywords.
         text = self.idea or self.expression or ""
@@ -595,6 +612,11 @@ class DirectAgent:
                 self._arg(args, "keyword", str)
             ),
             "list_knowledge_topics": lambda: self.tools.list_knowledge_topics(),
+            "add_knowledge": lambda: self.tools.add_knowledge(
+                topic=self._arg(args, "topic", str),
+                insight=self._arg(args, "insight", str),
+                source=self._arg(args, "source", str, default="agent"),
+            ),
         }
 
         handler = dispatch.get(tool)
@@ -673,11 +695,11 @@ class DirectAgent:
         # Record best factor to knowledge base.
         if entries and (entries[0].get("sharpe") or 0) > 1.0:
             best = entries[0]
+            ds_tag = f"Dataset={self.dataset_id}  " if self.dataset_id else ""
             self.tools.add_knowledge(
                 topic="successful_factor",
                 insight=(
-                    f"Dataset={self.dataset_id}  "
-                    f"Sharpe={best['sharpe']}  "
+                    f"{ds_tag}Sharpe={best['sharpe']}  "
                     f"Expression: {best['expression'][:200]}"
                 ),
                 source="agent",
@@ -719,7 +741,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Direct agent for autonomous factor mining on WorldQuant Brain.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--dataset-id", required=True, help="Target dataset (e.g. pv13, option8).")
+    parser.add_argument("--dataset-id", default="", help="Target dataset (e.g. pv13, option8). Omit to let agent choose.")
     parser.add_argument("--idea", default="", help="Financial idea in plain English.")
     parser.add_argument("--expression", default="", help="Existing expression to improve.")
     parser.add_argument("--critique", default="", help="Targeted critique / improvement goal.")

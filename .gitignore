@@ -13,4 +13,6 @@ backtest_results/logs/
 backtest_results/checkpoints/
 
 
-remot_sesults/
+remote_results/
+
+agent_output/
