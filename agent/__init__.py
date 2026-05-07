@@ -11,7 +11,8 @@ mutation_engine         Factor mutation from diagnostic analysis
 feedback_loop           Interactive agent loop (Phase 1 entry point)
 memory                  Factor iteration memory & knowledge base
 convergence             Convergence detection for iterative search
-orchestrator            Full autonomous factor search loop (Phase 3)
+orchestrator            Full autonomous factor search loop (Phase 3, template-based)
+direct_agent            Tool-based direct agent — LLM constructs expressions via tool calls (Phase 4)
 """
 import sys
 from pathlib import Path

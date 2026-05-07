@@ -54,7 +54,9 @@ alphaminingv2/
 │   └── run_pipeline.py             #   一键式闭环流水线入口
 │
 ├── agent/                          # LLM 驱动因子搜索 Agent
-│   ├── orchestrator.py             #   主循环：全自主搜索（Phase 3）
+│   ├── wq_tools.py                 #   WQ Brain 工具层（16 个工具）
+│   ├── direct_agent.py             #   无模板 Direct Agent（Phase 4）
+│   ├── orchestrator.py             #   主循环：全自主搜索（Phase 3，模板式）
 │   ├── feedback_loop.py            #   交互式 Agent 循环（Phase 1）
 │   ├── llm_client.py               #   DeepSeek API 客户端
 │   ├── expression_validator.py     #   WQ 表达式语法校验
@@ -65,18 +67,11 @@ alphaminingv2/
 │   └── memory.py                   #   因子迭代记忆与持久化
 │
 ├── adaptive_scheduler.py           # ┐
-├── backtest_runner.py              # │
-├── datafields_store.py             # ├ 根层薄封装，委托给 pipeline/
-├── main.py                         # │ 保持向后兼容，可直接运行
+├── backtest_runner.py              # ├ 根层封装，委托给 pipeline/
+├── datafields_store.py             # │ 保持向后兼容
+├── main.py                         # │
 ├── result_filter.py                # │
 ├── run_pipeline.py                 # ┘
-│
-├── agent_feedback_loop.py          # ┐
-├── agent_llm_client.py             # ├ 根层薄封装，委托给 agent/
-├── expression_validator.py         # │
-├── mutation_engine.py              # │
-├── result_analyzer.py              # │
-└── template_generator.py           # ┘
 │
 ├── template_catalog.json           # 配置：预定义因子模板及槽位约束
 ├── template_catalog_mixed.json     # 配置：多数据集混合模板库
@@ -175,7 +170,46 @@ python -m agent.feedback_loop \
   --auto
 ```
 
-### 全自主因子搜索 Agent（Phase 3）
+### Direct Agent — 无模板直接因子挖掘（Phase 4）
+
+LLM 通过工具调用直接探索数据集、字段、算子，构造 FASTEXPR 表达式并提交回测，无需预定义模板。始终保持 3 个并发回测（Brain 限制），事件驱动迭代：
+
+```bash
+# 从金融直觉出发（推荐）
+python -m agent.direct_agent \
+  --dataset-id pv13 \
+  --idea "Momentum combined with low volatility" \
+  --iterations 10
+
+# 改进现有表达式
+python -m agent.direct_agent \
+  --dataset-id pv13 \
+  --expression "group_rank(ts_mean(returns,21),industry)" \
+  --critique "High turnover, try longer lookback"
+
+# 设置收敛目标
+python -m agent.direct_agent \
+  --dataset-id pv13 \
+  --idea "Mean reversion in weekly returns" \
+  --target-sharpe 2.0 \
+  --iterations 20
+```
+
+Agent 流程：
+
+```
+Research Phase: LLM calls tools to explore fields, operators, settings
+      ↓ (type: "submit")
+3 concurrent backtests on Brain API
+      ↓ (poll every 30s, any completed triggers analysis)
+Analysis Phase: LLM reviews sharpe/turnover/fitness
+      ├─ improvements → resubmit (replace completed slot)
+      ├─ knowledge    → save to knowledge base
+      └─ converged    → finish
+      ↑__________________|  (loop)
+```
+
+### 全自主因子搜索 Agent（Phase 3 — 模板式）
 
 从金融直觉出发，自动完成模板生成 → Probe → 分析 → 变异/扩展的全循环：
 
@@ -291,7 +325,9 @@ WorldQuant Brain 并发回测执行引擎。
 | `result_analyzer.py` | 加载回测结果，LLM 逐 Core 诊断 |
 | `convergence.py` | 收敛检测：超参配置最大轮次/耐心值/优秀 Sharpe 阈值 |
 | `memory.py` | 全量状态持久化，支持断点恢复 |
-| `orchestrator.py` | 主循环编排：生成 → 回测 → 分析 → 决策 |
+| `wq_tools.py` | WQ Brain 工具层（16 个工具）：字段/算子查询、回测提交轮询、知识库 |
+| `direct_agent.py` | 无模板 Direct Agent：LLM 通过工具调用直接构造表达式，3 并发事件驱动 |
+| `orchestrator.py` | 主循环编排：生成 → 回测 → 分析 → 决策（模板式） |
 | `feedback_loop.py` | 交互式诊断界面 |
 
 ---
