@@ -4,7 +4,7 @@
 
 ```
 Research → Submit 3 factors → Poll → Analyze → Improve → ... → Converge
-         ↕ tools (16个)
+         ↕ tools (14个)
   Datasets · Fields · Operators · Settings · Knowledge Base
 ```
 
@@ -123,12 +123,12 @@ python pipeline/datafields_store.py --dataset-id pv1
 
 ### Direct Agent — 无模板直接探索
 
-这是系统的核心。与传统模板枚举式因子挖掘不同，Direct Agent 让 LLM 通过 16 个工具直接与 Brain 平台交互：
+这是系统的核心。与传统模板枚举式因子挖掘不同，Direct Agent 让 LLM 通过 14 个工具直接与 Brain 平台交互：
 
 1. **Research** — LLM 调用工具探索数据集字段、算子功能、回测设置
-2. **Submit** — LLM 构造 3 条 FASTEXPR 表达式，Agent 校验后提交 Brain 回测
-3. **Iterate** — 每 30 秒轮询，任一因子完成即触发 LLM 分析，生成改进版本替换之
-4. **Converge** — 达到目标 Sharpe 或无法进一步改进时结束
+2. **Submit** — LLM 构造 FASTEXPR 表达式，Agent 校验后提交 Brain 回测（最多 3 并发）
+3. **Iterate** — 每 30 秒轮询，因子完成即触发 LLM 分析，生成改进版本替换之。暂时性网络错误自动进入重试队列，后台持续轮询直至恢复或确认失败
+4. **Converge** — 采用分级质量标准：Sharpe>1.25 / Fitness>1.0 是**最低及格线**，达到 Sharpe>1.5 且换手率<0.30 才视为优质收敛。LLM 自行判断因子是否还有改进空间，避免止步于"刚及格"
 
 详细协议、工具列表和运行原理见 [docs/DIRECT_AGENT.md](./docs/DIRECT_AGENT.md)。
 
@@ -136,9 +136,26 @@ python pipeline/datafields_store.py --dataset-id pv1
 
 提供 Brain API 并发回测引擎（3 并发、指数退避重试、checkpoint 续跑）、数据字段缓存等底层能力。Agent 的所有回测请求最终由此执行。
 
+Agent 层内置可靠性机制：
+- **透明重试** — 暂时性网络错误（代理超时、连接重置、5xx）自动重试 3 次后转入后台重试队列持续轮询，不丢失回测结果
+- **网络错误隔离** — 网络错误与因子本身失败区分处理，避免因临时故障误判因子无效
+
 ### 知识库
 
-Agent 每次迭代会将成功/失败的经验写入 `agent_output/knowledge_base.json`，后续会话自动加载相关条目，实现跨会话学习。
+Agent 每次迭代将可复用的经验写入 `agent_output/knowledge_base.json`，后续会话自动搜索相关条目加载到上下文。系统强制限制每轮最多保存 2 条、每会话最多 10 条，防止知识库膨胀稀释有效信息。
+
+---
+
+## 近期改进
+
+### v2.1 — 轮询可靠性与收敛质量分级 (2026-05)
+
+- **重试队列** — 暂时性网络错误（代理超时、连接重置、5xx）自动重试 3 次后转入后台队列持续轮询，恢复后自动重新注入分析流程；真实因子失败仍立即标记
+- **收敛分级** — Sharpe>1.25 / Fitness>1.0 定义为最低及格线而非收敛目标；引入质量评估表（Converge-worthy / Keep improving / Abandon），LLM 自行判断改进价值
+- **顺序修复** — 收敛检查移至 improvement 提交之前，避免新提交的 running job 阻塞会话退出
+- **知识库硬限制** — 每轮最多保存 2 条、每会话最多 10 条，防止知识库膨胀
+- **LLM 异常兜底** — 捕获 DeepSeek API 网络异常（ChunkedEncodingError 等），避免偶发网络故障导致会话崩溃
+- **poll 缓存修复** — `poll_results` 不再缓存暂时性网络错误，确保重试队列能真正重新查询 API
 
 ---
 
