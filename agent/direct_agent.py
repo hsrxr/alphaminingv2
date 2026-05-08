@@ -34,10 +34,25 @@ from agent.wq_tools import WQTools
 
 MAX_CONCURRENT = 3
 POLL_INTERVAL = 30
-MAX_ITERATIONS = 20
+MAX_ITERATIONS = 1000
 TARGET_SHARPE = 2.0
 MAX_CONSECUTIVE_STALL = 20
+MAX_CONSECUTIVE_STALL_EXPRESSION = 40  # more slack when improving an existing expression
 MAX_IDLE_POLLS = 60  # 30 min without any completion → force conclusion
+MAX_KNOWLEDGE_PER_SESSION = 10   # hard cap on knowledge base entries per session
+MAX_KNOWLEDGE_PER_ANALYSIS = 2   # max entries per analysis round
+MAX_POLL_RETRIES = 3             # transient poll errors → retry before marking failed
+
+# Truncation limits.
+MAX_MSG_CHARS = 200_000        # per-message soft limit — covers list_fields("model77") at 122K
+MAX_TOTAL_CHARS = 800_000      # session total — safety buffer below 1M-token context window
+TIGHT_MSG_CHARS = 50_000       # per-message hard limit when total is near the ceiling
+
+# Convergence criteria thresholds.
+MIN_SHARPE = 1.25
+MIN_FITNESS = 1.0
+MIN_TURNOVER = 0.01
+MAX_TURNOVER = 0.70
 
 SYSTEM_PROMPT = """You are an expert quantitative factor researcher on the WorldQuant Brain platform. Your goal is to discover high-performing alpha factors (predictive stock trading signals).
 
@@ -48,18 +63,19 @@ Call any tool below by responding with `{"type": "tool_call", "reasoning": "..."
 | # | Tool | Args | Description |
 |---|------|------|-------------|
 | 1 | `list_datasets` | — | List all locally cached datasets with field counts |
-| 2 | `list_fields` | dataset_id | List field id + description for a dataset |
-| 3 | `get_field_detail` | field_id, dataset_id | Full metadata for one field |
-| 4 | `list_all_operators` | — | Overview of all 50 WQ operators |
-| 5 | `search_operators` | keyword | Search operators by name/summary |
-| 6 | `get_operator_detail` | name | Full spec for one operator |
-| 7 | `get_setting_schema` | — | All simulation settings with defaults |
-| 8 | `get_setting_detail` | name | Detail for one setting parameter |
-| 9 | `get_settings_guide` | — | Fetch official Brain settings documentation |
-| 10 | `validate_expression` | expression, dataset_id | Check FASTEXPR syntax and field refs |
-| 11 | `add_knowledge` | topic, insight, source | Save insight to persistent knowledge base |
-| 12 | `search_knowledge` | keyword | Search persistent knowledge base |
-| 13 | `list_knowledge_topics` | — | Overview of all KB topics |
+| 2 | `list_fields` | dataset_id | List all field IDs in a dataset (no descriptions) |
+| 3 | `get_field_detail` | field_id, dataset_id | Full metadata for one data field |
+| 4 | `get_dataset_detail` | dataset_id | Detailed dataset description, category, and stats |
+| 5 | `list_all_operators` | — | Overview of all 50 WQ operators |
+| 6 | `search_operators` | keyword | Search operators by name/summary |
+| 7 | `get_operator_detail` | name | Full spec for one operator |
+| 8 | `get_setting_schema` | — | All simulation settings with defaults |
+| 9 | `get_setting_detail` | name | Detail for one setting parameter |
+| 10 | `get_settings_guide` | — | Fetch official Brain settings documentation |
+| 11 | `validate_expression` | expression, dataset_id | Check FASTEXPR syntax and field refs |
+| 12 | `add_knowledge` | topic, insight, source | Save insight to persistent knowledge base |
+| 13 | `search_knowledge` | keyword | Search persistent knowledge base |
+| 14 | `list_knowledge_topics` | — | Overview of all KB topics |
 
 ## Response Protocol
 
@@ -104,13 +120,29 @@ After research, submit factors or conclude the session:
 
 ## Strategy
 
-1. **Research** — Explore the dataset, understand available fields, find relevant operators
+1. **Research** — Start with `get_dataset_detail` to understand the dataset's purpose and stats. Then use `list_fields` to see available fields. For any field that looks interesting, drill down with `get_field_detail` for complete metadata.
 2. **Generate** — Construct 3 diverse, well-reasoned expressions
-3. **Iterate** — Analyze backtest results, learn from failures, improve
-4. **Record** — Use `add_knowledge` to save insights at any time, not just during analysis. If you discover something interesting during research, save it immediately."""
+3. **Iterate** — Analyze backtest results, learn from failures, improve. Don't stop at barely passing — the goal is Sharpe > 1.5 with low turnover.
+4. **Record** — Knowledge base is for cross-session learning, NOT session logging.
+   - NEVER record: single-round results, parameter tweaks (e.g. "increasing decay from 5 to 10"), field descriptions, what operators do, or generic advice.
+   - ONLY record: surprising non-obvious relationships, reusable patterns that apply across multiple factors, hard-won lessons that cost multiple rounds to discover.
+   - Each entry must pass this test: "Would this save a future session real time?" If not, skip it.
+   - The system enforces a hard cap: max 2 entries per analysis round, max 10 per session. Use them wisely."""
 
 
 # ─── Direct Agent ─────────────────────────────────────────────────────────
+
+def _is_transient_error(error: str) -> bool:
+    """Return True if *error* indicates a transient network/infra issue."""
+    transient_patterns = [
+        "proxy", "timeout", "connection", "reset", "refused",
+        "500", "502", "503", "504",
+        "too many requests", "rate limit",
+        "retry", "try again",
+    ]
+    lower = error.lower()
+    return any(p in lower for p in transient_patterns)
+
 
 class DirectAgent:
     """Tool-based direct agent for autonomous factor mining on WorldQuant Brain.
@@ -156,10 +188,18 @@ class DirectAgent:
         self.completed_results: list[dict] = []
         self.iteration = 0
         self.converged = False
+        self._knowledge_count = 0
+        self._total_chars = 0
+        # Retry queue: jobs with transient network errors, kept for background polling.
+        self._retry_queue: dict[str, dict] = {}
 
         # Session directory.
         self.session_dir = self.output_dir / f"direct_{self.session_id}"
         self.session_dir.mkdir(parents=True, exist_ok=True)
+
+        # Structured log file (JSON Lines — every event is one line).
+        self._log_path = self.session_dir / "session.log"
+        self._log_event("session_start", dataset_id=self.dataset_id, model=model)
 
     # ── public API ────────────────────────────────────────────────────────
 
@@ -172,13 +212,16 @@ class DirectAgent:
         # ── Login ─────────────────────────────────────────────────────
         if not self.quiet:
             print(f"[{self.session_id}] Logging in to Brain API ...")
+        self._log_event("login", status="starting")
         try:
             self.tools.login()
         except RuntimeError as exc:
             print(f"[FATAL] Brain login failed: {exc}")
+            self._log_event("login", status="failed", error=str(exc))
             return {"error": str(exc), "session_id": self.session_id}
         if not self.quiet:
             print(f"[{self.session_id}] Login OK")
+        self._log_event("login", status="ok")
 
         # ── Build initial context ──────────────────────────────────────
         context = self._build_context()
@@ -186,10 +229,12 @@ class DirectAgent:
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": context},
         ]
+        self._total_chars = len(SYSTEM_PROMPT) + len(context)
 
         # ── Phase 1: Research ➜ initial submission ────────────────────
         if not self.quiet:
             print(f"[{self.session_id}] Phase 1 — Research & initial submission")
+        self._log_event("phase_start", phase="research", idea=idea, expression=expression)
         self._research_phase()
 
         if self.converged:
@@ -198,6 +243,7 @@ class DirectAgent:
         # ── Phase 2: Iteration (poll → analyse → improve) ─────────────
         if not self.quiet:
             print(f"[{self.session_id}] Phase 2 — Iteration")
+        self._log_event("phase_start", phase="iteration")
         self._iteration_phase()
 
         # ── Phase 3: Report ───────────────────────────────────────────
@@ -274,9 +320,14 @@ class DirectAgent:
 
     def _research_phase(self) -> None:
         """LLM-driven research loop: tool calls until submission or done."""
+        stall_limit = (
+            MAX_CONSECUTIVE_STALL_EXPRESSION
+            if self.expression
+            else MAX_CONSECUTIVE_STALL
+        )
         stall_count = 0
 
-        while stall_count < MAX_CONSECUTIVE_STALL:
+        while stall_count < stall_limit:
             response = self._llm_chat()
             if response is None:
                 stall_count += 1
@@ -306,10 +357,28 @@ class DirectAgent:
                 )
                 stall_count += 1
 
-        # Stall guard: generate simple fallback expressions.
-        if not self.quiet:
-            print(f"[{self.session_id}] Research stalled — using fallback expressions")
-        self._fallback_submit()
+        # Stall guard.
+        if self.expression:
+            # Submit the user's expression as a baseline so iteration can
+            # start from real results instead of unrelated fallbacks.
+            if not self.quiet:
+                print(
+                    f"[{self.session_id}] Research stalled — "
+                    f"submitting user expression as baseline"
+                )
+            self._log_event("research_stall", stall_count=stall_count, action="submit_baseline")
+            baseline = [{
+                "expression": self.expression,
+                "settings": {},
+                "rationale": "User expression submitted as baseline after research stall",
+            }]
+            self._submit_all(baseline)
+            return
+        else:
+            self._log_event("research_stall", stall_count=stall_count, action="fallback")
+            if not self.quiet:
+                print(f"[{self.session_id}] Research stalled — using fallback expressions")
+            self._fallback_submit()
 
     # ── Phase 2: Iteration ────────────────────────────────────────────────
 
@@ -318,7 +387,7 @@ class DirectAgent:
         idle_polls = 0
 
         while not self.converged and self.iteration < self.max_iterations:
-            if not self.active_jobs:
+            if not self.active_jobs and not self._retry_queue:
                 break
 
             # Poll.
@@ -349,6 +418,7 @@ class DirectAgent:
             else:
                 idle_polls += 1
                 if idle_polls >= MAX_IDLE_POLLS:
+                    self._log_event("idle_timeout", idle_polls=idle_polls)
                     if not self.quiet:
                         print(
                             f"[{self.session_id}] Idle timeout — "
@@ -382,6 +452,18 @@ class DirectAgent:
                     f"Turnover: {metrics.get('turnover', '?'):<8}  "
                     f"Fitness: {metrics.get('fitness', '?')}"
                 )
+            checks = metrics.get("checks", [])
+            if checks:
+                prompt_parts.append("  Checks:")
+                for c in checks:
+                    name = c.get("name", "?")
+                    result = c.get("result", "?")
+                    limit = c.get("limit")
+                    value = c.get("value")
+                    detail = f"  {name}: {result}"
+                    if value is not None and limit is not None:
+                        detail += f"  (value={value}, limit={limit})"
+                    prompt_parts.append(detail)
             if j.get("error"):
                 prompt_parts.append(f"Error: {j['error']}")
             prompt_parts.append("")
@@ -392,17 +474,57 @@ class DirectAgent:
             "For type 'analyze':\n"
             "  - improvements: list of {replace_job_id, expression, settings, rationale}\n"
             "  - knowledge: list of {topic, insight} entries to save\n"
-            "  - Set converged: true if target sharpe is reached or no further improvements likely\n"
+            "  - converged: true to stop, false to continue improving\n"
+            "  - abandoned: true if this factor direction is a dead end and you want to start fresh\n"
             "\n"
-            "Guidelines:\n"
-            f"  - Sharpe > {self.target_sharpe} is excellent. Record and converge.\n"
-            "  - If sharpe < 0.5 with no clear path, abandon and try a different approach.\n"
+            "### Minimum requirements (ALL must pass — these are the FLOOR, not the goal):\n"
+            "  - Sharpe > 1.25\n"
+            "  - Fitness > 1.0\n"
+            "  - 0.01 < Turnover < 0.70\n"
+            "  - All other Checks show PASS\n"
+            "\n"
+            "### Factor quality assessment\n"
+            "After passing minimum requirements, evaluate your factor:\n"
+            "\n"
+            "  **Converge-worthy** (set converged=true):\n"
+            "    - Sharpe > 1.5 AND turnover < 0.30  (strong, efficient signal)\n"
+            "    - Sharpe > 1.4 AND Fitness > 1.5     (very robust)\n"
+            "    - OR: you've tried 6+ variations and sharpe is stuck (<0.05 gain over 4 rounds)\n"
+            "\n"
+            "  **Keep improving** (converged=false):\n"
+            "    - Sharpe < 1.4 — still far from potential, try better parameters\n"
+            "    - Turnover > 0.30 — high, try adding volume filter or longer decay\n"
+            "    - Fitness < 1.2 — signal quality can improve, try neutralization\n"
+            "    - You see an obvious next step you haven't tried yet\n"
+            "\n"
+            "  **Abandon direction** (abandoned=true):\n"
+            "    - Sharpe stuck < 1.0 after 6+ rounds\n"
+            "    - Fundamental approach doesn't work (e.g. momentum fails in every variant)\n"
+            "\n"
+            "### Decision logic:\n"
+            "  - Your goal is EXCELLENCE, not passing. A sharpe=1.26 factor that \"barely passes\"\n"
+            "    is NOT converged — keep iterating.\n"
+            "  - Stopping early leaves value on the table. Each parameter tweak (decay,\n"
+            "    lookback, neutralization) can add 0.1-0.3 sharpe.\n"
+            "  - The best session ever produced Sharpe 2.0+. Don't settle for 1.3.\n"
             "  - Vary lookback windows, neutralization levels, and operator combinations.\n"
-            "  - Record ALL learnings (both successes and failures) to the knowledge base.\n"
+            "  - Knowledge: ONLY save surprising, non-obvious, reusable insights. "
+            "SKIP parameter tweaks, single-round results, field descriptions, and generic advice.\n"
+            "\n"
+            "### Note on converged override:\n"
+            "  - The system enforces minimum requirements at the code level.\n"
+            "  - If you set converged=true but no factor passes ALL minimum requirements, the system\n"
+            "    will override it to abandoned=true and clear current jobs to try a new direction.\n"
+            "  - If you genuinely cannot find any promising direction, set done=true to end the session.\n"
             f"\nActive jobs remaining: {len([j for j in self.active_jobs.values() if j['status'] == 'running'])}"
         )
 
         self._append("\n".join(prompt_parts))
+        self._log_event(
+            "analysis_prompt",
+            finished_jobs=len(finished),
+            prompt_preview="\n".join(prompt_parts)[:500],
+        )
 
         # Inner loop: the LLM may call tools repeatedly before reaching a decision.
         for _ in range(MAX_CONSECUTIVE_STALL):
@@ -428,14 +550,66 @@ class DirectAgent:
                 )
                 continue
 
+    def _best_sharpe(self) -> float:
+        """Return the highest sharpe across all completed results."""
+        best = 0.0
+        for j in self.completed_results:
+            s = j.get("metrics", {}).get("sharpe", 0) or 0
+            if s > best:
+                best = s
+        for j in self.active_jobs.values():
+            if j["status"] == "completed":
+                s = j.get("metrics", {}).get("sharpe", 0) or 0
+                if s > best:
+                    best = s
+        return best
+
+    def _meets_convergence_criteria(self) -> bool:
+        """Check if ANY completed result meets all convergence criteria."""
+        all_results = list(self.completed_results)
+        for j in self.active_jobs.values():
+            if j["status"] == "completed":
+                all_results.append(j)
+
+        for j in all_results:
+            m = j.get("metrics", {})
+            sharpe = m.get("sharpe", 0) or 0
+            fitness = m.get("fitness", 0) or 0
+            turnover = m.get("turnover", 0) or 0
+            checks = m.get("checks", [])
+            all_checks_pass = all(
+                c.get("result") == "PASS" for c in checks
+            )
+            if (sharpe >= MIN_SHARPE
+                    and fitness >= MIN_FITNESS
+                    and MIN_TURNOVER < turnover < MAX_TURNOVER
+                    and all_checks_pass):
+                return True
+        return False
+
     def _process_analysis(self, response: dict) -> None:
         """Process an LLM analysis response: record knowledge, submit improvements."""
-        # Save knowledge entries.
+        # Save knowledge entries (capped per session and per round).
+        knowledge_saved = 0
+        kb_round_count = 0
         for k in response.get("knowledge", []):
+            if self._knowledge_count >= MAX_KNOWLEDGE_PER_SESSION:
+                break
+            if kb_round_count >= MAX_KNOWLEDGE_PER_ANALYSIS:
+                break
             topic = k.get("topic", "general")
             insight = k.get("insight", "")
             if insight:
                 self.tools.add_knowledge(topic, insight, source="agent")
+                self._knowledge_count += 1
+                knowledge_saved += 1
+                kb_round_count += 1
+
+        # Abandon current direction: clear all active jobs, start fresh.
+        if response.get("abandoned"):
+            for jid in list(self.active_jobs.keys()):
+                self.active_jobs[jid]["status"] = "replaced"
+                self.completed_results.append(self.active_jobs.pop(jid))
 
         # Mark replaced jobs.
         for imp in response.get("improvements", []):
@@ -454,14 +628,49 @@ class DirectAgent:
                     "rationale": imp.get("rationale", ""),
                 })
 
+        self._log_event(
+            "analyze",
+            knowledge_saved=knowledge_saved,
+            improvements_submitted=len(new_exprs),
+            converged=response.get("converged", False),
+        )
+
+        # Check convergence BEFORE submitting improvements — once converged,
+        # stop submitting to avoid creating running jobs that block the exit.
+        if response.get("converged", False):
+            if self._meets_convergence_criteria():
+                self.converged = True
+                self._log_event("converged", best_sharpe=self._best_sharpe())
+                if not self.quiet:
+                    print(
+                        f"  [CONVERGED] Criteria met. "
+                        f"Best sharpe: {self._best_sharpe():.2f}"
+                    )
+                return  # skip improvements submission
+            else:
+                # Override: treat as abandoned instead of converged.
+                best = self._best_sharpe()
+                self._log_event(
+                    "converge_override",
+                    reason="criteria_not_met",
+                    best_sharpe=best,
+                    min_sharpe=MIN_SHARPE,
+                )
+                if not self.quiet:
+                    print(
+                        f"  [CONVERGE OVERRIDE] converged=true but criteria not met "
+                        f"(best sharpe={best:.2f} < {MIN_SHARPE}). "
+                        f"Continuing as abandoned — will try a new direction."
+                    )
+                # Abandon current jobs so the LLM starts fresh next round.
+                for jid in list(self.active_jobs.keys()):
+                    self.active_jobs[jid]["status"] = "abandoned"
+                    self.completed_results.append(self.active_jobs.pop(jid))
+                return  # skip improvements when overriding
+
+        # Only submit improvements when NOT converging.
         if new_exprs:
             self._submit_all(new_exprs)
-
-        # Check convergence.
-        if response.get("converged", False):
-            running = [j for j in self.active_jobs.values() if j["status"] == "running"]
-            if not running:
-                self.converged = True
 
     # ── Submission ────────────────────────────────────────────────────────
 
@@ -476,6 +685,7 @@ class DirectAgent:
             validation = self.tools.validate_expression(expr, self.dataset_id)
             if not validation.get("valid"):
                 errors = validation.get("errors", [])
+                self._log_event("submit", expression=expr[:100], status="invalid", errors=errors)
                 if not self.quiet:
                     print(f"  [INVALID] {expr[:70]}...  {errors}")
                 continue
@@ -499,9 +709,11 @@ class DirectAgent:
                     "error": "",
                 }
                 submitted += 1
+                self._log_event("submit", expression=expr[:100], status="submitted", job_id=result.job_id)
                 if not self.quiet:
                     print(f"  [SUBMIT] {expr[:70]}...  ->  ...{result.job_id[-16:]}")
             else:
+                self._log_event("submit", expression=expr[:100], status="failed", error=str(result.error)[:200])
                 if not self.quiet:
                     print(f"  [FAIL]   {expr[:70]}...  {result.error[:120]}")
 
@@ -527,44 +739,145 @@ class DirectAgent:
                 "rationale": "Short minus long return (mean reversion), market neutral",
             },
         ]
+        self._log_event(
+            "fallback_submit",
+            expressions=[fb["expression"][:100] for fb in fallbacks],
+        )
         self._submit_all(fallbacks)
 
     # ── Polling ───────────────────────────────────────────────────────────
 
     def _poll_all(self) -> None:
-        """Poll all active jobs and update status."""
-        job_ids = list(self.active_jobs.keys())
-        if not job_ids:
+        """Poll all active jobs and retry queue, with retry for transient errors."""
+        # Poll both active jobs and network-error retry queue.
+        all_ids = list(self.active_jobs.keys()) + list(self._retry_queue.keys())
+        if not all_ids:
             return
 
         try:
-            results = self.tools.poll_results(job_ids)
+            results = self.tools.poll_results(all_ids)
         except Exception as exc:
+            self._log_event("poll", jobs=len(all_ids), status="error", error=str(exc)[:200])
             if not self.quiet:
                 print(f"  [POLL ERR] {exc}")
             return
 
+        statuses: dict[str, str] = {}
+        recovered: list[str] = []
+
         for r in results:
             jid = r["job_id"]
+            new_status = r["status"]
+
+            # ── Retry queue jobs ────────────────────────────────────────
+            if jid in self._retry_queue:
+                job = self._retry_queue[jid]
+                if new_status == "completed":
+                    # Recovered! Move back to active_jobs.
+                    job["status"] = "completed"
+                    if r.get("metrics"):
+                        job["metrics"] = r["metrics"]
+                    if r.get("alpha_id"):
+                        job["alpha_id"] = r["alpha_id"]
+                    job.pop("error", None)
+                    self.active_jobs[jid] = job
+                    del self._retry_queue[jid]
+                    recovered.append(jid)
+                    if not self.quiet:
+                        print(f"  [RECOVERED] ...{jid[-16:]}  sharpe={job.get('metrics',{}).get('sharpe','?')}")
+                elif new_status == "failed" and not _is_transient_error(r.get("error", "")):
+                    # Real (non-transient) failure — conclude the job.
+                    job["status"] = "failed"
+                    job["error"] = r.get("error", "")
+                    self.completed_results.append(job)
+                    del self._retry_queue[jid]
+                    if not self.quiet:
+                        print(f"  [FAILED]  ...{jid[-16:]}  {r['error'][:80]}")
+                # else still transient → stays in retry queue, poll again next time.
+                statuses[jid[-16:]] = job["status"]
+                continue
+
+            # ── Active jobs ─────────────────────────────────────────────
             if jid not in self.active_jobs:
                 continue
-            self.active_jobs[jid]["status"] = r["status"]
-            if r.get("metrics"):
-                self.active_jobs[jid]["metrics"] = r["metrics"]
-            if r.get("error"):
-                self.active_jobs[jid]["error"] = r["error"]
-            if r.get("alpha_id"):
-                self.active_jobs[jid]["alpha_id"] = r["alpha_id"]
+
+            job = self.active_jobs[jid]
+
+            # Transient error → retry up to MAX_POLL_RETRIES, then move to retry queue.
+            if new_status == "failed" and r.get("error"):
+                retries = job.get("_poll_retries", 0) + 1
+                job["_poll_retries"] = retries
+                if _is_transient_error(r["error"]):
+                    if retries < MAX_POLL_RETRIES:
+                        new_status = "running"
+                        if not self.quiet:
+                            print(f"  [POLL RETRY] ...{jid[-16:]}  ({retries}/{MAX_POLL_RETRIES})")
+                    else:
+                        # Exhausted retries → move to retry queue for background polling.
+                        job["status"] = "network_error"
+                        job["error"] = r["error"]
+                        self._retry_queue[jid] = job
+                        del self.active_jobs[jid]
+                        if not self.quiet:
+                            print(f"  [NETWORK ERROR] ...{jid[-16:]}  moved to retry queue")
+                        statuses[jid[-16:]] = "network_error"
+                        continue
+                else:
+                    # Non-transient failure — mark as failed permanently.
+                    pass  # fall through to set status = "failed"
+
+            job["status"] = new_status
+            statuses[jid[-16:]] = new_status
+
+            if new_status == "completed":
+                if r.get("metrics"):
+                    job["metrics"] = r["metrics"]
+                if r.get("alpha_id"):
+                    job["alpha_id"] = r["alpha_id"]
+                job.pop("_poll_retries", None)
+                job.pop("error", None)
+            elif new_status == "failed":
+                if r.get("error"):
+                    job["error"] = r["error"]
+
+        running = sum(1 for s in statuses.values() if s in ("running", "network_error"))
+        completed = sum(1 for s in statuses.values() if s == "completed")
+        failed = sum(1 for s in statuses.values() if s == "failed")
+        self._log_event(
+            "poll",
+            jobs=len(all_ids),
+            running=running,
+            completed=completed,
+            failed=failed,
+            retry_queue=len(self._retry_queue),
+            recovered=len(recovered),
+        )
 
     # ── LLM communication ─────────────────────────────────────────────────
 
     def _llm_chat(self, temperature: float = 0.3) -> Optional[dict]:
         """Send messages to the LLM and parse a JSON response."""
+        # Log last user message preview.
+        last_user = None
+        for m in reversed(self.messages):
+            if m["role"] == "user":
+                raw = m["content"]
+                last_user = raw[:500] if isinstance(raw, str) else str(raw)[:500]
+                break
+        self._log_event("llm_call", temperature=temperature, last_user=last_user)
+
         try:
             content = self.llm.chat(self.messages, temperature=temperature)
             self.messages.append({"role": "assistant", "content": content})
-            return _extract_json(content)
+            self._total_chars += len(content)
+            parsed = _extract_json(content)
+            rtype = parsed.get("type", "?") if parsed else "parse_failed"
+            self._log_event(
+                "llm_response", type=rtype, preview=content[:500]
+            )
+            return parsed
         except (ValueError, json.JSONDecodeError) as exc:
+            self._log_event("llm_response", type="parse_error", error=str(exc)[:200])
             self._append(
                 f"Failed to parse your response as JSON: {exc}. "
                 "Please respond with valid JSON per the protocol."
@@ -573,6 +886,14 @@ class DirectAgent:
         except RuntimeError as exc:
             if not self.quiet:
                 print(f"  [LLM ERR] {exc}")
+            self._log_event("llm_response", type="runtime_error", error=str(exc)[:200])
+            return None
+        except Exception as exc:
+            # Catch network errors (ChunkedEncodingError, ConnectionError, etc.)
+            # that escape the LLM client's retry loop.
+            if not self.quiet:
+                print(f"  [LLM NET ERR] {exc}")
+            self._log_event("llm_response", type="network_error", error=str(exc)[:200])
             return None
 
     def _execute_tool(self, response: dict) -> dict:
@@ -589,6 +910,9 @@ class DirectAgent:
             "get_field_detail": lambda: self.tools.get_field_detail(
                 self._arg(args, "field_id", str),
                 self._arg(args, "dataset_id", str),
+            ),
+            "get_dataset_detail": lambda: self.tools.get_dataset_detail(
+                self._arg(args, "dataset_id", str)
             ),
             "list_all_operators": lambda: self.tools.list_all_operators(),
             "search_operators": lambda: self.tools.search_operators(
@@ -621,15 +945,18 @@ class DirectAgent:
 
         handler = dispatch.get(tool)
         if handler is None:
-            return {
-                "tool": tool,
-                "error": f"Unknown tool. Available: {', '.join(sorted(dispatch))}",
-            }
+            err = f"Unknown tool. Available: {', '.join(sorted(dispatch))}"
+            self._log_event("tool_call", tool=tool, args=args, status="unknown_tool")
+            return {"tool": tool, "error": err}
 
         try:
             payload = handler()
+            self._log_event("tool_call", tool=tool, args=args, status="ok")
             return {"tool": tool, "args": args, "result": payload}
         except Exception as exc:
+            self._log_event(
+                "tool_call", tool=tool, args=args, status="error", error=str(exc)[:200]
+            )
             return {"tool": tool, "args": args, "error": str(exc)}
 
     @staticmethod
@@ -654,10 +981,31 @@ class DirectAgent:
         """Append a user message to the conversation."""
         if isinstance(content, dict):
             content = json.dumps(content, ensure_ascii=False, default=str)
-        # Truncate large messages to avoid context overflow.
-        if len(content) > 10000:
-            content = content[:10000] + "\n... [truncated]"
+
+        # Per-message truncation: apply tighter limit when total approaches the ceiling.
+        limit = TIGHT_MSG_CHARS if self._total_chars > MAX_TOTAL_CHARS else MAX_MSG_CHARS
+        if len(content) > limit:
+            head = limit * 2 // 3
+            tail = limit - head - 20
+            content = content[:head] + "\n...(truncated)...\n" + content[-tail:]
+
         self.messages.append({"role": "user", "content": content})
+        self._total_chars += len(content)
+
+    # ── Logging ───────────────────────────────────────────────────────────
+
+    def _log_event(self, event_type: str, **data) -> None:
+        """Append a structured JSON line to the session log."""
+        record = {"t": datetime.now().isoformat(timespec="seconds"), "type": event_type}
+        # Truncate large string values so the log stays readable.
+        for k, v in data.items():
+            if isinstance(v, str) and len(v) > 2000:
+                record[k] = v[:2000] + "... [truncated]"
+            else:
+                record[k] = v
+        line = json.dumps(record, ensure_ascii=False, default=str)
+        with open(self._log_path, "a", encoding="utf-8") as fh:
+            fh.write(line + "\n")
 
     # ── Final report ──────────────────────────────────────────────────────
 
@@ -724,6 +1072,13 @@ class DirectAgent:
         )
 
         best_sharpe = entries[0].get("sharpe", "N/A") if entries else "N/A"
+        self._log_event(
+            "session_end",
+            iterations=self.iteration,
+            total_submissions=len(unique),
+            best_sharpe=best_sharpe,
+            converged=self.converged,
+        )
         if not self.quiet:
             print(f"\n[{self.session_id}] Report: {report_path}")
             print(

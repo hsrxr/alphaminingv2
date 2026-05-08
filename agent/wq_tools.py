@@ -3,7 +3,7 @@ agent/wq_tools.py — WorldQuant Brain tool layer for the direct agent.
 
 Packs WQ platform capabilities as callable tools:
   Research     — search_operators, get_operator_detail
-  Data         — list_datasets, list_fields
+  Data         — list_datasets, list_fields, get_dataset_detail, get_field_detail
   Settings     — get_setting_schema, get_setting_detail
   Validation   — validate_expression
   Execution    — submit_factor, poll_results, get_factor_detail
@@ -275,10 +275,54 @@ class WQTools:
 
     # ── Tool 2: list_fields ────────────────────────────────────────────
 
-    def list_fields(self, dataset_id: str) -> list[dict]:
-        """List all field IDs and descriptions in a dataset (lightweight overview)."""
+    def list_fields(self, dataset_id: str) -> list[str]:
+        """List all field IDs in a dataset (flat array, no descriptions — compact).
+
+        Use get_field_detail for full metadata on specific fields of interest.
+        """
         cache = self._load_field_cache(dataset_id)
-        return [{"id": f["id"], "description": f["description"]} for f in cache]
+        return [f["id"] for f in cache]
+
+    def get_dataset_detail(self, dataset_id: str) -> dict | None:
+        """Return detailed dataset information from description.md."""
+        ds_dir = DATAFIELDS_CACHE_DIR / dataset_id
+        if not ds_dir.exists():
+            return None
+
+        desc_file = ds_dir / "description.md"
+        if not desc_file.exists():
+            for name in ("Desciption.md", "desciption.md", "DESCRIPTION.md"):
+                alt = ds_dir / name
+                if alt.exists():
+                    desc_file = alt
+                    break
+        if not desc_file.exists():
+            return {"dataset_id": dataset_id, "description": "", "field_count": 0}
+
+        text = desc_file.read_text(encoding="utf-8")
+
+        # Extract category and description.
+        category = ""
+        desc_lines: list[str] = []
+        in_desc = False
+        for line in text.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("Category:"):
+                category = stripped[len("Category:"):].strip()
+            if "Dataset ID:" in line:
+                in_desc = True
+                continue
+            if stripped.startswith("## Stats"):
+                break
+            if in_desc and stripped:
+                desc_lines.append(stripped)
+
+        return {
+            "dataset_id": dataset_id,
+            "category": category,
+            "description": "\n".join(desc_lines),
+            "field_count": self._count_fields(ds_dir),
+        }
 
     # ── Tool 3: get_field_detail ──────────────────────────────────────
 
@@ -402,7 +446,7 @@ class WQTools:
             results.append({
                 "name": name,
                 "syntax": syntax,
-                "summary": op.get("summary", ""),
+                "summary": (op.get("summary", "") or "")[:120],
                 "level": op.get("level", ""),
             })
         return results
@@ -660,11 +704,10 @@ class WQTools:
                         "error": "",
                     })
                 else:
+                    # HTTP error during poll — don't cache as "failed"
+                    # (could be transient 5xx/429). Allow re-query
+                    # on the next poll cycle.
                     error_msg = f"HTTP {resp.status_code}: {resp.text[:200]}"
-                    result_obj = self._active_jobs.get(job_id)
-                    if result_obj:
-                        result_obj.status = "failed"
-                        result_obj.error = error_msg
                     results.append({
                         "job_id": job_id,
                         "status": "failed",
@@ -674,10 +717,9 @@ class WQTools:
                     })
 
             except requests.RequestException as exc:
-                result_obj = self._active_jobs.get(job_id)
-                if result_obj:
-                    result_obj.status = "failed"
-                    result_obj.error = str(exc)
+                # Transient network error — don't cache as "failed",
+                # so the next poll re-queries the API instead of
+                # returning a stale cached result.
                 results.append({
                     "job_id": job_id,
                     "status": "failed",
@@ -820,7 +862,8 @@ class WQTools:
 
         Brain API returns in-sample statistics under the ``is`` key:
           is.sharpe, is.turnover, is.fitness, is.returns,
-          is.drawdown, is.margin, is.pnl, is.longCount, is.shortCount
+          is.drawdown, is.margin, is.pnl, is.longCount, is.shortCount,
+          is.checks — array of {name, result, limit, value}
         """
         stats = alpha_detail.get("is") or alpha_detail.get("statistics") or alpha_detail.get("stats") or {}
         if isinstance(stats, dict):
@@ -835,6 +878,7 @@ class WQTools:
                 "long_count": stats.get("longCount", 0),
                 "short_count": stats.get("shortCount", 0),
                 "days": stats.get("numDays", stats.get("days", 0)),
+                "checks": stats.get("checks", []),
             }
         return {}
 

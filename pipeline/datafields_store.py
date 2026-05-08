@@ -69,7 +69,7 @@ def fetch_and_store_datafields(
     region: str = "USA",
     delay: int = 1,
     universe: str = "TOP3000",
-    data_type: str = "MATRIX",
+    data_type: str = "",
     search: str = "",
 ) -> pd.DataFrame:
     """Fetch all data fields, store each API page locally, and return the merged dataframe."""
@@ -128,12 +128,13 @@ def fetch_and_store_datafields(
             "dataset.id": dataset_id,
             "limit": DATA_FIELDS_PAGE_SIZE,
             "offset": offset,
-            "type": data_type,
         }
+        if data_type:
+            params["type"] = data_type
         if search:
             params["search"] = search
 
-        response = session.get(f"{API_BASE}/data-fields", params=params, timeout=30)
+        response = session.get(f"{API_BASE}/data-fields", params=params, timeout=60)
         response.raise_for_status()
         results = response.json()
 

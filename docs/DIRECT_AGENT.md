@@ -6,13 +6,14 @@ Direct Agent 是 AlphaMiningV2 的核心组件。它让 LLM 像人类量化研�
 
 ### 与模板式 Agent 的区别
 
-| 维度 | 模板式 Agent (orchestrator) | Direct Agent (direct_agent) |
-|------|----------------------------|-----------------------------|
-| 模板 | 需要 LLM 先生成模板，再枚举填充 | 不需要模板，LLM 直接写表达式 |
-| 搜索空间 | 由模板槽位决定，受笛卡尔积限制 | 由 LLM 创造力决定，无枚举上限 |
-| 并发策略 | Probe → Expand 两阶段 | 固定 3 并发，事件驱动替换 |
-| 迭代粒度 | 批量生成 → 批量回测 → 批量分析 | 单个因子完成即触发分析 |
-| 知识利用 | 无持久化 | 文件知识库，跨会话复用 |
+
+| 维度     | 模板式 Agent (orchestrator)      | Direct Agent (direct_agent)   |
+| -------- | -------------------------------- | ----------------------------- |
+| 模板     | 需要 LLM 先生成模板，再枚举填充  | 不需要模板，LLM 直接写表达式  |
+| 搜索空间 | 由模板槽位决定，受笛卡尔积限制   | 由 LLM 创造力决定，无枚举上限 |
+| 并发策略 | Probe → Expand 两阶段           | 固定 3 并发，事件驱动替换     |
+| 迭代粒度 | 批量生成 → 批量回测 → 批量分析 | 单个因子完成即触发分析        |
+| 知识利用 | 无持久化                         | 文件知识库，跨会话复用        |
 
 ---
 
@@ -52,36 +53,40 @@ Agent 通过以下工具与 WorldQuant Brain 交互。工具分为四类：
 
 #### 数据探索
 
-| 工具 | 参数 | 返回 |
-|------|------|------|
-| `list_datasets` | — | 所有本地缓存数据集及其字段数 |
-| `list_fields` | dataset_id | 数据集中所有字段的 id + description |
-| `get_field_detail` | field_id, dataset_id | 字段完整元数据（类别、覆盖度、用户数等） |
-| `list_all_operators` | — | 全部 50 个 WQ 算子名称、语法、简要说明 |
-| `search_operators` | keyword | 按关键词搜索算子（名称、说明、详细解释） |
-| `get_operator_detail` | name | 算子的完整定义、语法、示例 |
+
+| 工具                  | 参数                 | 返回                                     |
+| --------------------- | -------------------- | ---------------------------------------- |
+| `list_datasets`       | —                   | 所有本地缓存数据集及其字段数             |
+| `list_fields`         | dataset_id           | 数据集中所有字段的 id + description      |
+| `get_field_detail`    | field_id, dataset_id | 字段完整元数据（类别、覆盖度、用户数等） |
+| `list_all_operators`  | —                   | 全部 50 个 WQ 算子名称、语法、简要说明   |
+| `search_operators`    | keyword              | 按关键词搜索算子（名称、说明、详细解释） |
+| `get_operator_detail` | name                 | 算子的完整定义、语法、示例               |
 
 #### 回测设置
 
-| 工具 | 参数 | 返回 |
-|------|------|------|
-| `get_setting_schema` | — | 全部 10 个模拟参数的定义、可选值、默认值 |
-| `get_setting_detail` | name | 单个参数的完整说明 |
-| `get_settings_guide` | — | 抓取 Brain 官方设置文档页面 |
+
+| 工具                 | 参数 | 返回                                     |
+| -------------------- | ---- | ---------------------------------------- |
+| `get_setting_schema` | —   | 全部 10 个模拟参数的定义、可选值、默认值 |
+| `get_setting_detail` | name | 单个参数的完整说明                       |
+| `get_settings_guide` | —   | 抓取 Brain 官方设置文档页面              |
 
 #### 表达式校验
 
-| 工具 | 参数 | 返回 |
-|------|------|------|
+
+| 工具                  | 参数                   | 返回                                   |
+| --------------------- | ---------------------- | -------------------------------------- |
 | `validate_expression` | expression, dataset_id | 括号平衡、算子名存在性、字段存在性检查 |
 
 #### 知识库
 
-| 工具 | 参数 | 返回 |
-|------|------|------|
-| `search_knowledge` | keyword | 按关键词搜索知识库条目 |
-| `add_knowledge` | topic, insight, source | 添加经验条目到知识库 |
-| `list_knowledge_topics` | — | 所有知识库主题及条目数 |
+
+| 工具                    | 参数                   | 返回                   |
+| ----------------------- | ---------------------- | ---------------------- |
+| `search_knowledge`      | keyword                | 按关键词搜索知识库条目 |
+| `add_knowledge`         | topic, insight, source | 添加经验条目到知识库   |
+| `list_knowledge_topics` | —                     | 所有知识库主题及条目数 |
 
 ### 响应协议
 
@@ -197,7 +202,6 @@ LLM 会先研究 pv13 数据集有哪些字段，找到 `returns`、`volume` 等
 
 ```bash
 python -m agent.direct_agent \
-  --dataset-id pv13 \
   --expression "group_rank(ts_mean(returns,21),industry)" \
   --critique "Sharpe 0.8, turnover too high at 0.9"
 ```
@@ -208,8 +212,7 @@ LLM 分析当前表达式的不足，生成改进变体。
 
 ```bash
 python -m agent.direct_agent \
-  --dataset-id pv13 \
-  --expression "ts_mean(returns,5) - ts_mean(returns,21)"
+    --expression "ts_mean(returns,5) - ts_mean(returns,21)"
 ```
 
 LLM 会分析该表达式可能的弱点并尝试改进方向。
@@ -251,13 +254,14 @@ Agent 会在以下情况自动写入知识库：
 
 ## 关键参数
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `--iterations` | 20 | 最大分析迭代轮次 |
-| `--target-sharpe` | 2.0 | 达到此 Sharpe 即收敛 |
-| `--model` | deepseek-chat | LLM 模型 |
-| `--output-dir` | agent_output | 输出目录 |
-| `--quiet` | false | 静默模式 |
+
+| 参数              | 默认值        | 说明                 |
+| ----------------- | ------------- | -------------------- |
+| `--iterations`    | 20            | 最大分析迭代轮次     |
+| `--target-sharpe` | 2.0           | 达到此 Sharpe 即收敛 |
+| `--model`         | deepseek-chat | LLM 模型             |
+| `--output-dir`    | agent_output  | 输出目录             |
+| `--quiet`         | false         | 静默模式             |
 
 ---
 
