@@ -16,3 +16,6 @@ backtest_results/checkpoints/
 remote_results/
 
 agent_output/
+
+# WQ Brain 敏感文档
+docs/BRAIN_API_REFERENCE.md
