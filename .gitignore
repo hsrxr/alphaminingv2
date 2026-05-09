@@ -15,5 +15,11 @@ remote_results/
 
 agent_output/
 
+# Claude 配置
+.claude/
+
+# 数据字段缓存
+datafields_cache/
+
 # WQ Brain 敏感文档
 docs/BRAIN_API_REFERENCE.md
