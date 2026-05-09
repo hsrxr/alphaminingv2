@@ -207,7 +207,13 @@
         "operator_syntax": "ts_step(1)",
         "level": "base",
         "summary": "Returns a counter of days, incrementing by one each day.",
-        "detailed_explanation": "ts_step(1) is most commonly used as an x variable in functions like ts_regression, where it serves as a day counter. It helps represent time intervals in the regression analysis.\n\nExamples\n\nts_regression(returns, ts_step(1), 60, rettype=0)\n\nts_step(1) acts as the independent variable (x), counting days backward in the simulation. This allows the function to regress the returns over a 60-day window.\nts_sum(x, d)\nbase\nSum values of x for the past d days."
+        "detailed_explanation": "ts_step(1) is most commonly used as an x variable in functions like ts_regression, where it serves as a day counter. It helps represent time intervals in the regression analysis.\n\nExamples\n\nts_regression(returns, ts_step(1), 60, rettype=0)\n\nts_step(1) acts as the independent variable (x), counting days backward in the simulation. This allows the function to regress the returns over a 60-day window."
+    },
+    {
+        "operator_syntax": "ts_sum(x, d)",
+        "level": "base",
+        "summary": "Returns the sum of the values of x over the past d days.",
+        "detailed_explanation": "ts_sum(x, d) computes the sum of the values of x for the last d days. It is commonly used to aggregate daily data (e.g., returns, volume) over a window, or to accumulate fundamental data points into a trailing total.\n\nExamples\n\nts_sum(returns, 21)\n\nWhat to expect: Sums daily returns over the past 21 trading days (~1 month). Useful for creating multi-day return factors.\n\nts_sum(volume, 5)\n\nWhat to expect: Sums daily volume over the past 5 trading days (1 week) as a measure of weekly liquidity.\n\nTips\n\nts_sum(x, d) is similar to ts_mean(x, d) * d but preserves the magnitude rather than averaging. It pairs naturally with ts_backfill when accumulating fundamental data with missing values."
     },
     {
         "operator_syntax": "ts_zscore(x, d)",

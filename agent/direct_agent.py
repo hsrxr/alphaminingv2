@@ -192,6 +192,8 @@ class DirectAgent:
         self._total_chars = 0
         # Retry queue: jobs with transient network errors, kept for background polling.
         self._retry_queue: dict[str, dict] = {}
+        self._abandon_fallback_count = 0
+        self._max_abandon_fallbacks = 3
 
         # Session directory.
         self.session_dir = self.output_dir / f"direct_{self.session_id}"
@@ -233,7 +235,7 @@ class DirectAgent:
 
         # ── Phase 1: Research ➜ initial submission ────────────────────
         if not self.quiet:
-            print(f"[{self.session_id}] Phase 1 — Research & initial submission")
+            print(f"[{self.session_id}] Phase 1 — Research & initial submission", flush=True)
         self._log_event("phase_start", phase="research", idea=idea, expression=expression)
         self._research_phase()
 
@@ -242,7 +244,7 @@ class DirectAgent:
 
         # ── Phase 2: Iteration (poll → analyse → improve) ─────────────
         if not self.quiet:
-            print(f"[{self.session_id}] Phase 2 — Iteration")
+            print(f"[{self.session_id}] Phase 2 — Iteration", flush=True)
         self._log_event("phase_start", phase="iteration")
         self._iteration_phase()
 
@@ -343,6 +345,11 @@ class DirectAgent:
             elif rtype == "submit":
                 exprs = response.get("expressions", [])
                 if exprs:
+                    if len(exprs) < 3 and not self.quiet:
+                        print(
+                            f"  [WARN] LLM returned only {len(exprs)} expression(s) "
+                            f"(expected 3). Submitting what we have."
+                        )
                     self._submit_all(exprs)
                     return
                 self._append("No expressions in submit. Please provide at least one.")
@@ -385,6 +392,8 @@ class DirectAgent:
     def _iteration_phase(self) -> None:
         """Poll → analyse → improve → resubmit loop."""
         idle_polls = 0
+        heartbeat_after = 5  # print heartbeat after 5 idle polls (~2.5 min)
+        next_heartbeat = heartbeat_after
 
         while not self.converged and self.iteration < self.max_iterations:
             if not self.active_jobs and not self._retry_queue:
@@ -401,6 +410,7 @@ class DirectAgent:
 
             if finished:
                 idle_polls = 0
+                next_heartbeat = heartbeat_after
                 self.iteration += 1
                 if not self.quiet:
                     print(
@@ -417,6 +427,15 @@ class DirectAgent:
                         self.completed_results.append(self.active_jobs.pop(jid))
             else:
                 idle_polls += 1
+                if idle_polls >= next_heartbeat and not self.quiet:
+                    running = len(self.active_jobs)
+                    elapsed = idle_polls * POLL_INTERVAL
+                    print(
+                        f"[{self.session_id}] Waiting... "
+                        f"{running} job(s) running, "
+                        f"{elapsed // 60}m elapsed"
+                    )
+                    next_heartbeat = idle_polls + heartbeat_after
                 if idle_polls >= MAX_IDLE_POLLS:
                     self._log_event("idle_timeout", idle_polls=idle_polls)
                     if not self.quiet:
@@ -500,6 +519,10 @@ class DirectAgent:
             "  **Abandon direction** (abandoned=true):\n"
             "    - Sharpe stuck < 1.0 after 6+ rounds\n"
             "    - Fundamental approach doesn't work (e.g. momentum fails in every variant)\n"
+            "  - IMPORTANT: When you abandon a direction, you MUST provide NEW replacement\n"
+            "    expressions in 'improvements'. Abandoning means 'this approach failed, here's\n"
+            "    what I want to try next' — NOT 'I give up entirely'. Without replacements,\n"
+            "    the session will end. Always propose at least 1-3 new ideas.\n"
             "\n"
             "### Decision logic:\n"
             "  - Your goal is EXCELLENCE, not passing. A sharpe=1.26 factor that \"barely passes\"\n"
@@ -671,6 +694,38 @@ class DirectAgent:
         # Only submit improvements when NOT converging.
         if new_exprs:
             self._submit_all(new_exprs)
+            # Successful submission resets the abandon-fallback counter.
+            self._abandon_fallback_count = 0
+        elif response.get("abandoned") and not self.converged:
+            # Abandoned with no replacements: inject fallback expressions
+            # to keep the session alive instead of letting it die.
+            self._abandon_fallback_count += 1
+            if self._abandon_fallback_count > self._max_abandon_fallbacks:
+                self._log_event(
+                    "abandon_fallback_exhausted",
+                    count=self._abandon_fallback_count,
+                    iteration=self.iteration,
+                )
+                if not self.quiet:
+                    print(
+                        f"  [FALLBACK EXHAUSTED] {self._abandon_fallback_count} "
+                        f"consecutive abandons with no replacements — "
+                        f"ending session"
+                    )
+                self.converged = True
+                return
+            if not self.quiet:
+                print(
+                    f"  [FALLBACK #{self._abandon_fallback_count}] "
+                    f"Abandoned with no replacements — "
+                    f"injecting fallback expressions to continue exploration"
+                )
+            self._log_event(
+                "abandon_fallback",
+                count=self._abandon_fallback_count,
+                iteration=self.iteration,
+            )
+            self._fallback_submit()
 
     # ── Submission ────────────────────────────────────────────────────────
 
@@ -1129,11 +1184,18 @@ def main() -> None:
     )
 
     t0 = time.time()
-    summary = agent.run(
-        idea=args.idea,
-        expression=args.expression,
-        critique=args.critique,
-    )
+    try:
+        summary = agent.run(
+            idea=args.idea,
+            expression=args.expression,
+            critique=args.critique,
+        )
+    except Exception as exc:
+        print(f"\n[FATAL] Agent crashed: {exc}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
+        # Write a minimal report so the session isn't lost.
+        summary = agent._final_report()
     elapsed = time.time() - t0
     print(f"\nTotal time: {elapsed:.1f}s")
     if summary.get("error"):

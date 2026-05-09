@@ -243,7 +243,7 @@ class ExpressionValidator:
         for op_name in operator_names:
             if op_name not in self.operators:
                 result.add_error(f"Unknown operator: '{op_name}'. "
-                                 f"Must be one of the 50 WQ operators.")
+                                 f"Must be one of the 51 WQ operators.")
 
         # 3. Validate data field references (if dataset context provided).
         if dataset_id:

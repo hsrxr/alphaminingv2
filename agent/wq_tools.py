@@ -437,7 +437,7 @@ class WQTools:
     # ── Tool 5: list_all_operators ────────────────────────────────────
 
     def list_all_operators(self) -> list[dict]:
-        """Return a compact overview of all 50 operators (name + syntax + summary)."""
+        """Return a compact overview of all 51 operators (name + syntax + summary)."""
         self._lazy_load_operators()
         results: list[dict] = []
         for op in self._all_operators:
