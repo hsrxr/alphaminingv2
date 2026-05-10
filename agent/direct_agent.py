@@ -280,6 +280,7 @@ class DirectAgent:
         self._retry_queue: dict[str, dict] = {}
         self._abandon_fallback_count = 0
         self._max_abandon_fallbacks = 3
+        self._expression_history: list[str] = []  # all submitted expressions (for plateau detection)
 
         # Session directory.
         self.session_dir = self.output_dir / f"direct_{self.session_id}"
@@ -413,8 +414,7 @@ class DirectAgent:
                 "HINT: The baseline uses the settings shown above (or Brain defaults). "
                 "Try the same expression with DIFFERENT settings "
                 "(neutralization=MARKET/INDUSTRY/SECTOR/SUBINDUSTRY, "
-                "decay=1/3/5/10, delay=0/1) before modifying the formula. "
-                "Settings can change sharpe by 0.2-0.8 without changing the expression."
+                "decay=1/3/5/10, delay=0/1) to explore the parameter space."
             )
 
         # Attach relevant knowledge-base entries.
@@ -734,7 +734,29 @@ class DirectAgent:
             if j["status"] in ("completed", "failed")
         ]
 
-        prompt_parts = ["The following factors have completed backtesting:\n"]
+        # ── Plateau detection ──────────────────────────────────────────
+        # If the LLM has been submitting essentially the same expression
+        # many times, it's stuck in a micro-tweaking loop.
+        total_subs = len(self._expression_history)
+        unique_subs = len(set(self._expression_history))
+        plateau_warning = ""
+        if total_subs >= 9 and unique_subs <= 3:
+            plateau_warning = (
+                "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+                f"!!!  PLATEAU DETECTED: {total_subs} total submissions but  \n"
+                f"!!!  only {unique_subs} UNIQUE expressions. You are stuck    \n"
+                "!!!  making tiny tweaks. STOP.                              \n"
+                "!!!                                                        \n"
+                "!!!  You MUST try a GENUINELY NEW direction:               \n"
+                "!!!  - Call list_datasets() and explore a DIFFERENT dataset\n"
+                "!!!  - Use a DIFFERENT operator family (not ts_decay_linear)\n"
+                "!!!  - Try a DIFFERENT signal type (not cash-flow based)   \n"
+                "!!!  - Combine your best idea with an orthogonal signal    \n"
+                "!!!  - Settings tweaks alone will NOT break the plateau    \n"
+                "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+            )
+
+        prompt_parts = [f"The following factors have completed backtesting:\n"]
         for j in finished:
             prompt_parts.append(f"Job: ...{j['job_id'][-16:]}")
             prompt_parts.append(f"Expression: {j['expression']}")
@@ -771,6 +793,9 @@ class DirectAgent:
                 prompt_parts.append(f"Error: {j['error']}")
             prompt_parts.append("")
 
+        if plateau_warning:
+            prompt_parts.append(plateau_warning)
+
         prompt_parts.append(
             "Analyse these results and respond with type 'analyze' or 'done'.\n"
             "\n"
@@ -780,57 +805,48 @@ class DirectAgent:
             "  - converged: true to stop, false to continue improving\n"
             "  - abandoned: true if this factor direction is a dead end and you want to start fresh\n"
             "\n"
-            "### Minimum requirements (ALL must pass — these are the FLOOR, not the goal):\n"
+            "### Minimum requirements (ALL must pass):\n"
             "  - Sharpe > 1.25\n"
             "  - Fitness > 1.0\n"
             "  - 0.01 < Turnover < 0.70\n"
             "  - All other Checks show PASS\n"
             "\n"
-            "### Factor quality assessment\n"
-            "After passing minimum requirements, evaluate your factor:\n"
+            "### Strategy by Sharpe level:\n"
             "\n"
-            "  **Converge-worthy** (set converged=true):\n"
-            "    - Sharpe > 1.5 AND turnover < 0.30  (strong, efficient signal)\n"
-            "    - Sharpe > 1.4 AND Fitness > 1.5     (very robust)\n"
-            "    - OR: you've tried 6+ variations and sharpe is stuck (<0.05 gain over 4 rounds)\n"
+            "  If BEST sharpe > 1.4 (at a plateau — need a CREATIVE LEAP):\n"
+            "    - STOP making parameter tweaks and rank() wrappers — they won't break through\n"
+            "    - Think about the financial intuition: what's the economic story behind your\n"
+            "      factor? What else could drive this effect?\n"
+            "    - Try a DIFFERENT dataset: call list_datasets() and explore unfamiliar ones\n"
+            "    - Try a DIFFERENT operator family: if you've been using ts_decay_linear,\n"
+            "      switch to group_rank, ts_regression, ts_rank, or ts_std_dev\n"
+            "    - MULTIPLY your expression with a signal from a COMPLETELY DIFFERENT domain\n"
+            "      (e.g. pair cash-flow quality with momentum or low volatility)\n"
+            "    - Combine two complementary directions that both show promise — merging\n"
+            "      orthogonal signals can capture diversified return streams\n"
+            "    - Settings still help: try decay=10/15/20, neutralization=SECTOR/MARKET\n"
+            "    - If you've tried 3+ genuinely different directions and none improved, THEN abandon\n"
             "\n"
-            "  **Keep improving** (converged=false):\n"
-            "    - Sharpe < 1.4 — still far from potential, try better parameters\n"
-            "    - Turnover > 0.30 — high, try adding volume filter or longer decay\n"
-            "    - Fitness < 1.2 — signal quality can improve, try neutralization\n"
-            "    - You see an obvious next step you haven't tried yet\n"
+            "  If BEST sharpe 1.0-1.4 (improving — room to grow):\n"
+            "    - Try parameter and settings improvements first\n"
+            "    - But also ask: is this approach fundamentally limited? Would a different\n"
+            "      dataset or operator produce a stronger signal?\n"
+            "    - Consider exploring related fields you haven't tried yet\n"
             "\n"
-            "  **Abandon direction** (abandoned=true):\n"
-            "    - Sharpe stuck < 1.0 after 6+ rounds\n"
-            "    - Fundamental approach doesn't work (e.g. momentum fails in every variant)\n"
-            "  - IMPORTANT: When you abandon a direction, you MUST provide NEW replacement\n"
-            "    expressions in 'improvements'. Abandoning means 'this approach failed, here's\n"
-            "    what I want to try next' — NOT 'I give up entirely'. Without replacements,\n"
-            "    the session will end. Always propose at least 1-3 new ideas.\n"
+            "  If BEST sharpe < 1.0 (likely dead end — try something fundamentally different):\n"
+            "    - Abandon this direction\n"
+            "    - New operators, new datasets, new signal types\n"
+            "  - When you abandon, you MUST provide NEW replacement expressions. "
+            "Abandoning means 'this approach failed, here's what I want to try next'.\n"
             "\n"
-            "### Settings tuning (try BEFORE changing the formula):\n"
+            "### Settings tuning (try in combination with new directions):\n"
             "  - The SAME expression with different settings can change sharpe by 0.2-0.8.\n"
-            "  - Try settings variations on your BEST expression before writing new formulas:\n"
+            "  - Options to try:\n"
             "    - neutralization: MARKET (default), INDUSTRY, SECTOR, SUBINDUSTRY, NONE\n"
             "    - decay: higher (5, 10) = lower turnover; lower (1, 3) = more responsive\n"
             "    - delay: 0 or 1 (1 avoids look-ahead bias)\n"
             "    - truncation: 0.08 (default), higher = more concentrated\n"
-            "  - Example: if expression A with MARKET neutralization has sharpe 1.0,\n"
-            "    try INDUSTRY neutralization or decay=10 before giving up on A.\n"
             "  - Record useful settings discoveries in knowledge entries.\n"
-            "\n"
-            "### When stuck at Sharpe > 1.4 (plateau strategy):\n"
-            "  - Don't make tiny parameter tweaks — think about the financial intuition behind\n"
-            "    your factor and ask: what else drives this effect? What's the economic story?\n"
-            "  - Try MULTIPLYING your expression with a DIFFERENT signal from a different\n"
-            "    domain (e.g. pair value with momentum, quality with size, growth with low vol).\n"
-            "  - Try combining two COMPLEMENTARY directions that both show promise — merging\n"
-            "    them can capture orthogonal return streams and boost stability.\n"
-            "  - Experiment with different frameworks: change the operator family entirely,\n"
-            "    switch from cross-sectional to time-series, or try a different dataset.\n"
-            "  - Settings still matter: different decay (10/15/20), neutralization (MARKET/SECTOR),\n"
-            "    volume filters, or truncation adjustments can unlock the next level.\n"
-            "  - If you've tried 3+ genuinely different directions and none improved, THEN abandon.\n"
             "\n"
             "### Decision logic:\n"
             "  - Your goal is EXCELLENCE, not passing. A sharpe=1.26 factor that \"barely passes\"\n"
@@ -839,11 +855,11 @@ class DirectAgent:
             "    lookback, neutralization) can add 0.1-0.3 sharpe.\n"
             "  - The best session ever produced Sharpe 2.0+. Don't settle for 1.3.\n"
             "  - Vary lookback windows, neutralization levels, and operator combinations.\n"
+            "  - Converge only when: Sharpe > 1.5 AND turnover < 0.30, OR Sharpe > 1.4 AND Fitness > 1.5\n"
             "  - Knowledge: ONLY save surprising, non-obvious, reusable insights. "
             "SKIP parameter tweaks, single-round results, field descriptions, and generic advice.\n"
             "\n"
             "### Note on converged override:\n"
-            "  - The system enforces minimum requirements at the code level.\n"
             "  - If you set converged=true but no factor passes ALL minimum requirements, the system\n"
             "    will override it to abandoned=true and clear current jobs to try a new direction.\n"
             "  - If you genuinely cannot find any promising direction, set done=true to end the session.\n"
@@ -1108,6 +1124,9 @@ class DirectAgent:
             )
 
             if result.status == "submitted":
+                # Track expression for plateau detection (normalized).
+                norm = expr.replace(" ", "")
+                self._expression_history.append(norm)
                 self.active_jobs[result.job_id] = {
                     "job_id": result.job_id,
                     "expression": expr,
