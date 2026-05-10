@@ -54,6 +54,10 @@ MIN_FITNESS = 1.0
 MIN_TURNOVER = 0.01
 MAX_TURNOVER = 0.70
 
+# Phase 0: Idea Discovery constants
+MAX_DISCOVERY_TURNS = 30
+MAX_DISCOVERY_STALL = 5
+
 SYSTEM_PROMPT = """You are an expert quantitative factor researcher on the WorldQuant Brain platform. Your goal is to discover high-performing alpha factors (predictive stock trading signals).
 
 ## Available Tools
@@ -128,6 +132,88 @@ After research, submit factors or conclude the session:
    - ONLY record: surprising non-obvious relationships, reusable patterns that apply across multiple factors, hard-won lessons that cost multiple rounds to discover.
    - Each entry must pass this test: "Would this save a future session real time?" If not, skip it.
    - The system enforces a hard cap: max 2 entries per analysis round, max 10 per session. Use them wisely."""
+
+
+IDEA_DISCOVERY_SYSTEM_PROMPT = """You are an expert quantitative finance researcher searching for actionable factor ideas. Your goal is to discover 1-3 promising alpha factor ideas that can be implemented on the WorldQuant Brain platform.
+
+## Available Tools
+
+Call any tool by responding with `{"type": "tool_call", "reasoning": "...", "tool": "<name>", "args": {...}}`.
+
+| # | Tool | Args | Description |
+|---|------|------|-------------|
+| 1 | `web_search` | query, max_results | Search the web (DuckDuckGo) for factor ideas |
+| 2 | `fetch_webpage` | url | Fetch and read a web page |
+| 3 | `list_datasets` | — | List all locally cached datasets with field counts |
+| 4 | `list_fields` | dataset_id | List all field IDs in a dataset |
+| 5 | `get_field_detail` | field_id, dataset_id | Full metadata for one data field |
+| 6 | `get_dataset_detail` | dataset_id | Detailed dataset description |
+| 7 | `list_all_operators` | — | Overview of all WQ operators |
+| 8 | `search_operators` | keyword | Search operators by name/summary |
+| 9 | `get_operator_detail` | name | Full spec for one operator |
+| 10 | `validate_expression` | expression, dataset_id | Check FASTEXPR syntax and field refs |
+
+## Instructions
+
+1. SEARCH for factor ideas from multiple sources. Good starting points:
+   - Web search: "quantitative factor investing ideas", "stock return prediction factors", "cross-sectional anomalies"
+   - arXiv papers: "factor investing site:arxiv.org", "return prediction site:arxiv.org"
+   - Try varied queries to discover diverse factor families: momentum, value, quality, volatility, size, sentiment
+   - If a dataset is specified, focus on ideas relevant to that dataset
+
+2. FETCH and read the most promising results. For each source, extract:
+   - Source URL or paper title
+   - The financial hypothesis / factor idea (in plain English)
+   - Suggested implementation (operators, lookback windows, fields)
+   - Whether the idea makes financial sense
+
+3. VALIDATE candidate expressions using validate_expression to confirm they use real WQ operators and data fields.
+
+   IMPORTANT: Only use real WQ operators. Valid datasets include: pv1, pv13, fundamental2, fundamental6, analyst4, model16, model77, news12, news18, option8, option9, univ1, sentiment1, socialmedia8, socialmedia12.
+
+4. SELECT the best 1-3 ideas. Each must:
+   - Be financially sound (economic rationale makes sense)
+   - Be implementable on WQ (uses real operators and existing data fields)
+   - Include a concrete expression or expression template
+   - Be diverse across different factor families
+
+5. SUBMIT your findings via type "discovery_complete" when ready.
+
+## Response Protocol
+
+**DISCOVERY COMPLETE** — When you have 1-3 well-researched ideas:
+```json
+{
+  "type": "discovery_complete",
+  "reasoning": "...summary of your research process...",
+  "ideas": [
+    {
+      "hypothesis": "Plain English description of the factor idea and why it should work",
+      "source": "URL or paper title where the idea was found",
+      "expression": "Suggested WQ expression (if determined)",
+      "family": "momentum / value / quality / volatility / size / sentiment / other",
+      "confidence": "high / medium / low",
+      "rationale": "Why this idea is promising for WQ implementation"
+    }
+  ]
+}
+```
+
+**DISCOVERY FAILED** — If after thorough searching you cannot find any viable ideas:
+```json
+{
+  "type": "discovery_failed",
+  "reasoning": "Explain what was tried and why nothing usable was found"
+}
+```
+
+## Search Strategy Tips
+
+- Try specific queries: "new factor anomalies", "machine learning factor returns", "unusual volume return prediction", "short-term reversal factor"
+- arXiv search: use web_search with "site:arxiv.org" in the query
+- Cross-reference: if momentum papers mention volatility, search for that too
+- Read at least 3-5 different results before converging
+- If a dataset is specified, focus on ideas that match that dataset's domain (e.g. options for option8/option9)"""
 
 
 # ─── Direct Agent ─────────────────────────────────────────────────────────
@@ -205,11 +291,12 @@ class DirectAgent:
 
     # ── public API ────────────────────────────────────────────────────────
 
-    def run(self, idea: str = "", expression: str = "", critique: str = "") -> dict:
+    def run(self, idea: str = "", expression: str = "", critique: str = "", settings: dict | None = None) -> dict:
         """Main entry point.  Returns the session summary dict."""
         self.idea = idea
         self.expression = expression
         self.critique = critique
+        self.user_settings = settings or {}
 
         # ── Login ─────────────────────────────────────────────────────
         if not self.quiet:
@@ -224,6 +311,33 @@ class DirectAgent:
         if not self.quiet:
             print(f"[{self.session_id}] Login OK")
         self._log_event("login", status="ok")
+
+        # ── Phase 0: Idea Discovery (autonomous web search) ──────────
+        # Only runs when neither --idea nor --expression is provided.
+        if not self.idea and not self.expression:
+            if not self.quiet:
+                print(f"[{self.session_id}] No --idea provided. Starting autonomous idea discovery...")
+            self._log_event("phase_start", phase="idea_discovery", mode="autonomous")
+            self._idea_discovery_phase()
+
+            # If discovery still failed, try interactive fallback.
+            if not self.idea:
+                if self.quiet:
+                    print(f"[{self.session_id}] Idea discovery failed. Re-run with --idea.")
+                    return {"error": "Idea discovery failed", "session_id": self.session_id}
+                print(f"\n[{self.session_id}] Idea discovery was unsuccessful.")
+                print("Enter a financial idea to pursue (or press Enter to exit):")
+                try:
+                    user_input = input("> ").strip()
+                except (EOFError, KeyboardInterrupt):
+                    user_input = ""
+                if user_input:
+                    self.idea = user_input
+                    self._log_event("idea_discovery_user_fallback", idea=self.idea[:200])
+                    print(f"  Using: {self.idea[:100]}...")
+                else:
+                    print("No idea provided. Exiting.")
+                    return {"error": "No idea provided", "session_id": self.session_id}
 
         # ── Build initial context ──────────────────────────────────────
         context = self._build_context()
@@ -280,11 +394,27 @@ class DirectAgent:
 
         if self.expression:
             parts.append(f"Existing expression: {self.expression}")
+            parts.append(
+                "(This expression has already been submitted as a baseline — "
+                "you do NOT need to submit it again.)"
+            )
+            if self.user_settings:
+                s = dict(self.user_settings)
+                parts.append(
+                    f"Baseline settings: {s}"
+                )
             if self.critique:
                 parts.append(f"Critique / improvement goal: {self.critique}")
             parts.append(
                 "Analyse this expression and generate 3 improved variants. "
                 "You may research fields and operators first if needed."
+            )
+            parts.append(
+                "HINT: The baseline uses the settings shown above (or Brain defaults). "
+                "Try the same expression with DIFFERENT settings "
+                "(neutralization=MARKET/INDUSTRY/SECTOR/SUBINDUSTRY, "
+                "decay=1/3/5/10, delay=0/1) before modifying the formula. "
+                "Settings can change sharpe by 0.2-0.8 without changing the expression."
             )
 
         # Attach relevant knowledge-base entries.
@@ -293,6 +423,19 @@ class DirectAgent:
             parts.append(f"\nRelevant knowledge ({len(kb_entries)} entries):")
             for e in kb_entries[:8]:
                 parts.append(f"  [{e['topic']}] {e['insight'][:200]}")
+
+        # Attach discovered ideas from Phase 0 as reference.
+        discovered = getattr(self, '_discovered_ideas', None)
+        if discovered:
+            parts.append("\nDiscovered candidate ideas (from web research):")
+            for di in discovered[:3]:
+                src = di.get("source", "")[:80]
+                expr = di.get("expression", "")
+                parts.append(f"  - {di.get('hypothesis', '')[:200]}")
+                if src:
+                    parts.append(f"    Source: {src}")
+                if expr:
+                    parts.append(f"    Candidate: {expr}")
 
         return "\n".join(parts)
 
@@ -320,8 +463,140 @@ class DirectAgent:
 
         return entries
 
+    def _idea_discovery_phase(self) -> None:
+        """Phase 0: Autonomous web-based idea discovery.
+
+        Only runs when neither --idea nor --expression is provided.
+        Uses a separate LLM conversation (not self.messages) so search
+        results don't pollute the main context.
+        """
+        if not self.quiet:
+            print(f"[{self.session_id}] Phase 0 — Idea Discovery (searching the web...)")
+        self._log_event("phase_start", phase="idea_discovery", dataset_id=self.dataset_id)
+
+        # Build system prompt with dataset context.
+        sys_prompt = IDEA_DISCOVERY_SYSTEM_PROMPT
+        user_parts = []
+        if self.dataset_id:
+            user_parts.append(
+                f"Dataset specified: {self.dataset_id}. "
+                "Focus your search on ideas relevant to this dataset."
+            )
+        user_parts.append(
+            "Search the web for factor ideas. Read promising sources. "
+            "Validate candidate expressions against real WQ operators and fields. "
+            "When you have 1-3 solid ideas, submit via type 'discovery_complete'."
+        )
+
+        discovery_messages: list[dict] = [
+            {"role": "system", "content": sys_prompt},
+            {"role": "user", "content": "\n".join(user_parts)},
+        ]
+
+        stall_count = 0
+        for turn in range(MAX_DISCOVERY_TURNS):
+            try:
+                content = self.llm.chat(discovery_messages, temperature=0.5)
+            except RuntimeError as exc:
+                if not self.quiet:
+                    print(f"  [LLM ERR] {exc}")
+                self._log_event("discovery_llm", turn=turn, error=str(exc)[:200])
+                stall_count += 1
+                if stall_count >= MAX_DISCOVERY_STALL:
+                    break
+                continue
+
+            discovery_messages.append({"role": "assistant", "content": content})
+            self._log_event("discovery_llm", turn=turn, preview=content[:300])
+
+            try:
+                parsed = _extract_json(content)
+            except (ValueError, json.JSONDecodeError) as exc:
+                discovery_messages.append({
+                    "role": "user",
+                    "content": f"Parse error: {exc}. Please respond with valid JSON per the protocol.",
+                })
+                stall_count += 1
+                if stall_count >= MAX_DISCOVERY_STALL:
+                    break
+                continue
+
+            rtype = parsed.get("type", "")
+
+            if rtype == "tool_call":
+                result = self._execute_tool(parsed)
+                discovery_messages.append({
+                    "role": "user",
+                    "content": json.dumps(result, ensure_ascii=False, default=str),
+                })
+                stall_count = 0
+
+            elif rtype == "discovery_complete":
+                ideas = parsed.get("ideas", [])
+                if ideas:
+                    best = ideas[0]
+                    self.idea = best.get("hypothesis", "").strip()
+                    self._discovered_ideas = ideas
+                    self._log_event(
+                        "idea_discovery_complete",
+                        count=len(ideas),
+                        idea_preview=self.idea[:200],
+                        sources=[i.get("source", "")[:100] for i in ideas],
+                    )
+                    if not self.quiet:
+                        print(f"  [DISCOVERED] Idea: {self.idea[:120]}...")
+                        for i, idea in enumerate(ideas):
+                            src = idea.get("source", "")[:60]
+                            fam = idea.get("family", "?")
+                            hyp = idea.get("hypothesis", "")[:80]
+                            print(f"    {i+1}. [{fam}] {hyp}...  ({src})")
+                    return
+                discovery_messages.append({
+                    "role": "user",
+                    "content": "Empty ideas list. Continue searching or use discovery_failed.",
+                })
+                stall_count += 1
+
+            elif rtype == "discovery_failed":
+                reasoning = parsed.get("reasoning", "")[:200]
+                self._log_event("idea_discovery_failed", turn=turn, reasoning=reasoning)
+                if not self.quiet:
+                    print(f"  [DISCOVERY FAILED] {reasoning}")
+                return
+
+            else:
+                discovery_messages.append({
+                    "role": "user",
+                    "content": f"Unknown type '{rtype}'. Use 'tool_call', 'discovery_complete', or 'discovery_failed'.",
+                })
+                stall_count += 1
+                if stall_count >= MAX_DISCOVERY_STALL:
+                    break
+
+        self._log_event("idea_discovery_stalled", stall_count=stall_count)
+        if not self.quiet:
+            print(f"  [DISCOVERY STALLED] Max turns or stall limit reached.")
+
     def _research_phase(self) -> None:
         """LLM-driven research loop: tool calls until submission or done."""
+        # Always submit the user's original expression as a baseline first,
+        # so it gets backtested regardless of what the LLM decides to do.
+        if self.expression:
+            if not self.quiet:
+                settings_str = self.user_settings or {}
+                print(
+                    f"  [BASELINE] Submitting user expression as baseline: "
+                    f"{self.expression[:70]}..."
+                )
+                if settings_str:
+                    print(f"             Settings: {dict(settings_str)}")
+            self._log_event("research_baseline", expression=self.expression[:100])
+            self._submit_all([{
+                "expression": self.expression,
+                "settings": self.user_settings,
+                "rationale": "User's original expression submitted as baseline",
+            }])
+
         stall_limit = (
             MAX_CONSECUTIVE_STALL_EXPRESSION
             if self.expression
@@ -464,6 +739,15 @@ class DirectAgent:
             prompt_parts.append(f"Job: ...{j['job_id'][-16:]}")
             prompt_parts.append(f"Expression: {j['expression']}")
             prompt_parts.append(f"Status: {j['status']}")
+            # Show settings so the LLM can learn which parameter values work.
+            settings = j.get("settings", {}) or {}
+            if settings:
+                parts = []
+                for k, v in sorted(settings.items()):
+                    if v is not None and k != "language":
+                        parts.append(f"{k}={v}")
+                if parts:
+                    prompt_parts.append(f"  Settings: {', '.join(parts)}")
             metrics = j.get("metrics", {})
             if metrics:
                 prompt_parts.append(
@@ -524,6 +808,17 @@ class DirectAgent:
             "    what I want to try next' — NOT 'I give up entirely'. Without replacements,\n"
             "    the session will end. Always propose at least 1-3 new ideas.\n"
             "\n"
+            "### Settings tuning (try BEFORE changing the formula):\n"
+            "  - The SAME expression with different settings can change sharpe by 0.2-0.8.\n"
+            "  - Try settings variations on your BEST expression before writing new formulas:\n"
+            "    - neutralization: MARKET (default), INDUSTRY, SECTOR, SUBINDUSTRY, NONE\n"
+            "    - decay: higher (5, 10) = lower turnover; lower (1, 3) = more responsive\n"
+            "    - delay: 0 or 1 (1 avoids look-ahead bias)\n"
+            "    - truncation: 0.08 (default), higher = more concentrated\n"
+            "  - Example: if expression A with MARKET neutralization has sharpe 1.0,\n"
+            "    try INDUSTRY neutralization or decay=10 before giving up on A.\n"
+            "  - Record useful settings discoveries in knowledge entries.\n"
+            "\n"
             "### Decision logic:\n"
             "  - Your goal is EXCELLENCE, not passing. A sharpe=1.26 factor that \"barely passes\"\n"
             "    is NOT converged — keep iterating.\n"
@@ -539,7 +834,16 @@ class DirectAgent:
             "  - If you set converged=true but no factor passes ALL minimum requirements, the system\n"
             "    will override it to abandoned=true and clear current jobs to try a new direction.\n"
             "  - If you genuinely cannot find any promising direction, set done=true to end the session.\n"
-            f"\nActive jobs remaining: {len([j for j in self.active_jobs.values() if j['status'] == 'running'])}"
+            "\n"
+            "### Valid operators (use ONLY these — do NOT invent names):\n"
+        )
+        operators = self.tools.list_all_operators()
+        for op in operators:
+            prompt_parts.append(f"  {op['syntax']:<35s}  {op['summary']}")
+        prompt_parts.append("")
+
+        prompt_parts.append(
+            f"Active jobs remaining: {len([j for j in self.active_jobs.values() if j['status'] == 'running'])}"
         )
 
         self._append("\n".join(prompt_parts))
@@ -550,6 +854,8 @@ class DirectAgent:
         )
 
         # Inner loop: the LLM may call tools repeatedly before reaching a decision.
+        invalid_retries = 0
+        MAX_INVALID_RETRIES = 3
         for _ in range(MAX_CONSECUTIVE_STALL):
             response = self._llm_chat(temperature=0.4)
             if response is None:
@@ -558,8 +864,25 @@ class DirectAgent:
             rtype = response.get("type", "")
 
             if rtype == "analyze":
-                self._process_analysis(response)
-                return
+                ok = self._process_analysis(response)
+                if ok:
+                    return  # expressions submitted, normal exit
+                invalid_retries += 1
+                if invalid_retries >= MAX_INVALID_RETRIES:
+                    self._append(
+                        "Maximum invalid retries reached. Moving on."
+                    )
+                    return
+                # All expressions were invalid — re-prompt LLM with errors
+                # so it can retry with correct operator names.
+                self._append(
+                    "All submitted expressions used invalid operator names. "
+                    "Check the '### Valid operators' list above carefully. "
+                    "Use EXACT operator names (e.g. ts_std_dev, not ts_std; "
+                    "ts_regression with rettype=1 for returns, not ts_returns). "
+                    "Submit at least 1-3 valid replacements."
+                )
+                continue
             elif rtype == "done":
                 self.converged = True
                 return
@@ -610,8 +933,9 @@ class DirectAgent:
                 return True
         return False
 
-    def _process_analysis(self, response: dict) -> None:
-        """Process an LLM analysis response: record knowledge, submit improvements."""
+    def _process_analysis(self, response: dict) -> bool:
+        """Process an LLM analysis response: record knowledge, submit improvements.
+        Returns True if expressions were submitted, False otherwise."""
         # Save knowledge entries (capped per session and per round).
         knowledge_saved = 0
         kb_round_count = 0
@@ -669,7 +993,7 @@ class DirectAgent:
                         f"  [CONVERGED] Criteria met. "
                         f"Best sharpe: {self._best_sharpe():.2f}"
                     )
-                return  # skip improvements submission
+                return True  # converged, skip improvements
             else:
                 # Override: treat as abandoned instead of converged.
                 best = self._best_sharpe()
@@ -682,20 +1006,23 @@ class DirectAgent:
                 if not self.quiet:
                     print(
                         f"  [CONVERGE OVERRIDE] converged=true but criteria not met "
-                        f"(best sharpe={best:.2f} < {MIN_SHARPE}). "
+                        f"(best sharpe={best:.2f}, but checks/fitness/turnover fail). "
                         f"Continuing as abandoned — will try a new direction."
                     )
                 # Abandon current jobs so the LLM starts fresh next round.
                 for jid in list(self.active_jobs.keys()):
                     self.active_jobs[jid]["status"] = "abandoned"
                     self.completed_results.append(self.active_jobs.pop(jid))
-                return  # skip improvements when overriding
+                return True  # converged override — abandoned jobs
 
         # Only submit improvements when NOT converging.
+        submitted_count = 0
+        rate_limited = 0
         if new_exprs:
-            self._submit_all(new_exprs)
+            submitted_count, rate_limited = self._submit_all(new_exprs)
             # Successful submission resets the abandon-fallback counter.
-            self._abandon_fallback_count = 0
+            if submitted_count > 0:
+                self._abandon_fallback_count = 0
         elif response.get("abandoned") and not self.converged:
             # Abandoned with no replacements: inject fallback expressions
             # to keep the session alive instead of letting it die.
@@ -713,7 +1040,7 @@ class DirectAgent:
                         f"ending session"
                     )
                 self.converged = True
-                return
+                return False  # exhausted all fallbacks
             if not self.quiet:
                 print(
                     f"  [FALLBACK #{self._abandon_fallback_count}] "
@@ -726,12 +1053,28 @@ class DirectAgent:
                 iteration=self.iteration,
             )
             self._fallback_submit()
+            return True  # fallback expressions submitted
+
+        # All improvements rejected — re-prompt LLM with errors next cycle.
+        if new_exprs and submitted_count == 0:
+            if rate_limited > 0:
+                # Rate-limited, not an LLM mistake — skip retry loop.
+                if not self.quiet:
+                    print(f"  [RATE LIMITED] All {rate_limited} submissions hit rate limit")
+                return True
+            if not self.quiet:
+                print("  [NO VALID] All improvements were invalid")
+            return False
+
+        return submitted_count > 0
 
     # ── Submission ────────────────────────────────────────────────────────
 
-    def _submit_all(self, expressions: list[dict]) -> None:
-        """Validate and submit up to MAX_CONCURRENT expressions."""
+    def _submit_all(self, expressions: list[dict]) -> tuple[int, int]:
+        """Validate and submit up to MAX_CONCURRENT expressions.
+        Returns (submitted_count, rate_limited_count)."""
         submitted = 0
+        rate_limited = 0
         for ex in expressions[:MAX_CONCURRENT]:
             expr = ex.get("expression", "").strip()
             if not expr:
@@ -768,12 +1111,20 @@ class DirectAgent:
                 if not self.quiet:
                     print(f"  [SUBMIT] {expr[:70]}...  ->  ...{result.job_id[-16:]}")
             else:
+                is_rate_limit = "429" in (result.error or "")
+                if is_rate_limit:
+                    rate_limited += 1
                 self._log_event("submit", expression=expr[:100], status="failed", error=str(result.error)[:200])
                 if not self.quiet:
-                    print(f"  [FAIL]   {expr[:70]}...  {result.error[:120]}")
+                    label = "RATE_LIMIT" if is_rate_limit else "FAIL"
+                    print(f"  [{label}] {expr[:70]}...  {result.error[:120]}")
 
         if submitted == 0 and not self.quiet:
-            print("  [WARN] No valid expressions submitted this round.")
+            if rate_limited > 0:
+                print(f"  [WARN] All submissions rate-limited ({rate_limited}x 429).")
+            else:
+                print("  [WARN] No valid expressions submitted this round.")
+        return submitted, rate_limited
 
     def _fallback_submit(self) -> None:
         """Fallback expressions when the LLM stalls during research."""
@@ -996,6 +1347,14 @@ class DirectAgent:
                 insight=self._arg(args, "insight", str),
                 source=self._arg(args, "source", str, default="agent"),
             ),
+            "web_search": lambda: self.tools.web_search(
+                query=self._arg(args, "query", str),
+                max_results=self._arg(args, "max_results", int, default=10),
+            ),
+            "fetch_webpage": lambda: self.tools.fetch_webpage(
+                url=self._arg(args, "url", str),
+                max_chars=self._arg(args, "max_chars", int, default=8000),
+            ),
         }
 
         handler = dispatch.get(tool)
@@ -1118,6 +1477,11 @@ class DirectAgent:
             "converged": self.converged,
             "total_submissions": len(unique),
             "results": entries,
+            "discovery_source": (
+                getattr(self, '_discovered_ideas', None)[0].get("source", "")
+                if hasattr(self, '_discovered_ideas') and self._discovered_ideas
+                else ""
+            ),
         }
 
         report_path = self.session_dir / "report.json"
@@ -1155,6 +1519,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--idea", default="", help="Financial idea in plain English.")
     parser.add_argument("--expression", default="", help="Existing expression to improve.")
     parser.add_argument("--critique", default="", help="Targeted critique / improvement goal.")
+    parser.add_argument("--settings", default="",
+                        help='JSON settings, e.g. \'{"neutralization":"INDUSTRY","decay":10}\'. '
+                             'Overrides Brain API defaults for the baseline and shown as a hint to the LLM.')
+    parser.add_argument("--neutralization", default="", choices=["MARKET", "INDUSTRY", "SECTOR", "SUBINDUSTRY", "NONE"],
+                        help="Neutralization level for the baseline expression.")
+    parser.add_argument("--decay", type=int, default=0,
+                        help="Decay (half-life in days, e.g. 3/5/10) for the baseline expression. 0 = use Brain default.")
+    parser.add_argument("--delay", type=int, default=0, choices=[0, 1],
+                        help="Delay (0 or 1) for the baseline expression. 0 = use Brain default.")
+    parser.add_argument("--truncation", type=float, default=0.0,
+                        help="Truncation limit (0.00-1.00) for the baseline expression. 0 = use Brain default.")
     parser.add_argument("--iterations", type=int, default=MAX_ITERATIONS, help="Max analysis rounds.")
     parser.add_argument("--target-sharpe", type=float, default=TARGET_SHARPE, help="Convergence target.")
     parser.add_argument("--output-dir", default="agent_output", help="Output directory.")
@@ -1169,9 +1544,28 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.idea and not args.expression:
-        parser.error("Either --idea or --expression is required.")
+        if not args.quiet:
+            print("No --idea or --expression provided. Will attempt autonomous idea discovery (Phase 0).")
+        # Phase 0 will handle the missing idea; proceed without error.
 
     api_key = load_api_key()
+
+    user_settings = {}
+    if args.settings:
+        try:
+            user_settings = json.loads(args.settings)
+        except json.JSONDecodeError as e:
+            parser.error(f"Invalid --settings JSON: {e}")
+
+    # Individual CLI args override JSON keys (so both can be used together).
+    if args.neutralization:
+        user_settings["neutralization"] = args.neutralization
+    if args.decay:
+        user_settings["decay"] = args.decay
+    if args.delay:
+        user_settings["delay"] = args.delay
+    if args.truncation:
+        user_settings["truncation"] = args.truncation
 
     agent = DirectAgent(
         dataset_id=args.dataset_id,
@@ -1189,6 +1583,7 @@ def main() -> None:
             idea=args.idea,
             expression=args.expression,
             critique=args.critique,
+            settings=user_settings,
         )
     except Exception as exc:
         print(f"\n[FATAL] Agent crashed: {exc}", file=sys.stderr)

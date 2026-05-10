@@ -854,6 +854,78 @@ class WQTools:
             for t, c in sorted(topic_counts.items(), key=lambda x: -x[1])
         ]
 
+    # ── Web search tools (for Phase 0: Idea Discovery) ─────────────────
+
+    def web_search(self, query: str, max_results: int = 10) -> list[dict]:
+        """Search the web via DuckDuckGo. Returns [{title, url, snippet}, ...]."""
+        try:
+            try:
+                from ddgs import DDGS
+            except ImportError:
+                from duckduckgo_search import DDGS
+            with DDGS() as ddgs:
+                raw = list(ddgs.text(query, max_results=max_results))
+            return [
+                {"title": r.get("title", ""),
+                 "url": r.get("href", ""),
+                 "snippet": r.get("body", "")}
+                for r in raw
+            ]
+        except ImportError:
+            try:
+                params = {"q": query, "format": "json", "no_html": 1}
+                headers = {"User-Agent": "Mozilla/5.0 (compatible; AlphaMining/1.0)"}
+                resp = requests.get(
+                    "https://api.duckduckgo.com/",
+                    params=params, headers=headers, timeout=15
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                results = []
+                for topic in data.get("RelatedTopics", []):
+                    if "Topics" in topic:
+                        for sub in topic["Topics"]:
+                            results.append({
+                                "title": sub.get("Text", "")[:200],
+                                "url": sub.get("FirstURL", ""),
+                                "snippet": sub.get("Text", "")[:300],
+                            })
+                    else:
+                        results.append({
+                            "title": topic.get("Text", "")[:200],
+                            "url": topic.get("FirstURL", ""),
+                            "snippet": topic.get("Text", "")[:300],
+                        })
+                return results[:max_results]
+            except Exception as exc:
+                return [{"error": str(exc)}]
+        except Exception as exc:
+            return [{"error": str(exc)}]
+
+    def fetch_webpage(self, url: str, max_chars: int = 8000) -> str:
+        """Fetch a URL and return its text content (HTML stripped)."""
+        try:
+            headers = {"User-Agent": "Mozilla/5.0 (compatible; AlphaMining/1.0)"}
+            resp = requests.get(url, headers=headers, timeout=30)
+            resp.raise_for_status()
+            content_type = resp.headers.get("Content-Type", "")
+            if "application/pdf" in content_type:
+                return f"[PDF] {url} (cannot render PDF content inline)"
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(resp.text, "lxml")
+            for tag in soup(["script", "style", "nav", "footer", "header",
+                             "aside", "form", "iframe", "noscript"]):
+                tag.decompose()
+            text = soup.get_text(separator="\n", strip=True)
+            text = re.sub(r"\n{3,}", "\n\n", text)
+            return text[:max_chars]
+        except requests.Timeout:
+            return f"[TIMEOUT] Request to {url} timed out after 30s."
+        except requests.RequestException as exc:
+            return f"[FETCH ERROR] {exc}"
+        except Exception as exc:
+            return f"[PARSE ERROR] {exc}"
+
     # ── internals ──────────────────────────────────────────────────────
 
     @staticmethod

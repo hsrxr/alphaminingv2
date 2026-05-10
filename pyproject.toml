@@ -7,4 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
 	"pandas>=2.0",
 	"requests>=2.31",
+	"beautifulsoup4>=4.12",
+	"lxml>=5.0",
+	"ddgs>=9.0",
 ]
