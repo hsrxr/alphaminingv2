@@ -800,7 +800,8 @@ class WQTools:
 
     # ── Tool 13: add_knowledge ────────────────────────────────────────
 
-    def add_knowledge(self, topic: str, insight: str, source: str = "agent") -> dict:
+    def add_knowledge(self, topic: str, insight: str, source: str = "agent",
+                      tags: list[str] | None = None) -> dict:
         """Add an experience entry to the persistent knowledge base.
 
         Parameters
@@ -811,13 +812,22 @@ class WQTools:
             The insight/experience to record.
         source : str
             "agent" or "user".
+        tags : list[str] | None
+            Optional list of tag labels for filtering/search.
+            Available tags: signal_direction, operator, normalization, neutralization,
+            universe, dataset, field_choice, construction, combination, turnover,
+            parameter_tuning, dead_end, technical, successful_factor.
+            If omitted, derived from the topic automatically.
 
         Returns the saved entry dict.
         """
         entries = self._load_kb()
+        if tags is None:
+            tags = [topic]
         entry = {
             "id": len(entries) + 1,
             "topic": topic,
+            "tags": tags,
             "insight": insight,
             "source": source,
             "timestamp": datetime.now().isoformat(timespec="seconds"),
@@ -828,15 +838,37 @@ class WQTools:
 
     # ── Tool 14: search_knowledge ─────────────────────────────────────
 
-    def search_knowledge(self, keyword: str) -> list[dict]:
-        """Search the knowledge base by keyword in topic or insight text."""
-        kw = keyword.lower()
+    def search_knowledge(self, keyword: str = "", tags: list[str] | None = None) -> list[dict]:
+        """Search the knowledge base by keyword and/or tag filter.
+
+        Parameters
+        ----------
+        keyword : str
+            Search term matched against topic and insight text (case-insensitive).
+            If empty, only tag filtering is applied.
+        tags : list[str] | None
+            If provided, only return entries matching *any* of the given tags.
+
+        Returns matching entries.
+        """
         entries = self._load_kb()
-        return [
-            e for e in entries
-            if kw in e.get("topic", "").lower()
-            or kw in e.get("insight", "").lower()
-        ]
+        kw = keyword.lower() if keyword else ""
+
+        results = []
+        for e in entries:
+            # Keyword filter.
+            if kw:
+                in_topic = kw in e.get("topic", "").lower()
+                in_insight = kw in e.get("insight", "").lower()
+                if not in_topic and not in_insight:
+                    continue
+            # Tag filter.
+            if tags:
+                entry_tags = e.get("tags", [])
+                if not any(t in entry_tags for t in tags):
+                    continue
+            results.append(e)
+        return results
 
     # ── Tool 15: list_knowledge_topics ────────────────────────────────
 
@@ -852,6 +884,20 @@ class WQTools:
                 e["timestamp"] for e in entries if e.get("topic") == t
             )}
             for t, c in sorted(topic_counts.items(), key=lambda x: -x[1])
+        ]
+
+    # ── Tool 16: list_knowledge_tags ─────────────────────────────────
+
+    def list_knowledge_tags(self) -> list[dict]:
+        """List all unique tags in the knowledge base with entry count."""
+        entries = self._load_kb()
+        tag_counts: dict[str, int] = {}
+        for e in entries:
+            for t in e.get("tags", []):
+                tag_counts[t] = tag_counts.get(t, 0) + 1
+        return [
+            {"tag": t, "count": c}
+            for t, c in sorted(tag_counts.items(), key=lambda x: -x[1])
         ]
 
     # ── Web search tools (for Phase 0: Idea Discovery) ─────────────────
