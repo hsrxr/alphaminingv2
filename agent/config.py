@@ -1,7 +1,8 @@
-"""config.py — Shared configuration for the multi-agent factor-mining system.
+"""config.py — Shared configuration for the factor-mining system.
 
-All configurable parameters live here, with sensible defaults that can be
-overridden via CLI arguments or environment variables.
+All configurable parameters live here.  The ``AgentConfig`` dataclass is used
+by the multi-agent orchestrator; module-level constants are used by
+``DirectAgent``.
 """
 
 from dataclasses import dataclass, field
@@ -103,3 +104,46 @@ class AgentConfig:
             "reuse_results_db": self.reuse_results_db,
             "enable_critic": self.enable_critic,
         }
+
+
+# ══════════════════════════════════════════════════════════════════════════
+# DirectAgent constants  (used by agent/direct_agent.py)
+# ══════════════════════════════════════════════════════════════════════════
+
+# ─── Concurrency & Polling ─────────────────────────────────────────────────
+MAX_CONCURRENT = 3
+POLL_INTERVAL = 30
+MAX_POLL_RETRIES = 3
+
+# ─── Session limits ────────────────────────────────────────────────────────
+MAX_ITERATIONS = 1000
+TARGET_SHARPE = 2.0
+MAX_CONSECUTIVE_STALL = 20
+MAX_CONSECUTIVE_STALL_EXPRESSION = 40
+MAX_IDLE_POLLS = 60  # 30 min without any completion
+MAX_KNOWLEDGE_PER_SESSION = 10
+MAX_KNOWLEDGE_PER_ANALYSIS = 2
+MAX_CONVERGE_OVERRIDES = 5  # stop overriding after this many times
+
+# ─── FIFO submission queue ─────────────────────────────────────────────────
+MAX_QUEUE_RETRIES = 5
+MAX_QUEUE_SIZE = 50
+
+# ─── Message truncation limits ─────────────────────────────────────────────
+MAX_MSG_CHARS = 200_000
+MAX_TOTAL_CHARS = 800_000
+TIGHT_MSG_CHARS = 50_000
+
+# ─── Convergence criteria thresholds ───────────────────────────────────────
+MIN_SHARPE = 1.25
+MIN_FITNESS = 1.0
+MIN_TURNOVER = 0.01
+MAX_TURNOVER = 0.70
+
+# ─── Phase state machine ───────────────────────────────────────────────────
+PHASE_MAX_ROUNDS = 8
+PHASE_PROGRESS_STALL = 5
+
+# ─── Phase 0: Idea Discovery ───────────────────────────────────────────────
+MAX_DISCOVERY_TURNS = 30
+MAX_DISCOVERY_STALL = 5
