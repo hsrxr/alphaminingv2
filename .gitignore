@@ -23,3 +23,6 @@ datafields_cache/
 
 # 文档目录
 docs/
+
+# VS Code 本地配置
+.vscode/

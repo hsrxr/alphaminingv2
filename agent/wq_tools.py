@@ -10,6 +10,7 @@ Packs WQ platform capabilities as callable tools:
 """
 
 import json
+import os
 import re
 import time
 from dataclasses import dataclass, field
@@ -33,6 +34,31 @@ from agent.expression_validator import (
 
 API_BASE = "https://api.worldquantbrain.com"
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+# ─── Proxy helper ───────────────────────────────────────────────────────
+
+_PROXY_FROM_ENV: dict[str, str] | None = None
+
+def _get_proxies() -> dict[str, str] | None:
+    """Return proxy dict from env, caching the result after first call.
+
+    Reads ``HTTP_PROXY`` and ``HTTPS_PROXY`` (case-insensitive).  Returns
+    ``None`` when neither variable is set (direct connection).
+    """
+    global _PROXY_FROM_ENV
+    if _PROXY_FROM_ENV is not None:
+        return _PROXY_FROM_ENV or None
+
+    proxies: dict[str, str] = {}
+    for var in ("HTTP_PROXY", "HTTPS_PROXY"):
+        val = os.environ.get(var) or os.environ.get(var.lower())
+        if val:
+            key = var.lower().replace("http_proxy", "http")  # → "http" / "https"
+            proxies[key] = val
+
+    _PROXY_FROM_ENV = proxies or {}
+    return _PROXY_FROM_ENV or None
 
 
 # ─── Simulation settings schema ──────────────────────────────────────────
@@ -904,12 +930,13 @@ class WQTools:
 
     def web_search(self, query: str, max_results: int = 10) -> list[dict]:
         """Search the web via DuckDuckGo. Returns [{title, url, snippet}, ...]."""
+        proxies = _get_proxies()
         try:
             try:
                 from ddgs import DDGS
             except ImportError:
                 from duckduckgo_search import DDGS
-            with DDGS() as ddgs:
+            with DDGS(proxies=proxies) as ddgs:
                 raw = list(ddgs.text(query, max_results=max_results))
             return [
                 {"title": r.get("title", ""),
@@ -923,7 +950,7 @@ class WQTools:
                 headers = {"User-Agent": "Mozilla/5.0 (compatible; AlphaMining/1.0)"}
                 resp = requests.get(
                     "https://api.duckduckgo.com/",
-                    params=params, headers=headers, timeout=15
+                    params=params, headers=headers, proxies=proxies, timeout=15
                 )
                 resp.raise_for_status()
                 data = resp.json()
@@ -950,9 +977,10 @@ class WQTools:
 
     def fetch_webpage(self, url: str, max_chars: int = 8000) -> str:
         """Fetch a URL and return its text content (HTML stripped)."""
+        proxies = _get_proxies()
         try:
             headers = {"User-Agent": "Mozilla/5.0 (compatible; AlphaMining/1.0)"}
-            resp = requests.get(url, headers=headers, timeout=30)
+            resp = requests.get(url, headers=headers, proxies=proxies, timeout=30)
             resp.raise_for_status()
             content_type = resp.headers.get("Content-Type", "")
             if "application/pdf" in content_type:
