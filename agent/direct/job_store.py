@@ -120,6 +120,7 @@ class JobStore:
             "metrics": {},
             "error": "",
         }
+        self._log_event("submit", expression=expr[:100], status="submitted", job_id=job_id)
         return dedup_note
 
     def mark_replaced(self, job_id: str | None) -> None:

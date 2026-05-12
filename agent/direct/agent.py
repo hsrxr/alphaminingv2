@@ -385,10 +385,11 @@ class DirectAgent:
             }])
             return
         else:
-            self._log_event("research_stall", stall_count=stall_count, action="fallback")
+            self._log_event("research_stall", stall_count=stall_count, action="graceful_exit")
             if not self.quiet:
-                print(f"[{self.session_id}] Research stalled — using fallback expressions")
-            self.submission_engine.fallback_submit()
+                print(f"[{self.session_id}] Research stalled — no expressions submitted")
+            if not self.job_store.active_jobs:
+                self.job_store.converged = True
 
     # ── Phase 2: Iteration ────────────────────────────────────────────────
 

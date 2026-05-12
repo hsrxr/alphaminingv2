@@ -322,33 +322,6 @@ class SubmissionEngine:
                 if r.get("error"):
                     job["error"] = r["error"]
 
-    # ── Fallback ───────────────────────────────────────────────────────────
-
-    def fallback_submit(self) -> None:
-        """Fallback expressions when the LLM stalls during research."""
-        fallbacks = [
-            {
-                "expression": "group_rank(ts_zscore(returns, 21), subindustry)",
-                "settings": {"neutralization": "SUBINDUSTRY", "decay": 5},
-                "rationale": "21-day risk-adjusted momentum, subindustry neutral",
-            },
-            {
-                "expression": "ts_decay_linear(ts_scale(est_cashflow_op,252),22)-ts_decay_linear(ts_scale(est_capex,252),22)",
-                "settings": {"neutralization": "INDUSTRY", "decay": 10},
-                "rationale": "Cash flow quality spread — known to produce positive Sharpe",
-            },
-            {
-                "expression": "group_rank(ts_mean(returns, 5) - ts_mean(returns, 21), subindustry)",
-                "settings": {"neutralization": "SUBINDUSTRY", "decay": 3},
-                "rationale": "Short-term mean reversion, subindustry neutral",
-            },
-        ]
-        self._log_event(
-            "fallback_submit",
-            expressions=[fb["expression"][:100] for fb in fallbacks],
-        )
-        self.submit_all(fallbacks)
-
     # ── Expression warnings ────────────────────────────────────────────────
 
     @staticmethod

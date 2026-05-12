@@ -142,6 +142,33 @@ class LLMConversation:
                 agent="direct",
                 tag="network_error",
             )
+            # Retry once more for transient network errors — the LLM client's
+            # internal retry may have been exhausted but a final attempt with
+            # no messages appended may succeed on a fresh connection.
+            if not self.quiet:
+                print(f"  [LLM RETRY] One more attempt...")
+            try:
+                content = self.llm.chat(self.messages, temperature=temperature)
+                self.messages.append({"role": "assistant", "content": content})
+                self._total_chars += len(content)
+                parsed = _extract_json(content)
+                rtype = parsed.get("type", "?") if parsed else "parse_failed"
+                log_exchange(
+                    self.session_dir,
+                    exchange_id=f"{exchange_id}_retry",
+                    call_type="analysis",
+                    messages=messages_snapshot,
+                    response=content,
+                    temperature=temperature,
+                    agent="direct",
+                    tag=rtype,
+                )
+                self._log_event(
+                    "llm_response", exchange_id=f"{exchange_id}_retry", type=rtype, preview=content[:2000]
+                )
+                return parsed
+            except Exception:
+                pass
             return None
 
     # ── Append ─────────────────────────────────────────────────────────────
